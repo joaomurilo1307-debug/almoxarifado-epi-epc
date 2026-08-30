@@ -84,6 +84,7 @@ model EpiProduto {
   tipo          EpiTipo  @default(EPI)
   categoria     String?
   ca            String?
+  fabricante    String?
   tamanho       String?
   unidade       String   @default("UNID")
   valorUnitario Float?
@@ -136,6 +137,15 @@ model EpiMovimentacao {
   @@index([produtoId, contratoId])
   @@index([colaboradorId])
   @@index([contratoId, data])
+}
+
+// % de contingência padrão por categoria (Material de Escritório, Itens
+// Veicular, Insumos Alojamento, Depósito Geral, ou até EPI/EPC/FARDAMENTO
+// direto) — fica ENTRE o % do contrato (mais genérico) e o % do produto
+// (mais específico). Ordem de resolução: produto > categoria > contrato.
+model EpiCategoriaConfig {
+  categoria              String @id
+  percentualContingencia Float  @default(0.10)
 }
 
 model EpiFuncaoRegra {

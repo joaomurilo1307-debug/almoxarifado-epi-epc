@@ -21,8 +21,14 @@ export async function upsertEpiEstoque(
 export async function upsertEpiProdutoPorNome(
   nome: string,
   tamanho: string | null,
-  create: { tipo?: "EPI" | "EPC" | "FARDAMENTO" | "GERAL"; categoria?: string | null; ca?: string | null; unidade?: string },
-  update: { ca?: string; unidade?: string; categoria?: string | null }
+  create: {
+    tipo?: "EPI" | "EPC" | "FARDAMENTO" | "GERAL";
+    categoria?: string | null;
+    ca?: string | null;
+    fabricante?: string | null;
+    unidade?: string;
+  },
+  update: { ca?: string; unidade?: string; categoria?: string | null; fabricante?: string | null }
 ) {
   const existente = await prisma.epiProduto.findFirst({ where: { nome, tamanho } });
   if (existente) {
@@ -44,11 +50,15 @@ export function calcularMinimoSugerido(efetivo: number, percentual: number): num
 // pra nunca dessincronizar do histórico real (mesmo princípio da planilha Excel que
 // deu origem a este módulo).
 export async function listaEstoqueComCalculo(where: { contratoId?: string | null } = {}) {
-  const estoques = await prisma.epiEstoque.findMany({
-    where,
-    include: { produto: true, contrato: { select: { id: true, codigo: true, nome: true, percentualContingencia: true } } },
-    orderBy: [{ produto: { nome: "asc" } }],
-  });
+  const [estoques, categoriaConfigs] = await Promise.all([
+    prisma.epiEstoque.findMany({
+      where,
+      include: { produto: true, contrato: { select: { id: true, codigo: true, nome: true, percentualContingencia: true } } },
+      orderBy: [{ produto: { nome: "asc" } }],
+    }),
+    prisma.epiCategoriaConfig.findMany(),
+  ]);
+  const categoriaPercentualMap = new Map(categoriaConfigs.map((c) => [c.categoria, c.percentualContingencia]));
 
   const movs = await prisma.epiMovimentacao.groupBy({
     by: ["produtoId", "contratoId", "tipo"],
@@ -85,7 +95,21 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
     const necessidade = Math.max(0, Math.ceil(e.estoqueMinimo - atual));
     const valorUnitario = e.produto.valorUnitario ?? null;
     const efetivo = e.contratoId ? efetivoMap.get(e.contratoId) ?? 0 : efetivoTotal;
-    const percentualEfetivo = e.produto.percentualContingencia ?? e.contrato?.percentualContingencia ?? 0.1;
+    // Resolução em 3 níveis, do mais específico pro mais genérico: % do
+    // próprio produto > % da categoria (Material de Escritório, etc.) > %
+    // do contrato > 10% de fallback.
+    const categoriaChave = e.produto.categoria ?? e.produto.tipo;
+    const percentualEfetivo =
+      e.produto.percentualContingencia ??
+      categoriaPercentualMap.get(categoriaChave) ??
+      e.contrato?.percentualContingencia ??
+      0.1;
+    // Além de "abaixo do mínimo" (COMPRAR), avisa quando já está chegando
+    // perto (dentro de 20% acima do mínimo) — "ATENCAO", pra não deixar
+    // descobrir só quando já faltou.
+    let status: "OK" | "ATENCAO" | "COMPRAR" = "OK";
+    if (atual < e.estoqueMinimo) status = "COMPRAR";
+    else if (e.estoqueMinimo > 0 && atual < e.estoqueMinimo * 1.2) status = "ATENCAO";
     return {
       id: e.id,
       produto: e.produto,
@@ -97,7 +121,7 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
       estoqueMinimo: e.estoqueMinimo,
       minimoSugerido: calcularMinimoSugerido(efetivo, percentualEfetivo),
       necessidade,
-      status: atual < e.estoqueMinimo ? ("COMPRAR" as const) : ("OK" as const),
+      status,
       valorUnitario,
       valorEmEstoque: valorUnitario !== null ? Math.max(0, atual) * valorUnitario : null,
       valorNecessidade: valorUnitario !== null ? necessidade * valorUnitario : null,

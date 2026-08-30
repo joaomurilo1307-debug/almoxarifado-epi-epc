@@ -8,7 +8,7 @@ export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
-  const [contratos, colaboradoresAtivos, estoque, ultimasMovimentacoes] = await Promise.all([
+  const [contratos, colaboradoresAtivos, estoque, ultimasMovimentacoes, saidaPorProduto, saidaPorContrato] = await Promise.all([
     prisma.epiContrato.findMany({ orderBy: { codigo: "asc" } }),
     prisma.epiColaborador.count({ where: { situacao: "ATIVO" } }),
     listaEstoqueComCalculo(),
@@ -21,9 +21,41 @@ export async function GET() {
         colaborador: { select: { nomeCompleto: true } },
       },
     }),
+    // Itens mais usados — soma de tudo que já saiu de cada produto, do
+    // histórico real de movimentação (não é estimativa).
+    prisma.epiMovimentacao.groupBy({
+      by: ["produtoId"],
+      where: { tipo: "SAIDA" },
+      _sum: { quantidade: true },
+      orderBy: { _sum: { quantidade: "desc" } },
+      take: 10,
+    }),
+    // Onde consome mais — mesma soma, agrupada por contrato em vez de produto.
+    prisma.epiMovimentacao.groupBy({
+      by: ["contratoId"],
+      where: { tipo: "SAIDA" },
+      _sum: { quantidade: true },
+      orderBy: { _sum: { quantidade: "desc" } },
+    }),
   ]);
 
+  const produtoIdsUsados = saidaPorProduto.map((s) => s.produtoId);
+  const produtosUsados = produtoIdsUsados.length
+    ? await prisma.epiProduto.findMany({ where: { id: { in: produtoIdsUsados } }, select: { id: true, nome: true } })
+    : [];
+  const produtoNomeMap = new Map(produtosUsados.map((p) => [p.id, p.nome]));
+  const maisUsados = saidaPorProduto
+    .map((s) => ({ produto: produtoNomeMap.get(s.produtoId) ?? "?", quantidade: s._sum.quantidade ?? 0 }))
+    .filter((m) => m.quantidade > 0);
+
+  const contratoNomeMap = new Map(contratos.map((c) => [c.id, c.codigo]));
+  const consumoPorContrato = saidaPorContrato
+    .map((s) => ({ contrato: s.contratoId ? contratoNomeMap.get(s.contratoId) ?? "?" : "Geral", quantidade: s._sum.quantidade ?? 0 }))
+    .filter((c) => c.quantidade > 0)
+    .sort((a, b) => b.quantidade - a.quantidade);
+
   const abaixoMinimo = estoque.filter((e) => e.status === "COMPRAR");
+  const emAtencao = estoque.filter((e) => e.status === "ATENCAO");
   const necessidadeTotal = estoque.reduce((acc, e) => acc + e.necessidade, 0);
   const valorEmEstoqueTotal = estoque.reduce((acc, e) => acc + (e.valorEmEstoque ?? 0), 0);
   const valorNecessidadeTotal = estoque.reduce((acc, e) => acc + (e.valorNecessidade ?? 0), 0);
@@ -79,6 +111,8 @@ export async function GET() {
     itensComCusto,
     porContrato,
     porCategoria,
+    maisUsados,
+    consumoPorContrato,
     totalCriticos: abaixoMinimo.length,
     criticos: abaixoMinimo
       .sort((a, b) => b.necessidade - a.necessidade)
@@ -90,8 +124,19 @@ export async function GET() {
         contrato: e.contrato?.codigo ?? "Geral",
         estoqueAtual: e.estoqueAtual,
         estoqueMinimo: e.estoqueMinimo,
+        minimoSugerido: e.minimoSugerido,
         necessidade: e.necessidade,
         valorNecessidade: e.valorNecessidade,
+      })),
+    totalEmAtencao: emAtencao.length,
+    emAtencao: emAtencao
+      .sort((a, b) => a.estoqueAtual - a.estoqueMinimo - (b.estoqueAtual - b.estoqueMinimo))
+      .slice(0, 15)
+      .map((e) => ({
+        produto: e.produto.nome,
+        contrato: e.contrato?.codigo ?? "Geral",
+        estoqueAtual: e.estoqueAtual,
+        estoqueMinimo: e.estoqueMinimo,
       })),
     ultimasMovimentacoes,
   });

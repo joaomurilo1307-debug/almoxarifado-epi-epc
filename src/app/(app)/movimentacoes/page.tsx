@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import EpiMovimentacaoForm from "@/components/EpiMovimentacaoForm";
+import EpiLoteForm from "@/components/EpiLoteForm";
 
 type Contrato = { id: string; codigo: string; nome: string | null };
 type Produto = { id: string; nome: string; unidade: string };
@@ -24,6 +25,7 @@ export default function MovimentacoesPage() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [showLote, setShowLote] = useState(false);
 
   function reload() {
     fetch("/api/epi/movimentacoes").then((r) => r.json()).then(setMovs).catch(() => {});
@@ -40,12 +42,20 @@ export default function MovimentacoesPage() {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <p className="text-xs text-gray-400">{movs.length} movimentações recentes</p>
-        <button
-          onClick={() => setShowForm(true)}
-          className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-        >
-          + Nova movimentação
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowLote(true)}
+            className="rounded-lg border border-brand px-4 py-2 text-sm font-semibold text-brand-dark hover:bg-brand-light"
+          >
+            📦 Lançamento em lote
+          </button>
+          <button
+            onClick={() => setShowForm(true)}
+            className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
+          >
+            + Nova movimentação
+          </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -100,6 +110,18 @@ export default function MovimentacoesPage() {
           onClose={() => setShowForm(false)}
           onSaved={() => {
             setShowForm(false);
+            reload();
+          }}
+        />
+      )}
+
+      {showLote && (
+        <EpiLoteForm
+          contratos={contratos}
+          produtos={produtos}
+          onClose={() => setShowLote(false)}
+          onSaved={() => {
+            setShowLote(false);
             reload();
           }}
         />

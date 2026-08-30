@@ -27,7 +27,7 @@ export async function GET(req: Request) {
   return NextResponse.json(movimentacoes);
 }
 
-const createSchema = z.object({
+const itemSchema = z.object({
   tipo: z.enum(["ENTRADA", "SAIDA"]),
   produtoId: z.string().min(1),
   contratoId: z.string().min(1),
@@ -36,6 +36,12 @@ const createSchema = z.object({
   observacao: z.string().nullable().optional(),
   data: z.string().datetime().nullable().optional(),
 });
+
+// Aceita um item só (formato de sempre, usado pelo botão rápido de cada
+// linha) OU um lote (`{ itens: [...] }`, usado no lançamento em massa de uma
+// compra grande — não faz sentido abrir o formulário um por um pra dar
+// entrada em 30 itens de uma nota fiscal só).
+const createSchema = z.union([itemSchema, z.object({ itens: z.array(itemSchema).min(1).max(200) })]);
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -46,17 +52,26 @@ export async function POST(req: Request) {
   const parsed = createSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
-  const movimentacao = await prisma.epiMovimentacao.create({
-    data: {
-      ...parsed.data,
-      data: parsed.data.data ? new Date(parsed.data.data) : undefined,
-      registradoPorId: userId,
-    },
-    include: {
-      produto: { select: { id: true, nome: true, unidade: true } },
-      contrato: { select: { id: true, codigo: true } },
-      colaborador: { select: { id: true, nomeCompleto: true } },
-    },
+  const itens = "itens" in parsed.data ? parsed.data.itens : [parsed.data];
+
+  const movimentacoes = await prisma.$transaction(
+    itens.map((item) =>
+      prisma.epiMovimentacao.create({
+        data: {
+          ...item,
+          data: item.data ? new Date(item.data) : undefined,
+          registradoPorId: userId,
+        },
+        include: {
+          produto: { select: { id: true, nome: true, unidade: true } },
+          contrato: { select: { id: true, codigo: true } },
+          colaborador: { select: { id: true, nomeCompleto: true } },
+        },
+      })
+    )
+  );
+
+  return NextResponse.json("itens" in parsed.data ? { criadas: movimentacoes.length, movimentacoes } : movimentacoes[0], {
+    status: 201,
   });
-  return NextResponse.json(movimentacao, { status: 201 });
 }

@@ -23,6 +23,7 @@ const createSchema = z.object({
   tipo: z.enum(["EPI", "EPC", "FARDAMENTO", "GERAL"]).default("EPI"),
   categoria: z.string().nullable().optional(),
   ca: z.string().nullable().optional(),
+  fabricante: z.string().nullable().optional(),
   tamanho: z.string().nullable().optional(),
   unidade: z.string().default("UNID"),
 });

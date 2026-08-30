@@ -9,6 +9,7 @@ const patchSchema = z.object({
   tipo: z.enum(["EPI", "EPC", "FARDAMENTO", "GERAL"]).optional(),
   categoria: z.string().nullable().optional(),
   ca: z.string().nullable().optional(),
+  fabricante: z.string().nullable().optional(),
   tamanho: z.string().nullable().optional(),
   unidade: z.string().optional(),
   valorUnitario: z.number().nullable().optional(),

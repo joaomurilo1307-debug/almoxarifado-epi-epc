@@ -10,6 +10,7 @@ type Produto = {
   tipo: "EPI" | "EPC" | "FARDAMENTO" | "GERAL";
   categoria: string | null;
   ca: string | null;
+  fabricante: string | null;
   tamanho: string | null;
   unidade: string;
   valorUnitario: number | null;
@@ -102,9 +103,12 @@ function ProdutosTab() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [busca, setBusca] = useState("");
   const [filtroTipo, setFiltroTipo] = useState<"" | Produto["tipo"]>("");
+  const [filtroFabricante, setFiltroFabricante] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editando, setEditando] = useState<string | null>(null);
   const [rascunho, setRascunho] = useState("");
+  const [editandoFabricante, setEditandoFabricante] = useState<string | null>(null);
+  const [rascunhoFabricante, setRascunhoFabricante] = useState("");
   const [editandoPct, setEditandoPct] = useState<string | null>(null);
   const [rascunhoPct, setRascunhoPct] = useState("");
   const [escolhendoFoto, setEscolhendoFoto] = useState<string | null>(null);
@@ -116,16 +120,33 @@ function ProdutosTab() {
   }
   useEffect(reload, []);
 
+  const fabricantes = useMemo(
+    () => [...new Set(produtos.map((p) => p.fabricante).filter((f): f is string => !!f))].sort(),
+    [produtos]
+  );
+
   const filtrados = useMemo(
     () =>
       produtos.filter(
         (p) =>
           p.ativo &&
           (!busca || p.nome.toLowerCase().includes(busca.toLowerCase())) &&
-          (!filtroTipo || p.tipo === filtroTipo)
+          (!filtroTipo || p.tipo === filtroTipo) &&
+          (!filtroFabricante || p.fabricante === filtroFabricante)
       ),
-    [produtos, busca, filtroTipo]
+    [produtos, busca, filtroTipo, filtroFabricante]
   );
+
+  async function salvarFabricante(id: string) {
+    const fabricante = rascunhoFabricante.trim() || null;
+    await fetch(`/api/epi/produtos/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fabricante }),
+    });
+    setEditandoFabricante(null);
+    setProdutos((prev) => prev.map((p) => (p.id === id ? { ...p, fabricante } : p)));
+  }
 
   async function salvarPct(id: string, pctInteiro: number | null) {
     const pct = pctInteiro === null ? null : Math.min(100, Math.max(0, pctInteiro)) / 100;
@@ -200,6 +221,18 @@ function ProdutosTab() {
           <option value="FARDAMENTO">Fardamento</option>
           <option value="GERAL">Geral (escritório, veicular, alojamento...)</option>
         </select>
+        <select
+          value={filtroFabricante}
+          onChange={(e) => setFiltroFabricante(e.target.value)}
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        >
+          <option value="">Todos os fabricantes</option>
+          {fabricantes.map((f) => (
+            <option key={f} value={f}>
+              {f}
+            </option>
+          ))}
+        </select>
         <span className="text-xs text-gray-400">{filtrados.length} itens ativos</span>
         <button
           onClick={rodarAutoFoto}
@@ -226,6 +259,7 @@ function ProdutosTab() {
               <th className="px-4 py-3">Item</th>
               <th className="px-4 py-3">Tipo</th>
               <th className="px-4 py-3">CA</th>
+              <th className="px-4 py-3">Fabricante</th>
               <th className="px-4 py-3">Tamanho</th>
               <th className="px-4 py-3">Unid.</th>
               <th className="px-4 py-3 text-right">Valor unitário</th>
@@ -252,6 +286,28 @@ function ProdutosTab() {
                   {p.categoria && <span className="ml-1 text-xs text-gray-400">{p.categoria}</span>}
                 </td>
                 <td className="px-4 py-2.5 text-gray-500">{p.ca ?? "—"}</td>
+                <td className="px-4 py-2.5">
+                  {editandoFabricante === p.id ? (
+                    <input
+                      autoFocus
+                      value={rascunhoFabricante}
+                      onChange={(e) => setRascunhoFabricante(e.target.value)}
+                      onBlur={() => salvarFabricante(p.id)}
+                      onKeyDown={(e) => e.key === "Enter" && salvarFabricante(p.id)}
+                      className="w-32 rounded border border-brand px-1 py-0.5 text-sm"
+                    />
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setEditandoFabricante(p.id);
+                        setRascunhoFabricante(p.fabricante ?? "");
+                      }}
+                      className="rounded px-1 text-left text-gray-500 underline decoration-dotted hover:text-brand-dark"
+                    >
+                      {p.fabricante ?? "definir"}
+                    </button>
+                  )}
+                </td>
                 <td className="px-4 py-2.5 text-gray-500">{p.tamanho ?? "—"}</td>
                 <td className="px-4 py-2.5 text-gray-500">{p.unidade}</td>
                 <td className="px-4 py-2.5 text-right">
@@ -330,7 +386,7 @@ function ProdutosTab() {
             ))}
             {filtrados.length === 0 && (
               <tr>
-                <td colSpan={9} className="px-4 py-8 text-center text-sm text-gray-400">
+                <td colSpan={10} className="px-4 py-8 text-center text-sm text-gray-400">
                   Nenhum item encontrado.
                 </td>
               </tr>
@@ -386,6 +442,7 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
   const categoriaPlaceholder =
     tipo === "GERAL" ? "ex: Material de Escritório, Itens Veicular, Insumos Alojamento" : "opcional";
   const [ca, setCa] = useState("");
+  const [fabricante, setFabricante] = useState("");
   const [tamanho, setTamanho] = useState("");
   const [unidade, setUnidade] = useState("UNID");
   const [valorUnitario, setValorUnitario] = useState("");
@@ -408,6 +465,7 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
         tipo,
         categoria: categoria.trim() || null,
         ca: ca.trim() || null,
+        fabricante: fabricante.trim() || null,
         tamanho: tamanho.trim() || null,
         unidade: unidade.trim() || "UNID",
       }),
@@ -469,6 +527,11 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
             <input value={tamanho} onChange={(e) => setTamanho(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
           </label>
         </div>
+
+        <label className="mb-3 block text-sm">
+          <span className="mb-1 block text-xs font-medium text-gray-500">Fabricante (opcional)</span>
+          <input value={fabricante} onChange={(e) => setFabricante(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
+        </label>
 
         <div className="mb-4 grid grid-cols-2 gap-2">
           <label className="block text-sm">

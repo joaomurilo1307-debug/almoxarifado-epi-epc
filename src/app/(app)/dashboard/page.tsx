@@ -14,6 +14,8 @@ type DashboardData = {
   itensComCusto: number;
   porContrato: { contrato: { id: string; codigo: string; nome: string | null }; totalItens: number; abaixoMinimo: number }[];
   porCategoria: { tipo: string; categoria: string | null; total: number; abaixoMinimo: number }[];
+  maisUsados: { produto: string; quantidade: number }[];
+  consumoPorContrato: { contrato: string; quantidade: number }[];
   totalCriticos: number;
   criticos: {
     produto: string;
@@ -22,9 +24,12 @@ type DashboardData = {
     contrato: string;
     estoqueAtual: number;
     estoqueMinimo: number;
+    minimoSugerido: number;
     necessidade: number;
     valorNecessidade: number | null;
   }[];
+  totalEmAtencao: number;
+  emAtencao: { produto: string; contrato: string; estoqueAtual: number; estoqueMinimo: number }[];
   ultimasMovimentacoes: {
     id: string;
     tipo: "ENTRADA" | "SAIDA";
@@ -117,10 +122,11 @@ export default function AlmoxarifadoDashboard() {
         </button>
       </div>
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <KpiCard label="Contratos monitorados" value={data.totalContratos} accent="bg-brand" />
         <KpiCard label="Colaboradores ativos" value={data.colaboradoresAtivos} accent="bg-brand-dark" />
-        <KpiCard label="Itens abaixo do mínimo" value={data.itensAbaixoMinimo} accent="bg-accent" />
+        <KpiCard label="🟡 Perto do mínimo" value={data.totalEmAtencao} accent="bg-amber-400" />
+        <KpiCard label="🔴 Itens abaixo do mínimo" value={data.itensAbaixoMinimo} accent="bg-accent" />
         <KpiCard label="Unidades a comprar (total)" value={data.necessidadeTotalCompra} accent="bg-accent-dark" />
       </div>
 
@@ -181,6 +187,52 @@ export default function AlmoxarifadoDashboard() {
         </div>
       </div>
 
+      <div className="mb-6 grid gap-6 lg:grid-cols-2">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 className="mb-1 text-sm font-semibold text-gray-700">📈 Itens mais usados</h2>
+          <p className="mb-4 text-xs text-gray-400">Ranking pelo total de saídas já registradas no histórico.</p>
+          <div className="space-y-2.5">
+            {data.maisUsados.map((m, i) => {
+              const max = data.maisUsados[0]?.quantidade || 1;
+              return (
+                <div key={i}>
+                  <div className="mb-1 flex items-center justify-between text-xs">
+                    <span className="font-medium text-gray-700">{m.produto}</span>
+                    <span className="font-semibold text-gray-500">{m.quantidade}</span>
+                  </div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                    <div className="h-full rounded-full bg-gradient-to-r from-brand to-brand-dark" style={{ width: `${Math.max(4, (m.quantidade / max) * 100)}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+            {data.maisUsados.length === 0 && <p className="text-sm text-gray-400">Nenhuma saída registrada ainda.</p>}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 className="mb-1 text-sm font-semibold text-gray-700">📍 Onde consome mais</h2>
+          <p className="mb-4 text-xs text-gray-400">Total de unidades retiradas, por contrato.</p>
+          <div className="space-y-2.5">
+            {data.consumoPorContrato.map((c, i) => {
+              const max = data.consumoPorContrato[0]?.quantidade || 1;
+              return (
+                <div key={i}>
+                  <div className="mb-1 flex items-center justify-between text-xs">
+                    <span className="font-medium text-gray-700">{c.contrato}</span>
+                    <span className="font-semibold text-gray-500">{c.quantidade}</span>
+                  </div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                    <div className="h-full rounded-full bg-gradient-to-r from-accent to-accent-dark" style={{ width: `${Math.max(4, (c.quantidade / max) * 100)}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+            {data.consumoPorContrato.length === 0 && <p className="text-sm text-gray-400">Nenhuma saída registrada ainda.</p>}
+          </div>
+        </div>
+      </div>
+
       <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-gray-700">🔴 Itens críticos — o que comprar agora</h2>
@@ -202,6 +254,7 @@ export default function AlmoxarifadoDashboard() {
                   <th className="pb-2">Contrato</th>
                   <th className="pb-2 text-right">Atual</th>
                   <th className="pb-2 text-right">Mínimo</th>
+                  <th className="pb-2 text-right" title="Calculado ao vivo: efetivo do contrato × % de contingência">Sugestão</th>
                   <th className="pb-2 text-right">Comprar</th>
                   <th className="pb-2 text-right">Custo estimado</th>
                 </tr>
@@ -216,6 +269,7 @@ export default function AlmoxarifadoDashboard() {
                     <td className="py-2 text-gray-500">{c.contrato}</td>
                     <td className="py-2 text-right text-gray-500">{c.estoqueAtual}</td>
                     <td className="py-2 text-right text-gray-500">{c.estoqueMinimo}</td>
+                    <td className="py-2 text-right text-gray-400">{c.minimoSugerido}</td>
                     <td className="py-2 text-right font-semibold text-accent">{c.necessidade}</td>
                     <td className="py-2 text-right text-gray-400">{c.valorNecessidade !== null ? fmtMoney(c.valorNecessidade) : "—"}</td>
                   </tr>
@@ -225,6 +279,25 @@ export default function AlmoxarifadoDashboard() {
           </div>
         )}
       </div>
+
+      {data.emAtencao.length > 0 && (
+        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50/40 p-5 shadow-sm">
+          <h2 className="mb-1 text-sm font-semibold text-gray-700">🟡 Perto do mínimo — fique de olho</h2>
+          <p className="mb-4 text-xs text-gray-400">
+            Ainda não é crítico, mas já está a menos de 20% acima do mínimo — se não repor, vira "Comprar" em breve.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {data.emAtencao.map((e, i) => (
+              <div key={i} className="rounded-xl bg-white px-4 py-2.5 text-sm shadow-sm">
+                <p className="font-medium text-gray-700">{e.produto}</p>
+                <p className="text-xs text-gray-400">
+                  {e.contrato} · atual {e.estoqueAtual} / mínimo {e.estoqueMinimo}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
         <h2 className="mb-4 text-sm font-semibold text-gray-700">Últimas movimentações</h2>

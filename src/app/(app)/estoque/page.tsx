@@ -16,20 +16,19 @@ type EstoqueRow = {
   estoqueMinimo: number;
   minimoSugerido: number;
   necessidade: number;
-  status: "OK" | "COMPRAR";
+  status: "OK" | "ATENCAO" | "COMPRAR";
   valorEmEstoque: number | null;
 };
 
-function StatusBadge({ status }: { status: "OK" | "COMPRAR" }) {
-  return (
-    <span
-      className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-        status === "COMPRAR" ? "bg-rose-50 text-rose-600" : "bg-brand-light text-brand-dark"
-      }`}
-    >
-      {status === "COMPRAR" ? "Comprar" : "OK"}
-    </span>
-  );
+function StatusBadge({ status }: { status: "OK" | "ATENCAO" | "COMPRAR" }) {
+  const estilo =
+    status === "COMPRAR"
+      ? "bg-rose-50 text-rose-600"
+      : status === "ATENCAO"
+        ? "bg-amber-50 text-amber-600"
+        : "bg-brand-light text-brand-dark";
+  const texto = status === "COMPRAR" ? "Comprar" : status === "ATENCAO" ? "Atenção" : "OK";
+  return <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${estilo}`}>{texto}</span>;
 }
 
 function fmtMoney(v: number) {
@@ -56,7 +55,7 @@ export default function EstoquePage() {
   const [rows, setRows] = useState<EstoqueRow[]>([]);
   const [contratoFiltro, setContratoFiltro] = useState<string>("");
   const [grupoFiltro, setGrupoFiltro] = useState<string>("");
-  const [statusFiltro, setStatusFiltro] = useState<"" | "COMPRAR" | "OK">("");
+  const [statusFiltro, setStatusFiltro] = useState<"" | "COMPRAR" | "ATENCAO" | "OK">("");
   const [busca, setBusca] = useState("");
   const [modalRow, setModalRow] = useState<EstoqueRow | null>(null);
   const [editandoMinimo, setEditandoMinimo] = useState<string | null>(null);
@@ -155,6 +154,7 @@ export default function EstoquePage() {
         >
           <option value="">Todos os status</option>
           <option value="COMPRAR">🔴 Precisa comprar</option>
+          <option value="ATENCAO">🟡 Perto do mínimo</option>
           <option value="OK">✅ OK</option>
         </select>
         <input
@@ -172,6 +172,7 @@ export default function EstoquePage() {
             <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
               <th className="px-4 py-3" />
               <th className="px-4 py-3">Produto</th>
+              <th className="px-4 py-3">Código</th>
               <th className="px-4 py-3">Contrato</th>
               <th className="px-4 py-3 text-right">Inicial</th>
               <th className="px-4 py-3 text-right">Entradas</th>
@@ -196,11 +197,14 @@ export default function EstoquePage() {
                 </td>
                 <td className="px-4 py-2.5">
                   <p className="font-medium text-gray-700">{r.produto.nome}</p>
-                  <p className="text-xs text-gray-400">
-                    {r.produto.ca && <span>CA {r.produto.ca}</span>}
-                    {r.produto.ca && r.produto.categoria && <span> · </span>}
-                    {r.produto.categoria && <span>{r.produto.categoria}</span>}
-                  </p>
+                  {r.produto.categoria && <p className="text-xs text-gray-400">{r.produto.categoria}</p>}
+                </td>
+                <td className="px-4 py-2.5">
+                  {r.produto.ca ? (
+                    <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-xs font-semibold text-gray-600">CA {r.produto.ca}</span>
+                  ) : (
+                    <span className="text-xs text-gray-300">—</span>
+                  )}
                 </td>
                 <td className="px-4 py-2.5 text-gray-500">{r.contrato?.codigo ?? "Geral"}</td>
                 <td className="px-4 py-2.5 text-right text-gray-500">{r.estoqueInicial}</td>
@@ -257,7 +261,7 @@ export default function EstoquePage() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={11} className="px-4 py-8 text-center text-sm text-gray-400">
+                <td colSpan={12} className="px-4 py-8 text-center text-sm text-gray-400">
                   Nenhum item encontrado. Importe uma planilha em "Importar planilha".
                 </td>
               </tr>
