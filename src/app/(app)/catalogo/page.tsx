@@ -117,7 +117,9 @@ function compararTamanho(a: string, b: string) {
   return higienizada(a) - higienizada(b);
 }
 
-type Grupo = { chave: string; itens: Produto[] };
+// `chave` identifica o grupo de verdade (nome+tipo, nunca colide) — `nome` é
+// só o texto pra mostrar na tela.
+type Grupo = { chave: string; nome: string; itens: Produto[] };
 
 function ProdutosTab() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -183,19 +185,28 @@ function ProdutosTab() {
     [produtos, busca, filtroTipo, filtroFabricante]
   );
 
-  // Agrupa por nome — depois da migração de tamanhos, o nome já é a base
-  // limpa do equipamento (ex.: "BOTA DE SEGURANÇA MARLUVAS - CA42374") e o
-  // que varia por tamanho fica só no campo `tamanho`. Item sem variação de
-  // tamanho vira um grupo de 1 — renderiza igual a antes, sem drill-down.
+  // Agrupa por nome+tipo — depois da migração de tamanhos, o nome já é a
+  // base limpa do equipamento (ex.: "BOTA DE SEGURANÇA MARLUVAS - CA42374")
+  // e o que varia por tamanho fica só no campo `tamanho`. Item sem variação
+  // de tamanho vira um grupo de 1 — renderiza igual a antes, sem drill-down.
+  // Inclui o tipo na chave de propósito: um nome igual com tipo diferente
+  // (ex.: import antigo categorizou errado) não pode virar um grupo só —
+  // já aconteceu uma vez (ver correção de tipo no migrate-tamanhos) e
+  // misturar tipo escondido dentro do mesmo card seria pior que não agrupar.
   const grupos = useMemo<Grupo[]>(() => {
     const map = new Map<string, Produto[]>();
     for (const p of filtrados) {
-      if (!map.has(p.nome)) map.set(p.nome, []);
-      map.get(p.nome)!.push(p);
+      const chave = `${p.nome}__${p.tipo}`;
+      if (!map.has(chave)) map.set(chave, []);
+      map.get(chave)!.push(p);
     }
     return [...map.entries()]
-      .map(([chave, itens]) => ({ chave, itens: [...itens].sort((a, b) => compararTamanho(a.tamanho ?? "", b.tamanho ?? "")) }))
-      .sort((a, b) => a.chave.localeCompare(b.chave));
+      .map(([chave, itens]) => ({
+        chave,
+        nome: itens[0].nome,
+        itens: [...itens].sort((a, b) => compararTamanho(a.tamanho ?? "", b.tamanho ?? "")),
+      }))
+      .sort((a, b) => a.nome.localeCompare(b.nome));
   }, [filtrados]);
 
   async function salvarFabricante(id: string) {
@@ -607,7 +618,7 @@ function GrupoTamanhos({
           <button onClick={() => setEscolhendoFotoDoGrupo(grupo, ed)} className="block h-11 w-11 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
             {primeiro.fotoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={primeiro.fotoUrl} alt={grupo.chave} className="h-full w-full object-contain" />
+              <img src={primeiro.fotoUrl} alt={grupo.nome} className="h-full w-full object-contain" />
             ) : (
               <span className="flex h-full w-full items-center justify-center text-[10px] text-gray-300">sem foto</span>
             )}
@@ -616,7 +627,7 @@ function GrupoTamanhos({
         <td className="px-4 py-2.5">
           <button onClick={toggle} className="flex items-center gap-2 text-left font-semibold text-gray-700 hover:text-brand-dark">
             <span className="text-xs text-brand-dark">{aberto ? "▾" : "▸"}</span>
-            {grupo.chave}
+            {grupo.nome}
           </button>
         </td>
         <td className="px-4 py-2.5">

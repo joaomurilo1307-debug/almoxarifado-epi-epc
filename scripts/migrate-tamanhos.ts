@@ -116,6 +116,31 @@ const REGRAS: Regra[] = [
     match: /^CAMISA JALECO (PP|P|M|GG|G|XG|XXG)(\s*\(HIGIENIZADA\))?$/i,
     extrai: (m) => ({ novoNome: "CAMISA JALECO", tamanho: m[1].toUpperCase() + (m[2] ? " (Higienizada)" : "") }),
   },
+  // Achados na segunda varredura (30/08/2026, pedido do João: "faltou os
+  // blocos nos equipamentos, faltou separar") — três famílias que a primeira
+  // auditoria não pegou porque o padrão de nome era diferente dos outros.
+  // Cor continua sendo tratada como item diferente (verde ≠ laranja), só o
+  // tamanho é que sai do nome.
+  {
+    descricao: "Colete verde",
+    match: /^COLETE VERDE - (G|GG|M)$/i,
+    extrai: (m) => ({ novoNome: "COLETE VERDE", tamanho: m[1].toUpperCase() }),
+  },
+  {
+    descricao: "Colete laranja",
+    match: /^COLETE LARANJA - (G|GG|M|P|PP|XG)$/i,
+    extrai: (m) => ({ novoNome: "COLETE LARANJA", tamanho: m[1].toUpperCase() }),
+  },
+  {
+    descricao: "Colete refletivo",
+    match: /^COLETE REFLETIVO TAMANHO (G|GG|M|P|PP|XG)$/i,
+    extrai: (m) => ({ novoNome: "COLETE REFLETIVO", tamanho: m[1].toUpperCase() }),
+  },
+  {
+    descricao: "Jaleco policoton leve",
+    match: /^JALECO POLICOTON LEVE TAMANHO (PP|P|M|GG|G|XG|EXG|XXG)$/i,
+    extrai: (m) => ({ novoNome: "JALECO POLICOTON LEVE", tamanho: m[1].toUpperCase() }),
+  },
 ];
 
 async function repointEstoqueEMovimentacao(deId: string, paraId: string) {
@@ -173,6 +198,15 @@ async function main() {
       break;
     }
   }
+
+  // Achado na revisão do dashboard: "CAMISA DE MALHA" tamanho EXG ficou tipo
+  // EPI (herdou do import ECC) enquanto as outras 14 variantes da mesma peça
+  // são FARDAMENTO — mesma peça de roupa, categoria tem que ser igual.
+  const corrigidoTipo = await prisma.epiProduto.updateMany({
+    where: { nome: "CAMISA DE MALHA", tamanho: "EXG", tipo: "EPI" },
+    data: { tipo: "FARDAMENTO" },
+  });
+  if (corrigidoTipo.count > 0) console.log(`[correção de tipo] "CAMISA DE MALHA (EXG)": EPI -> FARDAMENTO`);
 
   console.log(`\nConcluído: ${mergeados} duplicidades reais fundidas, ${renomeados} produtos com tamanho separado do nome.`);
 }
