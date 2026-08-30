@@ -7,12 +7,13 @@ type Regra = { id: string; funcao: string; categoria: string; descricao: string;
 type Produto = {
   id: string;
   nome: string;
-  tipo: "EPI" | "EPC" | "FARDAMENTO";
+  tipo: "EPI" | "EPC" | "FARDAMENTO" | "GERAL";
   categoria: string | null;
   ca: string | null;
   tamanho: string | null;
   unidade: string;
   valorUnitario: number | null;
+  percentualContingencia: number | null;
   fotoUrl: string | null;
   ativo: boolean;
 };
@@ -90,12 +91,22 @@ export default function CatalogoPage() {
   );
 }
 
+const TIPO_LABEL: Record<Produto["tipo"], string> = {
+  EPI: "EPI",
+  EPC: "EPC",
+  FARDAMENTO: "Fardamento",
+  GERAL: "Geral",
+};
+
 function ProdutosTab() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [busca, setBusca] = useState("");
+  const [filtroTipo, setFiltroTipo] = useState<"" | Produto["tipo"]>("");
   const [showForm, setShowForm] = useState(false);
   const [editando, setEditando] = useState<string | null>(null);
   const [rascunho, setRascunho] = useState("");
+  const [editandoPct, setEditandoPct] = useState<string | null>(null);
+  const [rascunhoPct, setRascunhoPct] = useState("");
   const [escolhendoFoto, setEscolhendoFoto] = useState<string | null>(null);
   const [autoFotoRodando, setAutoFotoRodando] = useState(false);
   const [autoFotoResultado, setAutoFotoResultado] = useState<string | null>(null);
@@ -106,9 +117,31 @@ function ProdutosTab() {
   useEffect(reload, []);
 
   const filtrados = useMemo(
-    () => produtos.filter((p) => p.ativo && (!busca || p.nome.toLowerCase().includes(busca.toLowerCase()))),
-    [produtos, busca]
+    () =>
+      produtos.filter(
+        (p) =>
+          p.ativo &&
+          (!busca || p.nome.toLowerCase().includes(busca.toLowerCase())) &&
+          (!filtroTipo || p.tipo === filtroTipo)
+      ),
+    [produtos, busca, filtroTipo]
   );
+
+  async function salvarPct(id: string, pctInteiro: number | null) {
+    const pct = pctInteiro === null ? null : Math.min(100, Math.max(0, pctInteiro)) / 100;
+    await fetch(`/api/epi/produtos/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ percentualContingencia: pct }),
+    });
+    setEditandoPct(null);
+    setProdutos((prev) => prev.map((p) => (p.id === id ? { ...p, percentualContingencia: pct } : p)));
+  }
+
+  function ajustarPct(p: Produto, delta: number) {
+    const atual = Math.round((p.percentualContingencia ?? 0.1) * 100);
+    salvarPct(p.id, atual + delta);
+  }
 
   async function salvarValor(id: string) {
     const valor = rascunho.trim() === "" ? null : parseFloat(rascunho.replace(",", "."));
@@ -156,6 +189,17 @@ function ProdutosTab() {
           placeholder="Buscar item..."
           className="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm"
         />
+        <select
+          value={filtroTipo}
+          onChange={(e) => setFiltroTipo(e.target.value as any)}
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        >
+          <option value="">Todos os tipos</option>
+          <option value="EPI">EPI</option>
+          <option value="EPC">EPC</option>
+          <option value="FARDAMENTO">Fardamento</option>
+          <option value="GERAL">Geral (escritório, veicular, alojamento...)</option>
+        </select>
         <span className="text-xs text-gray-400">{filtrados.length} itens ativos</span>
         <button
           onClick={rodarAutoFoto}
@@ -185,6 +229,7 @@ function ProdutosTab() {
               <th className="px-4 py-3">Tamanho</th>
               <th className="px-4 py-3">Unid.</th>
               <th className="px-4 py-3 text-right">Valor unitário</th>
+              <th className="px-4 py-3 text-center">% Contingência</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
@@ -203,7 +248,8 @@ function ProdutosTab() {
                 </td>
                 <td className="px-4 py-2.5 font-medium text-gray-700">{p.nome}</td>
                 <td className="px-4 py-2.5">
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{p.tipo}</span>
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{TIPO_LABEL[p.tipo]}</span>
+                  {p.categoria && <span className="ml-1 text-xs text-gray-400">{p.categoria}</span>}
                 </td>
                 <td className="px-4 py-2.5 text-gray-500">{p.ca ?? "—"}</td>
                 <td className="px-4 py-2.5 text-gray-500">{p.tamanho ?? "—"}</td>
@@ -231,6 +277,50 @@ function ProdutosTab() {
                     </button>
                   )}
                 </td>
+                <td className="px-4 py-2.5">
+                  <div className="flex items-center justify-center gap-1">
+                    <button
+                      onClick={() => ajustarPct(p, -1)}
+                      className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 hover:bg-gray-200"
+                      aria-label="Diminuir"
+                    >
+                      −
+                    </button>
+                    {editandoPct === p.id ? (
+                      <input
+                        autoFocus
+                        value={rascunhoPct}
+                        onChange={(e) => setRascunhoPct(e.target.value)}
+                        onBlur={() => {
+                          const v = parseFloat(rascunhoPct.replace(",", "."));
+                          salvarPct(p.id, Number.isNaN(v) ? null : v);
+                        }}
+                        onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()}
+                        className="w-12 rounded border border-brand px-1 py-0.5 text-center text-xs font-semibold"
+                      />
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setEditandoPct(p.id);
+                          setRascunhoPct(p.percentualContingencia !== null ? String(Math.round(p.percentualContingencia * 100)) : "");
+                        }}
+                        title={p.percentualContingencia === null ? "Usando o % padrão do contrato — clique pra definir um específico" : "Clique pra digitar"}
+                        className={`w-14 rounded px-1 py-0.5 text-center text-xs font-semibold ${
+                          p.percentualContingencia !== null ? "bg-brand-light text-brand-dark" : "text-gray-400 underline decoration-dotted"
+                        }`}
+                      >
+                        {p.percentualContingencia !== null ? `${Math.round(p.percentualContingencia * 100)}%` : "padrão"}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => ajustarPct(p, 1)}
+                      className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 hover:bg-gray-200"
+                      aria-label="Aumentar"
+                    >
+                      +
+                    </button>
+                  </div>
+                </td>
                 <td className="px-4 py-2.5 text-right">
                   <button onClick={() => excluir(p.id)} className="text-xs text-gray-400 hover:text-rose-600">
                     Remover
@@ -240,7 +330,7 @@ function ProdutosTab() {
             ))}
             {filtrados.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-8 text-center text-sm text-gray-400">
+                <td colSpan={9} className="px-4 py-8 text-center text-sm text-gray-400">
                   Nenhum item encontrado.
                 </td>
               </tr>
@@ -289,8 +379,12 @@ function ProdutosTab() {
 
 function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
   const [nome, setNome] = useState("");
-  const [tipo, setTipo] = useState<"EPI" | "EPC" | "FARDAMENTO">("EPI");
+  const [tipo, setTipo] = useState<"EPI" | "EPC" | "FARDAMENTO" | "GERAL">("EPI");
   const [categoria, setCategoria] = useState("");
+  // Placeholder muda pra dar exemplo certo quando tipo=GERAL, já que aí
+  // "categoria" vira a prateleira do item (escritório/veicular/alojamento...)
+  const categoriaPlaceholder =
+    tipo === "GERAL" ? "ex: Material de Escritório, Itens Veicular, Insumos Alojamento" : "opcional";
   const [ca, setCa] = useState("");
   const [tamanho, setTamanho] = useState("");
   const [unidade, setUnidade] = useState("UNID");
@@ -351,7 +445,18 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
             <option value="EPI">EPI</option>
             <option value="EPC">EPC</option>
             <option value="FARDAMENTO">Fardamento</option>
+            <option value="GERAL">Geral (escritório, veicular, alojamento...)</option>
           </select>
+        </label>
+
+        <label className="mb-3 block text-sm">
+          <span className="mb-1 block text-xs font-medium text-gray-500">Categoria</span>
+          <input
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            placeholder={categoriaPlaceholder}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2"
+          />
         </label>
 
         <div className="mb-3 grid grid-cols-2 gap-2">

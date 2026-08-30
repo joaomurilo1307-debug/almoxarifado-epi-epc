@@ -1,0 +1,996 @@
+{
+  "epis": [
+    {
+      "nome": "ABAFADOR DE RUIDOS TP CONCHA ACOPLAR",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 20,
+      "estoqueMinimo": 30,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "ADAPTADOR COM PROTETOR FACIAL PARA VISEIRA LIBUS",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 40,
+      "estoqueMinimo": 20,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "AVENTAL DE PVC",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 10,
+      "estoqueMinimo": 5,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BAINHA COURO P/ FACÃO",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 35",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 36",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 37",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 3,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 38",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 4,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 39",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 40",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 41",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 42",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 1,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 43",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 1,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 44",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA COM CADARÇO BICO COMPOSITE TAMANHO 45",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA MOTOSSERRISTA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 35",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 2,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 36",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 2,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 37",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 38",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 39",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 4,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 40",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 41",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 42",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 43",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 44",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 1,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "BOTA SEM CADARÇO BICO COMPOSITE TAMANHO 45",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CALÇA POLICOTON LEVE TAMANHO 38",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 31,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CALÇA POLICOTON LEVE TAMANHO 40",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 3,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CALÇA POLICOTON LEVE TAMANHO 42",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 16,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CALÇA POLICOTON LEVE TAMANHO 44",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 9,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CALÇA POLICOTON LEVE TAMANHO 46",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 8,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CALÇA POLICOTON LEVE TAMANHO 48",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 6,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CALÇA POLICOTON LEVE TAMANHO 50",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 3,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CALÇA POLICOTON LEVE TAMANHO 52",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CALÇA POLICOTON LEVE TAMANHO 56",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 5,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAMISA DE MALHA TAMANHO EXG",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 1,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAMISA DE MALHA TAMANHO G",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 54,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAMISA DE MALHA TAMANHO GG",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 1,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAMISA DE MALHA TAMANHO M",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 28,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAMISA DE MALHA TAMANHO P",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 15,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAPA DE CHUVA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAPACETE CLACE B BRANCO",
+      "ca": "498",
+      "estoqueInicial": 0,
+      "estoqueAtual": 9,
+      "estoqueMinimo": 4,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAPACETE CLACE B CINZA",
+      "ca": "498",
+      "estoqueInicial": 0,
+      "estoqueAtual": 8,
+      "estoqueMinimo": 4,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAPACETE CLASE B AZUL",
+      "ca": "498",
+      "estoqueInicial": 0,
+      "estoqueAtual": 12,
+      "estoqueMinimo": 6,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CAPACETE CLASE B LARANJA",
+      "ca": "498",
+      "estoqueInicial": 0,
+      "estoqueAtual": 34,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CHAPEU DE PALHA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "CLIP PORTA LUVAS DE SEGURANÇA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 40,
+      "estoqueMinimo": 15,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "COLETE REFLETIVO TAMANHO G",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "COLETE REFLETIVO TAMANHO GG",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "COLETE REFLETIVO TAMANHO M",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "FITA P/DEMARCAÇÃO S/ADESIVO ZEBRADA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "JALECO POLICOTON LEVE TAMANHO EXG",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 2,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "JALECO POLICOTON LEVE TAMANHO XG",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 26,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "JALECO POLICOTON LEVE TAMANHO G",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 27,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "JALECO POLICOTON LEVE TAMANHO GG",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 81,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "JALECO POLICOTON LEVE TAMANHO M",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "JALECO POLICOTON LEVE TAMANHO P",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 10,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "JUGULAR PARA CAPACETE",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 37,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "KIT MOTOSSERRISTA UNIFOEME",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "LUVA AGENTES MECANICOS",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "LUVA ANTI IMPACTO",
+      "ca": "44549",
+      "estoqueInicial": 0,
+      "estoqueAtual": 8,
+      "estoqueMinimo": 4,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "LUVA DE PVC",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 15,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "LUVA DE RASPA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "LUVA DE SEGURANÇA DESCATAVEL 8X100 UND",
+      "ca": "13030",
+      "estoqueInicial": 0,
+      "estoqueAtual": 8,
+      "estoqueMinimo": 4,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "LUVA NITRILICA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 8,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "LUVA PU CUT ANTI CORTE",
+      "ca": "42941",
+      "estoqueInicial": 0,
+      "estoqueAtual": 6,
+      "estoqueMinimo": 3,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "LUVA TATIL BLACK",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "LUVA VAQUETA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "MANGOTE DE MALHA FIBRA ARAMIDA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "OCULOS BANDA ELASTICA INCOLOR",
+      "ca": "28436",
+      "estoqueInicial": 0,
+      "estoqueAtual": 15,
+      "estoqueMinimo": 6,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "OCULOS BANDA ELASTICA PRETO",
+      "ca": "28436",
+      "estoqueInicial": 0,
+      "estoqueAtual": 15,
+      "estoqueMinimo": 6,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "OCULOS DE SEGURANÇA ANTIRRISCO CINZA",
+      "ca": "12572",
+      "estoqueInicial": 0,
+      "estoqueAtual": 10,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "OCULOS DE SEGURANÇA ANTIRRISCO INCOLOR",
+      "ca": "12572",
+      "estoqueInicial": 0,
+      "estoqueAtual": 53,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "OCULOS SEGURANÇA SOBREPOR",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "PERNEIRA DE BEDIM COM JOELHEIRA - TECMATER",
+      "ca": "41818",
+      "estoqueInicial": 0,
+      "estoqueAtual": 4,
+      "estoqueMinimo": 2,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "PERNEIRA DE BEDIM JOELHEIRA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "PROTETOR SOLAR COM REPELENTE",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "REPELENTE",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "RESPIRADOR C/ VALVULA PFF2",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "RESPIRADOR SEMIFACIAL C/ FILTRO CARBOGRAFITE",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 0,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "TOUCA ARABE COM ABA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 25,
+      "estoqueMinimo": 15,
+      "categoria": "EPI"
+    },
+    {
+      "nome": "TOUCA ARABE SEM ABA",
+      "ca": null,
+      "estoqueInicial": 0,
+      "estoqueAtual": 3,
+      "estoqueMinimo": 0,
+      "categoria": "EPI"
+    }
+  ],
+  "deposito": [
+    {
+      "nome": "CONE DE SINALIZAÇÃO/REFLETIVO LARANJA",
+      "ca": null,
+      "estoqueInicial": 8,
+      "estoqueAtual": 8,
+      "estoqueMinimo": 3,
+      "categoria": "Depósito Geral"
+    }
+  ],
+  "escritorio": [
+    {
+      "nome": "APONTADOR LEO&LEO",
+      "ca": null,
+      "estoqueInicial": 5,
+      "estoqueAtual": 5,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "BLOCOS ADESIVOS, 100 FOLHAS POR BLOCK",
+      "ca": null,
+      "estoqueInicial": 20,
+      "estoqueAtual": 20,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "BORRACHA BRANCA, PREMIER",
+      "ca": null,
+      "estoqueInicial": 5,
+      "estoqueAtual": 5,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "CANETA BIC CRISTAL CRISTAL AZUL",
+      "ca": null,
+      "estoqueInicial": 100,
+      "estoqueAtual": 100,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "CANETA BIC CRISTAL CRISTAL VERMELHA",
+      "ca": null,
+      "estoqueInicial": 100,
+      "estoqueAtual": 100,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "CAPA PARA ENCADERNAÇÃO PRETA",
+      "ca": null,
+      "estoqueInicial": 50,
+      "estoqueAtual": 50,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "CAPA PARA ENCADERNAÇÃO TRANSPARENTE",
+      "ca": null,
+      "estoqueInicial": 50,
+      "estoqueAtual": 50,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "CLIPS TOP Nº 2/0,725 UNIDADES",
+      "ca": null,
+      "estoqueInicial": 3,
+      "estoqueAtual": 3,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "CLIPS TOP Nº 3/0,440 UNIDADES",
+      "ca": null,
+      "estoqueInicial": 3,
+      "estoqueAtual": 3,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "COLA BASTÃO Scotch",
+      "ca": null,
+      "estoqueInicial": 10,
+      "estoqueAtual": 10,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "CORRETIVO LIQUIDO RADEX",
+      "ca": null,
+      "estoqueInicial": 5,
+      "estoqueAtual": 5,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "CRACHA VERT. C/ CLIPS REMOVIVEL",
+      "ca": null,
+      "estoqueInicial": 50,
+      "estoqueAtual": 50,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "ESPIRAL PLASTICO PARA ENCADERNAÇÃO",
+      "ca": null,
+      "estoqueInicial": 50,
+      "estoqueAtual": 50,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "FITA ADESIVA CRISTAL",
+      "ca": null,
+      "estoqueInicial": 50,
+      "estoqueAtual": 50,
+      "estoqueMinimo": 20,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "FITA CORRETIVA, MASTERPRINT",
+      "ca": null,
+      "estoqueInicial": 5,
+      "estoqueAtual": 5,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "GRAMPEADOR METAL 15,5cm",
+      "ca": null,
+      "estoqueInicial": 2,
+      "estoqueAtual": 2,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "GRAMPOS GALVANIZADOS CIS 10 CAIXAS COM 5.000",
+      "ca": null,
+      "estoqueInicial": 10,
+      "estoqueAtual": 10,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "GRAMPOS ROCAMA 10 CAIXAS COM 3500",
+      "ca": null,
+      "estoqueInicial": 10,
+      "estoqueAtual": 10,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "MARCADOR TEXTO AMARELO",
+      "ca": null,
+      "estoqueInicial": 12,
+      "estoqueAtual": 12,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "MARCADOR TEXTO VERDE",
+      "ca": null,
+      "estoqueInicial": 12,
+      "estoqueAtual": 12,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "MAUSE USB COM FIO MS-31",
+      "ca": null,
+      "estoqueInicial": 15,
+      "estoqueAtual": 14,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "MOUSEPAD, BASE ANTIDERRAPANTE GAMER",
+      "ca": null,
+      "estoqueInicial": 30,
+      "estoqueAtual": 30,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "PAPEL SENNINHA A4 100 FOLHAS",
+      "ca": null,
+      "estoqueInicial": 3,
+      "estoqueAtual": 3,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "PASTA SANFONADA A4 CRISTAL",
+      "ca": null,
+      "estoqueInicial": 1,
+      "estoqueAtual": 1,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "PILHA 2AA ALCALINA 2 PILHAS POR  BLISTER",
+      "ca": null,
+      "estoqueInicial": 25,
+      "estoqueAtual": 25,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "PILHA 2AAA ALCALINA 2 PILHAS POR  BLISTER",
+      "ca": null,
+      "estoqueInicial": 25,
+      "estoqueAtual": 25,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "PLASTICO PARA PLASTIFICAÇÃO A4",
+      "ca": null,
+      "estoqueInicial": 100,
+      "estoqueAtual": 100,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "PRANCHETA",
+      "ca": null,
+      "estoqueInicial": 5,
+      "estoqueAtual": 5,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "ROTULADOR ELETRONICO PT-M95",
+      "ca": null,
+      "estoqueInicial": 1,
+      "estoqueAtual": 1,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "TECLADO COM FIO TF150, MULTI",
+      "ca": null,
+      "estoqueInicial": 10,
+      "estoqueAtual": 10,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    },
+    {
+      "nome": "TESOURA DE ESCRITORIO JOCAR",
+      "ca": null,
+      "estoqueInicial": 2,
+      "estoqueAtual": 2,
+      "estoqueMinimo": 0,
+      "categoria": "Material de Escritório"
+    }
+  ],
+  "veicular": [
+    {
+      "nome": "PNEU FORZA A/T C1- 265/70R16 112T",
+      "ca": null,
+      "estoqueInicial": 4,
+      "estoqueAtual": 4,
+      "estoqueMinimo": 0,
+      "categoria": "Itens Veicular"
+    },
+    {
+      "nome": "TAPETE",
+      "ca": null,
+      "estoqueInicial": 2,
+      "estoqueAtual": 2,
+      "estoqueMinimo": 0,
+      "categoria": "Itens Veicular"
+    }
+  ],
+  "alojamento": [
+    {
+      "nome": "MANTA SOLTEIRO",
+      "ca": null,
+      "estoqueInicial": 5,
+      "estoqueAtual": 5,
+      "estoqueMinimo": 0,
+      "categoria": "Insumos Alojamento"
+    },
+    {
+      "nome": "LENÇOL SOLTEIRO SEM ELASTICO",
+      "ca": null,
+      "estoqueInicial": 20,
+      "estoqueAtual": 21,
+      "estoqueMinimo": 0,
+      "categoria": "Insumos Alojamento"
+    },
+    {
+      "nome": "LENÇOL SOLTEIRO COM ELASTICO",
+      "ca": null,
+      "estoqueInicial": 20,
+      "estoqueAtual": 20,
+      "estoqueMinimo": 0,
+      "categoria": "Insumos Alojamento"
+    },
+    {
+      "nome": "FRONHA ESTRELAR 50X70",
+      "ca": null,
+      "estoqueInicial": 11,
+      "estoqueAtual": 11,
+      "estoqueMinimo": 0,
+      "categoria": "Insumos Alojamento"
+    },
+    {
+      "nome": "TOALHA DE ROSTO OCEANO 43X66 CM",
+      "ca": null,
+      "estoqueInicial": 20,
+      "estoqueAtual": 20,
+      "estoqueMinimo": 0,
+      "categoria": "Insumos Alojamento"
+    },
+    {
+      "nome": "TOALHA DE BANHO OCEANO 68X135 CM",
+      "ca": null,
+      "estoqueInicial": 20,
+      "estoqueAtual": 20,
+      "estoqueMinimo": 0,
+      "categoria": "Insumos Alojamento"
+    }
+  ]
+}

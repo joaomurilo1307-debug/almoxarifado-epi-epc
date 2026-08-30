@@ -14,6 +14,7 @@ type EstoqueRow = {
   saidas: number;
   estoqueAtual: number;
   estoqueMinimo: number;
+  minimoSugerido: number;
   necessidade: number;
   status: "OK" | "COMPRAR";
   valorEmEstoque: number | null;
@@ -80,6 +81,15 @@ export default function EstoquePage() {
       body: JSON.stringify({ estoqueMinimo: valor }),
     });
     setEditandoMinimo(null);
+    reload();
+  }
+
+  async function aplicarSugestao(id: string, sugerido: number) {
+    await fetch(`/api/epi/estoque/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ estoqueMinimo: sugerido }),
+    });
     reload();
   }
 
@@ -156,16 +166,27 @@ export default function EstoquePage() {
                       className="w-16 rounded border border-brand px-1 py-0.5 text-right text-sm"
                     />
                   ) : (
-                    <button
-                      onClick={() => {
-                        setEditandoMinimo(r.id);
-                        setMinimoRascunho(String(r.estoqueMinimo));
-                      }}
-                      className="rounded px-1 text-gray-500 underline decoration-dotted hover:text-brand-dark"
-                      title="Clique para editar o mínimo"
-                    >
-                      {r.estoqueMinimo}
-                    </button>
+                    <div>
+                      <button
+                        onClick={() => {
+                          setEditandoMinimo(r.id);
+                          setMinimoRascunho(String(r.estoqueMinimo));
+                        }}
+                        className="rounded px-1 text-gray-500 underline decoration-dotted hover:text-brand-dark"
+                        title="Clique para editar o mínimo"
+                      >
+                        {r.estoqueMinimo}
+                      </button>
+                      {r.minimoSugerido !== r.estoqueMinimo && (
+                        <button
+                          onClick={() => aplicarSugestao(r.id, r.minimoSugerido)}
+                          title="Sugestão calculada: efetivo do contrato × % de contingência do item (ou do contrato, se o item não tiver um % próprio)"
+                          className="block text-[10px] text-brand-dark hover:underline"
+                        >
+                          sugestão: {r.minimoSugerido}
+                        </button>
+                      )}
+                    </div>
                   )}
                 </td>
                 <td className="px-4 py-2.5 text-right text-gray-400">{r.valorEmEstoque !== null ? fmtMoney(r.valorEmEstoque) : "—"}</td>

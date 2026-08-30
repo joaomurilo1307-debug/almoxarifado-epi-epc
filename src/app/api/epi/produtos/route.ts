@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 
 const createSchema = z.object({
   nome: z.string().min(1),
-  tipo: z.enum(["EPI", "EPC", "FARDAMENTO"]).default("EPI"),
+  tipo: z.enum(["EPI", "EPC", "FARDAMENTO", "GERAL"]).default("EPI"),
   categoria: z.string().nullable().optional(),
   ca: z.string().nullable().optional(),
   tamanho: z.string().nullable().optional(),

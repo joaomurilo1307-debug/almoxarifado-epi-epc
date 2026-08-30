@@ -41,6 +41,9 @@ const estoqueItemSchema = z.object({
   estoqueInicial: z.number().default(0),
   estoqueMinimo: z.number().default(0),
   medida: z.string().nullable().optional(),
+  tipo: z.enum(["EPI", "EPC", "FARDAMENTO", "GERAL"]).optional(),
+  categoria: z.string().nullable().optional(),
+  ca: z.string().nullable().optional(),
 });
 
 const importSchema = z.object({
@@ -143,15 +146,20 @@ export async function POST(req: Request) {
   let estoqueImportado = 0;
   for (const e of estoque) {
     const nome = e.produto.trim();
-    const ca = extractCA(nome);
+    const ca = e.ca?.trim() || extractCA(nome);
     const produto = await upsertEpiProdutoPorNome(
       nome,
       null,
-      { ca, unidade: e.medida?.trim() || "UNID" },
-      { ca: ca ?? undefined, unidade: e.medida?.trim() || undefined }
+      { tipo: e.tipo, categoria: e.categoria ?? undefined, ca, unidade: e.medida?.trim() || "UNID" },
+      { ca: ca ?? undefined, unidade: e.medida?.trim() || undefined, categoria: e.categoria ?? undefined }
     );
     const cId = e.contrato ? await contratoId(e.contrato) : null;
-    await upsertEpiEstoque(produto.id, cId, { estoqueInicial: e.estoqueInicial, estoqueMinimo: e.estoqueMinimo });
+    // Mínimo nunca fica fracionado — arredonda pra cima antes de gravar (mesma
+    // regra usada em qualquer cálculo posterior de sugestão).
+    await upsertEpiEstoque(produto.id, cId, {
+      estoqueInicial: e.estoqueInicial,
+      estoqueMinimo: Math.max(0, Math.ceil(e.estoqueMinimo)),
+    });
     estoqueImportado++;
   }
 

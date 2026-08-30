@@ -26,6 +26,7 @@ enum EpiTipo {
   EPI
   EPC
   FARDAMENTO
+  GERAL
 }
 
 enum EpiMovimentoTipo {
@@ -86,6 +87,10 @@ model EpiProduto {
   tamanho       String?
   unidade       String   @default("UNID")
   valorUnitario Float?
+  // Override do % de contingência do contrato (Métricas), por item — null usa
+  // o % do contrato como padrão. Ex.: um item mais crítico pode pedir 20% em
+  // vez dos 10% gerais, sem mexer no % de todo mundo.
+  percentualContingencia Float?
   fotoUrl       String?
   ativo         Boolean  @default(true)
   createdAt     DateTime @default(now())

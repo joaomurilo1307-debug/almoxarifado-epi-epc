@@ -39,6 +39,10 @@ const REGRAS: { re: RegExp; foto: string }[] = [
   { re: /CAL[ÇC]A/i, foto: "044_Cal_a_brim_cinza_refletiva.jpeg" },
   { re: /CAMISA.*SOCIAL/i, foto: "045_Camisa_social.jpeg" },
   { re: /CAMISA.*POLO/i, foto: "046_Camisa_polo.png" },
+  // Jaleco/uniforme leve sem casamento mais específico — o item de referência
+  // mais próximo é o blusão/jaqueta de trabalho (não é a peça exata).
+  { re: /JALECO/i, foto: "047_Blus_o_Jaqueta_operador_de_motosserra.png" },
+  { re: /CAMISA/i, foto: "046_Camisa_polo.png" },
   { re: /BLUSA/i, foto: "043_Blusa_refletiva.jpeg" },
 ];
 
