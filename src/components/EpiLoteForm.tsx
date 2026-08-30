@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import NovoItemInline, { ProdutoCriado } from "./NovoItemInline";
 
 type Contrato = { id: string; codigo: string; nome: string | null };
 type Produto = { id: string; nome: string; unidade?: string };
 
 type Linha = { produtoId: string; quantidade: number };
+
+const NOVO_ITEM = "__novo__";
 
 // Lançamento em lote — pra dar entrada de uma compra grande (nota fiscal com
 // vários itens) numa tacada só, em vez de abrir o formulário item por item.
@@ -29,9 +32,19 @@ export default function EpiLoteForm({
   const [saving, setSaving] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [resultado, setResultado] = useState<number | null>(null);
+  const [produtosExtra, setProdutosExtra] = useState<Produto[]>([]);
+  const [cadastrandoNovoNaLinha, setCadastrandoNovoNaLinha] = useState<number | null>(null);
+
+  const todosProdutos = [...produtos, ...produtosExtra];
 
   function atualizarLinha(i: number, campo: keyof Linha, valor: string | number) {
     setLinhas((prev) => prev.map((l, idx) => (idx === i ? { ...l, [campo]: valor } : l)));
+  }
+
+  function produtoRecemCriado(i: number, p: ProdutoCriado) {
+    setProdutosExtra((prev) => [...prev, p]);
+    atualizarLinha(i, "produtoId", p.id);
+    setCadastrandoNovoNaLinha(null);
   }
 
   function adicionarLinha() {
@@ -118,32 +131,43 @@ export default function EpiLoteForm({
             </label>
 
             <div className="mb-3 space-y-2">
-              {linhas.map((l, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <select
-                    value={l.produtoId}
-                    onChange={(e) => atualizarLinha(i, "produtoId", e.target.value)}
-                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                  >
-                    <option value="">Selecione o produto...</option>
-                    {produtos.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.nome}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="number"
-                    min={1}
-                    value={l.quantidade}
-                    onChange={(e) => atualizarLinha(i, "quantidade", parseInt(e.target.value, 10) || 1)}
-                    className="w-20 rounded-lg border border-gray-300 px-2 py-2 text-sm"
-                  />
-                  <button onClick={() => removerLinha(i)} className="shrink-0 text-xs text-gray-400 hover:text-rose-600">
-                    Remover
-                  </button>
-                </div>
-              ))}
+              {linhas.map((l, i) =>
+                cadastrandoNovoNaLinha === i ? (
+                  <NovoItemInline key={i} onCancel={() => setCadastrandoNovoNaLinha(null)} onCreated={(p) => produtoRecemCriado(i, p)} />
+                ) : (
+                  <div key={i} className="flex items-center gap-2">
+                    <select
+                      value={l.produtoId}
+                      onChange={(e) => {
+                        if (e.target.value === NOVO_ITEM) {
+                          setCadastrandoNovoNaLinha(i);
+                          return;
+                        }
+                        atualizarLinha(i, "produtoId", e.target.value);
+                      }}
+                      className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                    >
+                      <option value="">Selecione o produto...</option>
+                      {todosProdutos.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.nome}
+                        </option>
+                      ))}
+                      <option value={NOVO_ITEM}>+ Cadastrar item novo...</option>
+                    </select>
+                    <input
+                      type="number"
+                      min={1}
+                      value={l.quantidade}
+                      onChange={(e) => atualizarLinha(i, "quantidade", parseInt(e.target.value, 10) || 1)}
+                      className="w-20 rounded-lg border border-gray-300 px-2 py-2 text-sm"
+                    />
+                    <button onClick={() => removerLinha(i)} className="shrink-0 text-xs text-gray-400 hover:text-rose-600">
+                      Remover
+                    </button>
+                  </div>
+                )
+              )}
             </div>
 
             <button onClick={adicionarLinha} className="mb-4 text-sm font-medium text-brand-dark hover:underline">

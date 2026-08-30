@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Densidade padrão do sistema: reduz a escala geral (como um "zoom" de
+   navegador) pra caber mais coluna/linha na tela sem precisar rolar
+   horizontalmente e sem cortar nome de item/colaborador. Como tudo no
+   Tailwind é baseado em rem, isso encolhe a UI inteira de forma proporcional
+   (texto, espaçamento, ícones) — não é um ajuste isolado de uma página. */
+html {
+  font-size: 80%;
+}
+
 body {
   @apply text-ink;
   background-color: #f6f7f9;

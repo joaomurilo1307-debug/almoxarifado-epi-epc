@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import NovoItemInline, { ProdutoCriado } from "./NovoItemInline";
 
 type Contrato = { id: string; codigo: string; nome: string | null };
 type Produto = { id: string; nome: string; unidade?: string };
 type Colaborador = { id: string; nomeCompleto: string; contratoId: string };
+
+const NOVO_ITEM = "__novo__";
 
 export default function EpiMovimentacaoForm({
   contratos,
@@ -31,6 +34,16 @@ export default function EpiMovimentacaoForm({
   const [observacao, setObservacao] = useState("");
   const [saving, setSaving] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [produtosExtra, setProdutosExtra] = useState<Produto[]>([]);
+  const [cadastrandoNovo, setCadastrandoNovo] = useState(false);
+
+  const todosProdutos = [...produtos, ...produtosExtra];
+
+  function produtoRecemCriado(p: ProdutoCriado) {
+    setProdutosExtra((prev) => [...prev, p]);
+    setProdutoId(p.id);
+    setCadastrandoNovo(false);
+  }
 
   const colaboradoresDoContrato = colaboradores.filter((c) => !contratoId || c.contratoId === contratoId);
 
@@ -91,18 +104,35 @@ export default function EpiMovimentacaoForm({
           </label>
         )}
 
-        {!produtoFixo && (
+        {!produtoFixo && !cadastrandoNovo && (
           <label className="mb-3 block text-sm">
             <span className="mb-1 block text-xs font-medium text-gray-500">Produto</span>
-            <select value={produtoId} onChange={(e) => setProdutoId(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2">
+            <select
+              value={produtoId}
+              onChange={(e) => {
+                if (e.target.value === NOVO_ITEM) {
+                  setCadastrandoNovo(true);
+                  return;
+                }
+                setProdutoId(e.target.value);
+              }}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2"
+            >
               <option value="">Selecione...</option>
-              {produtos.map((p) => (
+              {todosProdutos.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.nome}
                 </option>
               ))}
+              <option value={NOVO_ITEM}>+ Cadastrar item novo...</option>
             </select>
           </label>
+        )}
+
+        {!produtoFixo && cadastrandoNovo && (
+          <div className="mb-3">
+            <NovoItemInline onCancel={() => setCadastrandoNovo(false)} onCreated={produtoRecemCriado} />
+          </div>
         )}
 
         <label className="mb-3 block text-sm">
