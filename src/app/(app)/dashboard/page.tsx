@@ -13,8 +13,18 @@ type DashboardData = {
   valorNecessidadeTotal: number;
   itensComCusto: number;
   porContrato: { contrato: { id: string; codigo: string; nome: string | null }; totalItens: number; abaixoMinimo: number }[];
-  porTipo: Record<string, { total: number; abaixoMinimo: number }>;
-  criticos: { produto: string; contrato: string; estoqueAtual: number; estoqueMinimo: number; necessidade: number; valorNecessidade: number | null }[];
+  porCategoria: { tipo: string; categoria: string | null; total: number; abaixoMinimo: number }[];
+  totalCriticos: number;
+  criticos: {
+    produto: string;
+    tipo: string;
+    categoria: string | null;
+    contrato: string;
+    estoqueAtual: number;
+    estoqueMinimo: number;
+    necessidade: number;
+    valorNecessidade: number | null;
+  }[];
   ultimasMovimentacoes: {
     id: string;
     tipo: "ENTRADA" | "SAIDA";
@@ -38,6 +48,22 @@ function KpiCard({ label, value, accent }: { label: string; value: string | numb
 
 function fmtMoney(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+const ICONE_CATEGORIA: Record<string, string> = {
+  EPI: "🦺",
+  EPC: "🛡️",
+  FARDAMENTO: "👕",
+  "Material de Escritório": "🖇️",
+  "Itens Veicular": "🚗",
+  "Insumos Alojamento": "🛏️",
+  "Depósito Geral": "📦",
+};
+
+function labelCategoria(tipo: string, categoria: string | null) {
+  if (categoria) return categoria;
+  if (tipo === "FARDAMENTO") return "Fardamento";
+  return tipo;
 }
 
 export default function AlmoxarifadoDashboard() {
@@ -132,23 +158,38 @@ export default function AlmoxarifadoDashboard() {
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="mb-4 text-sm font-semibold text-gray-700">Distribuição por tipo</h2>
-          <div className="space-y-3">
-            {Object.entries(data.porTipo).map(([tipo, v]) => (
-              <div key={tipo} className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3">
-                <span className="text-sm font-medium text-gray-700">{tipo}</span>
-                <span className="text-xs text-gray-400">
-                  {v.total} itens {v.abaixoMinimo > 0 && <span className="text-accent">· {v.abaixoMinimo} abaixo do mínimo</span>}
-                </span>
-              </div>
-            ))}
-            {Object.keys(data.porTipo).length === 0 && <p className="text-sm text-gray-400">Sem dados ainda.</p>}
+          <h2 className="mb-1 text-sm font-semibold text-gray-700">Distribuição por categoria</h2>
+          <p className="mb-4 text-xs text-gray-400">EPI, EPC, Fardamento e cada categoria de item geral (escritório, veicular, alojamento, depósito), separados.</p>
+          <div className="space-y-2">
+            {data.porCategoria.map((c) => {
+              const label = labelCategoria(c.tipo, c.categoria);
+              return (
+                <div key={`${c.tipo}-${c.categoria ?? ""}`} className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3">
+                  <span className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <span>{ICONE_CATEGORIA[label] ?? "📦"}</span>
+                    {label}
+                    {c.categoria && <span className="rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] font-normal text-gray-500">Geral</span>}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    {c.total} itens {c.abaixoMinimo > 0 && <span className="font-medium text-accent">· {c.abaixoMinimo} abaixo do mínimo</span>}
+                  </span>
+                </div>
+              );
+            })}
+            {data.porCategoria.length === 0 && <p className="text-sm text-gray-400">Sem dados ainda.</p>}
           </div>
         </div>
       </div>
 
       <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-sm font-semibold text-gray-700">🔴 Itens críticos — o que comprar agora</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-gray-700">🔴 Itens críticos — o que comprar agora</h2>
+          {data.totalCriticos > data.criticos.length && (
+            <span className="text-xs text-gray-400">
+              mostrando {data.criticos.length} de {data.totalCriticos} · veja o resto na aba Estoque
+            </span>
+          )}
+        </div>
         {data.criticos.length === 0 ? (
           <p className="text-sm text-gray-400">Nenhum item abaixo do mínimo. 🎉</p>
         ) : (
@@ -157,6 +198,7 @@ export default function AlmoxarifadoDashboard() {
               <thead>
                 <tr className="border-b border-gray-100 text-left text-xs uppercase tracking-wide text-gray-400">
                   <th className="pb-2">Produto</th>
+                  <th className="pb-2">Categoria</th>
                   <th className="pb-2">Contrato</th>
                   <th className="pb-2 text-right">Atual</th>
                   <th className="pb-2 text-right">Mínimo</th>
@@ -168,6 +210,9 @@ export default function AlmoxarifadoDashboard() {
                 {data.criticos.map((c, i) => (
                   <tr key={i} className="border-b border-gray-50 last:border-0">
                     <td className="py-2 font-medium text-gray-700">{c.produto}</td>
+                    <td className="py-2 text-xs text-gray-500">
+                      {ICONE_CATEGORIA[labelCategoria(c.tipo, c.categoria)] ?? "📦"} {labelCategoria(c.tipo, c.categoria)}
+                    </td>
                     <td className="py-2 text-gray-500">{c.contrato}</td>
                     <td className="py-2 text-right text-gray-500">{c.estoqueAtual}</td>
                     <td className="py-2 text-right text-gray-500">{c.estoqueMinimo}</td>

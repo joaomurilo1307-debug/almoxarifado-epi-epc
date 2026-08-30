@@ -46,13 +46,27 @@ export async function GET() {
     });
   }
 
-  const porTipo: Record<string, { total: number; abaixoMinimo: number }> = {};
+  // Quebra por categoria de verdade: dentro de "Geral" (escritório, veicular,
+  // alojamento, depósito) cada categoria vira sua própria linha, em vez de
+  // ficar tudo escondido atrás de um "Geral" só. EPI/EPC/Fardamento continuam
+  // como estavam (não têm sub-categoria hoje).
+  const porCategoriaMap = new Map<string, { tipo: string; categoria: string | null; total: number; abaixoMinimo: number }>();
   for (const e of estoque) {
     const tipo = e.produto.tipo;
-    porTipo[tipo] ??= { total: 0, abaixoMinimo: 0 };
-    porTipo[tipo].total++;
-    if (e.status === "COMPRAR") porTipo[tipo].abaixoMinimo++;
+    const categoria = tipo === "GERAL" ? e.produto.categoria : null;
+    const chave = categoria ?? tipo;
+    if (!porCategoriaMap.has(chave)) porCategoriaMap.set(chave, { tipo, categoria, total: 0, abaixoMinimo: 0 });
+    const bucket = porCategoriaMap.get(chave)!;
+    bucket.total++;
+    if (e.status === "COMPRAR") bucket.abaixoMinimo++;
   }
+  const ORDEM_TIPO = ["EPI", "EPC", "FARDAMENTO", "GERAL"];
+  const porCategoria = [...porCategoriaMap.values()].sort((a, b) => {
+    const ordemA = ORDEM_TIPO.indexOf(a.tipo);
+    const ordemB = ORDEM_TIPO.indexOf(b.tipo);
+    if (ordemA !== ordemB) return ordemA - ordemB;
+    return (a.categoria ?? "").localeCompare(b.categoria ?? "");
+  });
 
   return NextResponse.json({
     totalContratos: contratos.length,
@@ -64,12 +78,15 @@ export async function GET() {
     valorNecessidadeTotal,
     itensComCusto,
     porContrato,
-    porTipo,
+    porCategoria,
+    totalCriticos: abaixoMinimo.length,
     criticos: abaixoMinimo
       .sort((a, b) => b.necessidade - a.necessidade)
-      .slice(0, 12)
+      .slice(0, 30)
       .map((e) => ({
         produto: e.produto.nome,
+        tipo: e.produto.tipo,
+        categoria: e.produto.categoria,
         contrato: e.contrato?.codigo ?? "Geral",
         estoqueAtual: e.estoqueAtual,
         estoqueMinimo: e.estoqueMinimo,

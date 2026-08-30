@@ -7,7 +7,7 @@ type Contrato = { id: string; codigo: string; nome: string | null };
 type Colaborador = { id: string; nomeCompleto: string; contratoId: string };
 type EstoqueRow = {
   id: string;
-  produto: { id: string; nome: string; tipo: string; ca: string | null; unidade: string; valorUnitario: number | null; fotoUrl: string | null };
+  produto: { id: string; nome: string; tipo: string; categoria: string | null; ca: string | null; unidade: string; valorUnitario: number | null; fotoUrl: string | null };
   contrato: Contrato | null;
   estoqueInicial: number;
   entradas: number;
@@ -36,12 +36,27 @@ function fmtMoney(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+// Grupos de filtro — EPI/EPC/Fardamento por tipo, e cada categoria de item
+// geral (escritório, veicular, alojamento, depósito) separada, não escondida
+// atrás de um "Geral" só.
+const GRUPOS = [
+  { value: "EPI", label: "🦺 EPI" },
+  { value: "EPC", label: "🛡️ EPC" },
+  { value: "FARDAMENTO", label: "👕 Fardamento" },
+  { value: "cat:Material de Escritório", label: "🖇️ Material de Escritório" },
+  { value: "cat:Itens Veicular", label: "🚗 Itens Veicular" },
+  { value: "cat:Insumos Alojamento", label: "🛏️ Insumos Alojamento" },
+  { value: "cat:Depósito Geral", label: "📦 Depósito Geral" },
+];
+
 export default function EstoquePage() {
   const [contratos, setContratos] = useState<Contrato[]>([]);
   const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
   const [produtos, setProdutos] = useState<{ id: string; nome: string }[]>([]);
   const [rows, setRows] = useState<EstoqueRow[]>([]);
   const [contratoFiltro, setContratoFiltro] = useState<string>("");
+  const [grupoFiltro, setGrupoFiltro] = useState<string>("");
+  const [statusFiltro, setStatusFiltro] = useState<"" | "COMPRAR" | "OK">("");
   const [busca, setBusca] = useState("");
   const [modalRow, setModalRow] = useState<EstoqueRow | null>(null);
   const [editandoMinimo, setEditandoMinimo] = useState<string | null>(null);
@@ -65,8 +80,20 @@ export default function EstoquePage() {
   }, [contratoFiltro]);
 
   const filtered = useMemo(
-    () => rows.filter((r) => !busca || r.produto.nome.toLowerCase().includes(busca.toLowerCase())),
-    [rows, busca]
+    () =>
+      rows.filter((r) => {
+        if (busca && !r.produto.nome.toLowerCase().includes(busca.toLowerCase())) return false;
+        if (statusFiltro && r.status !== statusFiltro) return false;
+        if (grupoFiltro) {
+          if (grupoFiltro.startsWith("cat:")) {
+            if (r.produto.categoria !== grupoFiltro.slice(4)) return false;
+          } else if (r.produto.tipo !== grupoFiltro) {
+            return false;
+          }
+        }
+        return true;
+      }),
+    [rows, busca, grupoFiltro, statusFiltro]
   );
 
   async function salvarMinimo(id: string) {
@@ -109,6 +136,27 @@ export default function EstoquePage() {
             </option>
           ))}
         </select>
+        <select
+          value={grupoFiltro}
+          onChange={(e) => setGrupoFiltro(e.target.value)}
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        >
+          <option value="">Todas as categorias</option>
+          {GRUPOS.map((g) => (
+            <option key={g.value} value={g.value}>
+              {g.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={statusFiltro}
+          onChange={(e) => setStatusFiltro(e.target.value as any)}
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        >
+          <option value="">Todos os status</option>
+          <option value="COMPRAR">🔴 Precisa comprar</option>
+          <option value="OK">✅ OK</option>
+        </select>
         <input
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
@@ -148,7 +196,11 @@ export default function EstoquePage() {
                 </td>
                 <td className="px-4 py-2.5">
                   <p className="font-medium text-gray-700">{r.produto.nome}</p>
-                  {r.produto.ca && <p className="text-xs text-gray-400">CA {r.produto.ca}</p>}
+                  <p className="text-xs text-gray-400">
+                    {r.produto.ca && <span>CA {r.produto.ca}</span>}
+                    {r.produto.ca && r.produto.categoria && <span> · </span>}
+                    {r.produto.categoria && <span>{r.produto.categoria}</span>}
+                  </p>
                 </td>
                 <td className="px-4 py-2.5 text-gray-500">{r.contrato?.codigo ?? "Geral"}</td>
                 <td className="px-4 py-2.5 text-right text-gray-500">{r.estoqueInicial}</td>
