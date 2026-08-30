@@ -99,8 +99,29 @@ const TIPO_LABEL: Record<Produto["tipo"], string> = {
   GERAL: "Geral",
 };
 
+// Ordem natural pra tamanho de roupa — usada quando o tamanho não é um
+// número (bota/calça já ordenam numericamente sozinhos).
+const TAMANHO_LETRA_ORDEM = ["PP", "P", "M", "G", "GG", "XG", "EXG", "XXG"];
+function compararTamanho(a: string, b: string) {
+  const semHig = (t: string) => t.replace(/\s*\(Higienizada\)/i, "").trim();
+  const higienizada = (t: string) => (/\(Higienizada\)/i.test(t) ? 1 : 0);
+  const ca = semHig(a);
+  const cb = semHig(b);
+  const na = Number(ca);
+  const nb = Number(cb);
+  if (ca !== "" && cb !== "" && !Number.isNaN(na) && !Number.isNaN(nb) && na !== nb) return na - nb;
+  const ia = TAMANHO_LETRA_ORDEM.indexOf(ca.toUpperCase());
+  const ib = TAMANHO_LETRA_ORDEM.indexOf(cb.toUpperCase());
+  if (ia >= 0 && ib >= 0 && ia !== ib) return ia - ib;
+  if (ca !== cb) return ca.localeCompare(cb);
+  return higienizada(a) - higienizada(b);
+}
+
+type Grupo = { chave: string; itens: Produto[] };
+
 function ProdutosTab() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [estoquePorProduto, setEstoquePorProduto] = useState<Map<string, number>>(new Map());
   const [busca, setBusca] = useState("");
   const [filtroTipo, setFiltroTipo] = useState<"" | Produto["tipo"]>("");
   const [filtroFabricante, setFiltroFabricante] = useState("");
@@ -114,11 +135,33 @@ function ProdutosTab() {
   const [escolhendoFoto, setEscolhendoFoto] = useState<string | null>(null);
   const [autoFotoRodando, setAutoFotoRodando] = useState(false);
   const [autoFotoResultado, setAutoFotoResultado] = useState<string | null>(null);
+  const [expandidos, setExpandidos] = useState<Set<string>>(new Set());
 
   function reload() {
     fetch("/api/epi/produtos").then((r) => r.json()).then(setProdutos).catch(() => {});
+    fetch("/api/epi/estoque")
+      .then((r) => r.json())
+      .then((estoque: { produtoId?: string; produto?: { id: string }; estoqueAtual: number }[]) => {
+        const map = new Map<string, number>();
+        for (const e of estoque) {
+          const id = e.produtoId ?? e.produto?.id;
+          if (!id) continue;
+          map.set(id, (map.get(id) ?? 0) + e.estoqueAtual);
+        }
+        setEstoquePorProduto(map);
+      })
+      .catch(() => {});
   }
   useEffect(reload, []);
+
+  function toggleExpandido(chave: string) {
+    setExpandidos((prev) => {
+      const next = new Set(prev);
+      if (next.has(chave)) next.delete(chave);
+      else next.add(chave);
+      return next;
+    });
+  }
 
   const fabricantes = useMemo(
     () => [...new Set(produtos.map((p) => p.fabricante).filter((f): f is string => !!f))].sort(),
@@ -130,12 +173,30 @@ function ProdutosTab() {
       produtos.filter(
         (p) =>
           p.ativo &&
-          (!busca || p.nome.toLowerCase().includes(busca.toLowerCase())) &&
+          (!busca ||
+            p.nome.toLowerCase().includes(busca.toLowerCase()) ||
+            (p.tamanho ?? "").toLowerCase().includes(busca.toLowerCase()) ||
+            (p.ca ?? "").toLowerCase().includes(busca.toLowerCase())) &&
           (!filtroTipo || p.tipo === filtroTipo) &&
           (!filtroFabricante || p.fabricante === filtroFabricante)
       ),
     [produtos, busca, filtroTipo, filtroFabricante]
   );
+
+  // Agrupa por nome — depois da migração de tamanhos, o nome já é a base
+  // limpa do equipamento (ex.: "BOTA DE SEGURANÇA MARLUVAS - CA42374") e o
+  // que varia por tamanho fica só no campo `tamanho`. Item sem variação de
+  // tamanho vira um grupo de 1 — renderiza igual a antes, sem drill-down.
+  const grupos = useMemo<Grupo[]>(() => {
+    const map = new Map<string, Produto[]>();
+    for (const p of filtrados) {
+      if (!map.has(p.nome)) map.set(p.nome, []);
+      map.get(p.nome)!.push(p);
+    }
+    return [...map.entries()]
+      .map(([chave, itens]) => ({ chave, itens: [...itens].sort((a, b) => compararTamanho(a.tamanho ?? "", b.tamanho ?? "")) }))
+      .sort((a, b) => a.chave.localeCompare(b.chave));
+  }, [filtrados]);
 
   async function salvarFabricante(id: string) {
     const fabricante = rascunhoFabricante.trim() || null;
@@ -262,131 +323,69 @@ function ProdutosTab() {
               <th className="px-4 py-3">Fabricante</th>
               <th className="px-4 py-3">Tamanho</th>
               <th className="px-4 py-3">Unid.</th>
+              <th className="px-4 py-3 text-right">Em estoque</th>
               <th className="px-4 py-3 text-right">Valor unitário</th>
               <th className="px-4 py-3 text-center">% Contingência</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody>
-            {filtrados.map((p) => (
-              <tr key={p.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
-                <td className="px-4 py-2.5">
-                  <button onClick={() => setEscolhendoFoto(p.id)} className="block h-11 w-11 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
-                    {p.fotoUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={p.fotoUrl} alt={p.nome} className="h-full w-full object-contain" />
-                    ) : (
-                      <span className="flex h-full w-full items-center justify-center text-[10px] text-gray-300">sem foto</span>
-                    )}
-                  </button>
-                </td>
-                <td className="px-4 py-2.5 font-medium text-gray-700">{p.nome}</td>
-                <td className="px-4 py-2.5">
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{TIPO_LABEL[p.tipo]}</span>
-                  {p.categoria && <span className="ml-1 text-xs text-gray-400">{p.categoria}</span>}
-                </td>
-                <td className="px-4 py-2.5 text-gray-500">{p.ca ?? "—"}</td>
-                <td className="px-4 py-2.5">
-                  {editandoFabricante === p.id ? (
-                    <input
-                      autoFocus
-                      value={rascunhoFabricante}
-                      onChange={(e) => setRascunhoFabricante(e.target.value)}
-                      onBlur={() => salvarFabricante(p.id)}
-                      onKeyDown={(e) => e.key === "Enter" && salvarFabricante(p.id)}
-                      className="w-32 rounded border border-brand px-1 py-0.5 text-sm"
-                    />
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setEditandoFabricante(p.id);
-                        setRascunhoFabricante(p.fabricante ?? "");
-                      }}
-                      className="rounded px-1 text-left text-gray-500 underline decoration-dotted hover:text-brand-dark"
-                    >
-                      {p.fabricante ?? "definir"}
-                    </button>
-                  )}
-                </td>
-                <td className="px-4 py-2.5 text-gray-500">{p.tamanho ?? "—"}</td>
-                <td className="px-4 py-2.5 text-gray-500">{p.unidade}</td>
-                <td className="px-4 py-2.5 text-right">
-                  {editando === p.id ? (
-                    <input
-                      autoFocus
-                      value={rascunho}
-                      onChange={(e) => setRascunho(e.target.value)}
-                      onBlur={() => salvarValor(p.id)}
-                      onKeyDown={(e) => e.key === "Enter" && salvarValor(p.id)}
-                      placeholder="0,00"
-                      className="w-24 rounded border border-brand px-1 py-0.5 text-right text-sm"
-                    />
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setEditando(p.id);
-                        setRascunho(p.valorUnitario !== null ? String(p.valorUnitario) : "");
-                      }}
-                      className="rounded px-1 text-gray-500 underline decoration-dotted hover:text-brand-dark"
-                    >
-                      {p.valorUnitario !== null ? fmtMoney(p.valorUnitario) : "definir"}
-                    </button>
-                  )}
-                </td>
-                <td className="px-4 py-2.5">
-                  <div className="flex items-center justify-center gap-1">
-                    <button
-                      onClick={() => ajustarPct(p, -1)}
-                      className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 hover:bg-gray-200"
-                      aria-label="Diminuir"
-                    >
-                      −
-                    </button>
-                    {editandoPct === p.id ? (
-                      <input
-                        autoFocus
-                        value={rascunhoPct}
-                        onChange={(e) => setRascunhoPct(e.target.value)}
-                        onBlur={() => {
-                          const v = parseFloat(rascunhoPct.replace(",", "."));
-                          salvarPct(p.id, Number.isNaN(v) ? null : v);
-                        }}
-                        onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()}
-                        className="w-12 rounded border border-brand px-1 py-0.5 text-center text-xs font-semibold"
-                      />
-                    ) : (
-                      <button
-                        onClick={() => {
-                          setEditandoPct(p.id);
-                          setRascunhoPct(p.percentualContingencia !== null ? String(Math.round(p.percentualContingencia * 100)) : "");
-                        }}
-                        title={p.percentualContingencia === null ? "Usando o % padrão do contrato — clique pra definir um específico" : "Clique pra digitar"}
-                        className={`w-14 rounded px-1 py-0.5 text-center text-xs font-semibold ${
-                          p.percentualContingencia !== null ? "bg-brand-light text-brand-dark" : "text-gray-400 underline decoration-dotted"
-                        }`}
-                      >
-                        {p.percentualContingencia !== null ? `${Math.round(p.percentualContingencia * 100)}%` : "padrão"}
-                      </button>
-                    )}
-                    <button
-                      onClick={() => ajustarPct(p, 1)}
-                      className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 hover:bg-gray-200"
-                      aria-label="Aumentar"
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
-                <td className="px-4 py-2.5 text-right">
-                  <button onClick={() => excluir(p.id)} className="text-xs text-gray-400 hover:text-rose-600">
-                    Remover
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filtrados.length === 0 && (
+            {grupos.map((g) =>
+              g.itens.length === 1 ? (
+                <LinhaProduto
+                  key={g.itens[0].id}
+                  p={g.itens[0]}
+                  qtd={estoquePorProduto.get(g.itens[0].id) ?? 0}
+                  editando={editando}
+                  setEditando={setEditando}
+                  rascunho={rascunho}
+                  setRascunho={setRascunho}
+                  salvarValor={salvarValor}
+                  editandoFabricante={editandoFabricante}
+                  setEditandoFabricante={setEditandoFabricante}
+                  rascunhoFabricante={rascunhoFabricante}
+                  setRascunhoFabricante={setRascunhoFabricante}
+                  salvarFabricante={salvarFabricante}
+                  editandoPct={editandoPct}
+                  setEditandoPct={setEditandoPct}
+                  rascunhoPct={rascunhoPct}
+                  setRascunhoPct={setRascunhoPct}
+                  salvarPct={salvarPct}
+                  ajustarPct={ajustarPct}
+                  setEscolhendoFoto={setEscolhendoFoto}
+                  excluir={excluir}
+                />
+              ) : (
+                <GrupoTamanhos
+                  key={g.chave}
+                  grupo={g}
+                  aberto={expandidos.has(g.chave)}
+                  toggle={() => toggleExpandido(g.chave)}
+                  estoquePorProduto={estoquePorProduto}
+                  editando={editando}
+                  setEditando={setEditando}
+                  rascunho={rascunho}
+                  setRascunho={setRascunho}
+                  salvarValor={salvarValor}
+                  editandoFabricante={editandoFabricante}
+                  setEditandoFabricante={setEditandoFabricante}
+                  rascunhoFabricante={rascunhoFabricante}
+                  setRascunhoFabricante={setRascunhoFabricante}
+                  salvarFabricante={salvarFabricante}
+                  editandoPct={editandoPct}
+                  setEditandoPct={setEditandoPct}
+                  rascunhoPct={rascunhoPct}
+                  setRascunhoPct={setRascunhoPct}
+                  salvarPct={salvarPct}
+                  ajustarPct={ajustarPct}
+                  setEscolhendoFoto={setEscolhendoFoto}
+                  excluir={excluir}
+                />
+              )
+            )}
+            {grupos.length === 0 && (
               <tr>
-                <td colSpan={10} className="px-4 py-8 text-center text-sm text-gray-400">
+                <td colSpan={11} className="px-4 py-8 text-center text-sm text-gray-400">
                   Nenhum item encontrado.
                 </td>
               </tr>
@@ -431,6 +430,222 @@ function ProdutosTab() {
       )}
     </div>
   );
+}
+
+type LinhaEditProps = {
+  editando: string | null;
+  setEditando: (id: string | null) => void;
+  rascunho: string;
+  setRascunho: (v: string) => void;
+  salvarValor: (id: string) => void;
+  editandoFabricante: string | null;
+  setEditandoFabricante: (id: string | null) => void;
+  rascunhoFabricante: string;
+  setRascunhoFabricante: (v: string) => void;
+  salvarFabricante: (id: string) => void;
+  editandoPct: string | null;
+  setEditandoPct: (id: string | null) => void;
+  rascunhoPct: string;
+  setRascunhoPct: (v: string) => void;
+  salvarPct: (id: string, pct: number | null) => void;
+  ajustarPct: (p: Produto, delta: number) => void;
+  setEscolhendoFoto: (id: string | null) => void;
+  excluir: (id: string) => void;
+};
+
+// Uma linha de produto de verdade — usada tanto pra item avulso (sem
+// variação de tamanho) quanto pra cada tamanho dentro de um grupo aberto.
+// `indentado` só muda o recuo visual e esconde colunas que já aparecem na
+// linha-pai do grupo (foto/tipo/CA/fabricante), pra não repetir informação.
+function LinhaProduto({
+  p,
+  qtd,
+  indentado,
+  ...ed
+}: { p: Produto; qtd: number; indentado?: boolean } & LinhaEditProps) {
+  return (
+    <tr className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
+      <td className="px-4 py-2.5">
+        {indentado ? null : (
+          <button onClick={() => ed.setEscolhendoFoto(p.id)} className="block h-11 w-11 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+            {p.fotoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={p.fotoUrl} alt={p.nome} className="h-full w-full object-contain" />
+            ) : (
+              <span className="flex h-full w-full items-center justify-center text-[10px] text-gray-300">sem foto</span>
+            )}
+          </button>
+        )}
+      </td>
+      <td className={`px-4 py-2.5 font-medium text-gray-700 ${indentado ? "pl-10 text-gray-400" : ""}`}>{indentado ? "↳" : p.nome}</td>
+      <td className="px-4 py-2.5">
+        {indentado ? null : (
+          <>
+            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{TIPO_LABEL[p.tipo]}</span>
+            {p.categoria && <span className="ml-1 text-xs text-gray-400">{p.categoria}</span>}
+          </>
+        )}
+      </td>
+      <td className="px-4 py-2.5 text-gray-500">{indentado ? null : p.ca ?? "—"}</td>
+      <td className="px-4 py-2.5">
+        {indentado ? null : editandoFabricanteCampo(p, ed)}
+      </td>
+      <td className="px-4 py-2.5 font-semibold text-gray-700">{p.tamanho ?? "—"}</td>
+      <td className="px-4 py-2.5 text-gray-500">{p.unidade}</td>
+      <td className="px-4 py-2.5 text-right text-gray-600">{qtd}</td>
+      <td className="px-4 py-2.5 text-right">
+        {ed.editando === p.id ? (
+          <input
+            autoFocus
+            value={ed.rascunho}
+            onChange={(e) => ed.setRascunho(e.target.value)}
+            onBlur={() => ed.salvarValor(p.id)}
+            onKeyDown={(e) => e.key === "Enter" && ed.salvarValor(p.id)}
+            placeholder="0,00"
+            className="w-24 rounded border border-brand px-1 py-0.5 text-right text-sm"
+          />
+        ) : (
+          <button
+            onClick={() => {
+              ed.setEditando(p.id);
+              ed.setRascunho(p.valorUnitario !== null ? String(p.valorUnitario) : "");
+            }}
+            className="rounded px-1 text-gray-500 underline decoration-dotted hover:text-brand-dark"
+          >
+            {p.valorUnitario !== null ? fmtMoney(p.valorUnitario) : "definir"}
+          </button>
+        )}
+      </td>
+      <td className="px-4 py-2.5">
+        <div className="flex items-center justify-center gap-1">
+          <button onClick={() => ed.ajustarPct(p, -1)} className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 hover:bg-gray-200" aria-label="Diminuir">
+            −
+          </button>
+          {ed.editandoPct === p.id ? (
+            <input
+              autoFocus
+              value={ed.rascunhoPct}
+              onChange={(e) => ed.setRascunhoPct(e.target.value)}
+              onBlur={() => {
+                const v = parseFloat(ed.rascunhoPct.replace(",", "."));
+                ed.salvarPct(p.id, Number.isNaN(v) ? null : v);
+              }}
+              onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()}
+              className="w-12 rounded border border-brand px-1 py-0.5 text-center text-xs font-semibold"
+            />
+          ) : (
+            <button
+              onClick={() => {
+                ed.setEditandoPct(p.id);
+                ed.setRascunhoPct(p.percentualContingencia !== null ? String(Math.round(p.percentualContingencia * 100)) : "");
+              }}
+              title={p.percentualContingencia === null ? "Usando o % padrão do contrato — clique pra definir um específico" : "Clique pra digitar"}
+              className={`w-14 rounded px-1 py-0.5 text-center text-xs font-semibold ${
+                p.percentualContingencia !== null ? "bg-brand-light text-brand-dark" : "text-gray-400 underline decoration-dotted"
+              }`}
+            >
+              {p.percentualContingencia !== null ? `${Math.round(p.percentualContingencia * 100)}%` : "padrão"}
+            </button>
+          )}
+          <button onClick={() => ed.ajustarPct(p, 1)} className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 hover:bg-gray-200" aria-label="Aumentar">
+            +
+          </button>
+        </div>
+      </td>
+      <td className="px-4 py-2.5 text-right">
+        <button onClick={() => ed.excluir(p.id)} className="text-xs text-gray-400 hover:text-rose-600">
+          Remover
+        </button>
+      </td>
+    </tr>
+  );
+}
+
+function editandoFabricanteCampo(p: Produto, ed: LinhaEditProps) {
+  return ed.editandoFabricante === p.id ? (
+    <input
+      autoFocus
+      value={ed.rascunhoFabricante}
+      onChange={(e) => ed.setRascunhoFabricante(e.target.value)}
+      onBlur={() => ed.salvarFabricante(p.id)}
+      onKeyDown={(e) => e.key === "Enter" && ed.salvarFabricante(p.id)}
+      className="w-32 rounded border border-brand px-1 py-0.5 text-sm"
+    />
+  ) : (
+    <button
+      onClick={() => {
+        ed.setEditandoFabricante(p.id);
+        ed.setRascunhoFabricante(p.fabricante ?? "");
+      }}
+      className="rounded px-1 text-left text-gray-500 underline decoration-dotted hover:text-brand-dark"
+    >
+      {p.fabricante ?? "definir"}
+    </button>
+  );
+}
+
+// Linha-pai de um grupo com mais de um tamanho (ex.: "BOTA DE SEGURANÇA
+// MARLUVAS - CA42374" com 9 tamanhos) + as linhas-filho quando expandido.
+// Editar fabricante/CA fica só nas linhas-filho (cada tamanho é o produto
+// de verdade) — a linha-pai é resumo, não edita nada sozinha.
+function GrupoTamanhos({
+  grupo,
+  aberto,
+  toggle,
+  estoquePorProduto,
+  ...ed
+}: { grupo: Grupo; aberto: boolean; toggle: () => void; estoquePorProduto: Map<string, number> } & LinhaEditProps) {
+  const primeiro = grupo.itens[0];
+  const cas = new Set(grupo.itens.map((i) => i.ca ?? ""));
+  const fabricantes = new Set(grupo.itens.map((i) => i.fabricante ?? ""));
+  const totalQtd = grupo.itens.reduce((soma, i) => soma + (estoquePorProduto.get(i.id) ?? 0), 0);
+
+  return (
+    <>
+      <tr className="border-b border-gray-50 bg-brand-light/20 hover:bg-brand-light/30">
+        <td className="px-4 py-2.5">
+          <button onClick={() => setEscolhendoFotoDoGrupo(grupo, ed)} className="block h-11 w-11 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+            {primeiro.fotoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={primeiro.fotoUrl} alt={grupo.chave} className="h-full w-full object-contain" />
+            ) : (
+              <span className="flex h-full w-full items-center justify-center text-[10px] text-gray-300">sem foto</span>
+            )}
+          </button>
+        </td>
+        <td className="px-4 py-2.5">
+          <button onClick={toggle} className="flex items-center gap-2 text-left font-semibold text-gray-700 hover:text-brand-dark">
+            <span className="text-xs text-brand-dark">{aberto ? "▾" : "▸"}</span>
+            {grupo.chave}
+          </button>
+        </td>
+        <td className="px-4 py-2.5">
+          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{TIPO_LABEL[primeiro.tipo]}</span>
+          {primeiro.categoria && <span className="ml-1 text-xs text-gray-400">{primeiro.categoria}</span>}
+        </td>
+        <td className="px-4 py-2.5 text-gray-500">{cas.size === 1 ? [...cas][0] || "—" : "vário"}</td>
+        <td className="px-4 py-2.5 text-gray-500">{fabricantes.size === 1 ? [...fabricantes][0] || "—" : "vário"}</td>
+        <td className="px-4 py-2.5">
+          <button onClick={toggle} className="rounded-full bg-brand-light px-2 py-0.5 text-xs font-semibold text-brand-dark hover:bg-brand/20">
+            {grupo.itens.length} tamanhos
+          </button>
+        </td>
+        <td className="px-4 py-2.5 text-gray-500">{primeiro.unidade}</td>
+        <td className="px-4 py-2.5 text-right font-semibold text-gray-700">{totalQtd}</td>
+        <td className="px-4 py-2.5 text-right text-gray-400">—</td>
+        <td className="px-4 py-2.5 text-center text-gray-400">—</td>
+        <td className="px-4 py-2.5" />
+      </tr>
+      {aberto && grupo.itens.map((item) => <LinhaProduto key={item.id} p={item} qtd={estoquePorProduto.get(item.id) ?? 0} indentado {...ed} />)}
+    </>
+  );
+}
+
+function setEscolhendoFotoDoGrupo(grupo: Grupo, ed: LinhaEditProps) {
+  // A foto do grupo é a foto do primeiro tamanho — escolher uma foto pela
+  // linha-pai edita esse item (os outros tamanhos podem ter foto própria se
+  // precisar, editando na linha expandida).
+  ed.setEscolhendoFoto(grupo.itens[0].id);
 }
 
 function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {

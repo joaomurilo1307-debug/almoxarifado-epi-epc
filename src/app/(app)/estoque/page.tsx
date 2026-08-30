@@ -7,7 +7,7 @@ type Contrato = { id: string; codigo: string; nome: string | null };
 type Colaborador = { id: string; nomeCompleto: string; contratoId: string };
 type EstoqueRow = {
   id: string;
-  produto: { id: string; nome: string; tipo: string; categoria: string | null; ca: string | null; unidade: string; valorUnitario: number | null; fotoUrl: string | null };
+  produto: { id: string; nome: string; tipo: string; categoria: string | null; ca: string | null; tamanho: string | null; unidade: string; valorUnitario: number | null; fotoUrl: string | null };
   contrato: Contrato | null;
   estoqueInicial: number;
   entradas: number;
@@ -37,7 +37,8 @@ function fmtMoney(v: number) {
 
 // Grupos de filtro — EPI/EPC/Fardamento por tipo, e cada categoria de item
 // geral (escritório, veicular, alojamento, depósito) separada, não escondida
-// atrás de um "Geral" só.
+// atrás de um "Geral" só. A mesma lista serve pra separar o estoque em
+// blocos visuais (um bloco por grupo), em vez de uma tabela só gigante.
 const GRUPOS = [
   { value: "EPI", label: "🦺 EPI" },
   { value: "EPC", label: "🛡️ EPC" },
@@ -47,6 +48,14 @@ const GRUPOS = [
   { value: "cat:Insumos Alojamento", label: "🛏️ Insumos Alojamento" },
   { value: "cat:Depósito Geral", label: "📦 Depósito Geral" },
 ];
+
+function grupoChaveDe(r: EstoqueRow): string {
+  // Mesma regra do dashboard: só GERAL usa a categoria (escritório/veicular/
+  // alojamento/depósito) como sub-grupo — EPI/EPC/Fardamento agrupam pelo
+  // tipo mesmo, categoria (se algum dia tiver valor) não conta aqui.
+  if (r.produto.tipo === "GERAL" && r.produto.categoria) return `cat:${r.produto.categoria}`;
+  return r.produto.tipo;
+}
 
 export default function EstoquePage() {
   const [contratos, setContratos] = useState<Contrato[]>([]);
@@ -60,6 +69,16 @@ export default function EstoquePage() {
   const [modalRow, setModalRow] = useState<EstoqueRow | null>(null);
   const [editandoMinimo, setEditandoMinimo] = useState<string | null>(null);
   const [minimoRascunho, setMinimoRascunho] = useState("");
+  const [blocosFechados, setBlocosFechados] = useState<Set<string>>(new Set());
+
+  function toggleBloco(chave: string) {
+    setBlocosFechados((prev) => {
+      const next = new Set(prev);
+      if (next.has(chave)) next.delete(chave);
+      else next.add(chave);
+      return next;
+    });
+  }
 
   function reload() {
     const qs = contratoFiltro ? `?contratoId=${contratoFiltro}` : "";
@@ -94,6 +113,19 @@ export default function EstoquePage() {
       }),
     [rows, busca, grupoFiltro, statusFiltro]
   );
+
+  // Separa em blocos (um por categoria) em vez de uma tabela só gigante —
+  // preserva a ordem de GRUPOS, e só cria bloco pra quem tem item de verdade
+  // depois do filtro atual.
+  const blocos = useMemo(() => {
+    const porChave = new Map<string, EstoqueRow[]>();
+    for (const r of filtered) {
+      const chave = grupoChaveDe(r);
+      if (!porChave.has(chave)) porChave.set(chave, []);
+      porChave.get(chave)!.push(r);
+    }
+    return GRUPOS.map((g) => ({ ...g, rows: porChave.get(g.value) ?? [] })).filter((b) => b.rows.length > 0);
+  }, [filtered]);
 
   async function salvarMinimo(id: string) {
     const valor = parseFloat(minimoRascunho.replace(",", "."));
@@ -166,108 +198,134 @@ export default function EstoquePage() {
         <span className="text-xs text-gray-400">{filtered.length} itens · mínimo é editável, clique no número</span>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
-              <th className="px-4 py-3" />
-              <th className="px-4 py-3">Produto</th>
-              <th className="px-4 py-3">Código</th>
-              <th className="px-4 py-3">Contrato</th>
-              <th className="px-4 py-3 text-right">Inicial</th>
-              <th className="px-4 py-3 text-right">Entradas</th>
-              <th className="px-4 py-3 text-right">Saídas</th>
-              <th className="px-4 py-3 text-right">Atual</th>
-              <th className="px-4 py-3 text-right">Mínimo</th>
-              <th className="px-4 py-3 text-right">Valor em estoque</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((r) => (
-              <tr key={r.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
-                <td className="px-4 py-2.5">
-                  <div className="h-9 w-9 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
-                    {r.produto.fotoUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={r.produto.fotoUrl} alt={r.produto.nome} className="h-full w-full object-contain" />
-                    ) : null}
-                  </div>
-                </td>
-                <td className="px-4 py-2.5">
-                  <p className="font-medium text-gray-700">{r.produto.nome}</p>
-                  {r.produto.categoria && <p className="text-xs text-gray-400">{r.produto.categoria}</p>}
-                </td>
-                <td className="px-4 py-2.5">
-                  {r.produto.ca ? (
-                    <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-xs font-semibold text-gray-600">CA {r.produto.ca}</span>
-                  ) : (
-                    <span className="text-xs text-gray-300">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-2.5 text-gray-500">{r.contrato?.codigo ?? "Geral"}</td>
-                <td className="px-4 py-2.5 text-right text-gray-500">{r.estoqueInicial}</td>
-                <td className="px-4 py-2.5 text-right text-brand-dark">{r.entradas}</td>
-                <td className="px-4 py-2.5 text-right text-rose-500">{r.saidas}</td>
-                <td className="px-4 py-2.5 text-right font-semibold text-gray-800">{r.estoqueAtual}</td>
-                <td className="px-4 py-2.5 text-right">
-                  {editandoMinimo === r.id ? (
-                    <input
-                      autoFocus
-                      value={minimoRascunho}
-                      onChange={(e) => setMinimoRascunho(e.target.value)}
-                      onBlur={() => salvarMinimo(r.id)}
-                      onKeyDown={(e) => e.key === "Enter" && salvarMinimo(r.id)}
-                      className="w-16 rounded border border-brand px-1 py-0.5 text-right text-sm"
-                    />
-                  ) : (
-                    <div>
-                      <button
-                        onClick={() => {
-                          setEditandoMinimo(r.id);
-                          setMinimoRascunho(String(r.estoqueMinimo));
-                        }}
-                        className="rounded px-1 text-gray-500 underline decoration-dotted hover:text-brand-dark"
-                        title="Clique para editar o mínimo"
-                      >
-                        {r.estoqueMinimo}
-                      </button>
-                      {r.minimoSugerido !== r.estoqueMinimo && (
-                        <button
-                          onClick={() => aplicarSugestao(r.id, r.minimoSugerido)}
-                          title="Sugestão calculada: efetivo do contrato × % de contingência do item (ou do contrato, se o item não tiver um % próprio)"
-                          className="block text-[10px] text-brand-dark hover:underline"
-                        >
-                          sugestão: {r.minimoSugerido}
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </td>
-                <td className="px-4 py-2.5 text-right text-gray-400">{r.valorEmEstoque !== null ? fmtMoney(r.valorEmEstoque) : "—"}</td>
-                <td className="px-4 py-2.5">
-                  <StatusBadge status={r.status} />
-                </td>
-                <td className="px-4 py-2.5 text-right">
-                  <button
-                    onClick={() => setModalRow(r)}
-                    className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
-                  >
-                    + Movimentação
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filtered.length === 0 && (
-              <tr>
-                <td colSpan={12} className="px-4 py-8 text-center text-sm text-gray-400">
-                  Nenhum item encontrado. Importe uma planilha em "Importar planilha".
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="space-y-4">
+        {blocos.map((bloco) => {
+          const fechado = blocosFechados.has(bloco.value);
+          const comprar = bloco.rows.filter((r) => r.status === "COMPRAR").length;
+          const atencao = bloco.rows.filter((r) => r.status === "ATENCAO").length;
+          const valorTotal = bloco.rows.reduce((s, r) => s + (r.valorEmEstoque ?? 0), 0);
+          return (
+            <div key={bloco.value} className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+              <button
+                onClick={() => toggleBloco(bloco.value)}
+                className="flex w-full items-center justify-between gap-3 bg-gray-50 px-5 py-3 text-left hover:bg-gray-100"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gray-400">{fechado ? "▸" : "▾"}</span>
+                  <span className="font-semibold text-gray-700">{bloco.label}</span>
+                  <span className="text-xs text-gray-400">{bloco.rows.length} itens</span>
+                  {comprar > 0 && <span className="rounded-full bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-600">🔴 {comprar} comprar</span>}
+                  {atencao > 0 && <span className="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-600">🟡 {atencao} perto do mín.</span>}
+                </div>
+                {valorTotal > 0 && <span className="text-xs text-gray-400">{fmtMoney(valorTotal)} em estoque</span>}
+              </button>
+
+              {!fechado && (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-gray-100 text-left text-xs uppercase tracking-wide text-gray-400">
+                        <th className="px-4 py-2" />
+                        <th className="px-4 py-2">Produto</th>
+                        <th className="px-4 py-2">Código</th>
+                        <th className="px-4 py-2">Contrato</th>
+                        <th className="px-4 py-2 text-right">Inicial</th>
+                        <th className="px-4 py-2 text-right">Entradas</th>
+                        <th className="px-4 py-2 text-right">Saídas</th>
+                        <th className="px-4 py-2 text-right">Atual</th>
+                        <th className="px-4 py-2 text-right">Mínimo</th>
+                        <th className="px-4 py-2 text-right">Valor em estoque</th>
+                        <th className="px-4 py-2">Status</th>
+                        <th className="px-4 py-2" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bloco.rows.map((r) => (
+                        <tr key={r.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
+                          <td className="px-4 py-2.5">
+                            <div className="h-9 w-9 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                              {r.produto.fotoUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={r.produto.fotoUrl} alt={r.produto.nome} className="h-full w-full object-contain" />
+                              ) : null}
+                            </div>
+                          </td>
+                          <td className="px-4 py-2.5">
+                            <p className="font-medium text-gray-700">{r.produto.nome}</p>
+                            {r.produto.tamanho && <p className="text-xs text-gray-400">Tamanho {r.produto.tamanho}</p>}
+                          </td>
+                          <td className="px-4 py-2.5">
+                            {r.produto.ca ? (
+                              <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-xs font-semibold text-gray-600">CA {r.produto.ca}</span>
+                            ) : (
+                              <span className="text-xs text-gray-300">—</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-2.5 text-gray-500">{r.contrato?.codigo ?? "Geral"}</td>
+                          <td className="px-4 py-2.5 text-right text-gray-500">{r.estoqueInicial}</td>
+                          <td className="px-4 py-2.5 text-right text-brand-dark">{r.entradas}</td>
+                          <td className="px-4 py-2.5 text-right text-rose-500">{r.saidas}</td>
+                          <td className="px-4 py-2.5 text-right font-semibold text-gray-800">{r.estoqueAtual}</td>
+                          <td className="px-4 py-2.5 text-right">
+                            {editandoMinimo === r.id ? (
+                              <input
+                                autoFocus
+                                value={minimoRascunho}
+                                onChange={(e) => setMinimoRascunho(e.target.value)}
+                                onBlur={() => salvarMinimo(r.id)}
+                                onKeyDown={(e) => e.key === "Enter" && salvarMinimo(r.id)}
+                                className="w-16 rounded border border-brand px-1 py-0.5 text-right text-sm"
+                              />
+                            ) : (
+                              <div>
+                                <button
+                                  onClick={() => {
+                                    setEditandoMinimo(r.id);
+                                    setMinimoRascunho(String(r.estoqueMinimo));
+                                  }}
+                                  className="rounded px-1 text-gray-500 underline decoration-dotted hover:text-brand-dark"
+                                  title="Clique para editar o mínimo"
+                                >
+                                  {r.estoqueMinimo}
+                                </button>
+                                {r.minimoSugerido !== r.estoqueMinimo && (
+                                  <button
+                                    onClick={() => aplicarSugestao(r.id, r.minimoSugerido)}
+                                    title="Sugestão calculada: efetivo do contrato × % de contingência do item (ou do contrato, se o item não tiver um % próprio)"
+                                    className="block text-[10px] text-brand-dark hover:underline"
+                                  >
+                                    sugestão: {r.minimoSugerido}
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-4 py-2.5 text-right text-gray-400">{r.valorEmEstoque !== null ? fmtMoney(r.valorEmEstoque) : "—"}</td>
+                          <td className="px-4 py-2.5">
+                            <StatusBadge status={r.status} />
+                          </td>
+                          <td className="px-4 py-2.5 text-right">
+                            <button
+                              onClick={() => setModalRow(r)}
+                              className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
+                            >
+                              + Movimentação
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          );
+        })}
+        {blocos.length === 0 && (
+          <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center text-sm text-gray-400 shadow-sm">
+            Nenhum item encontrado. Importe uma planilha em "Importar planilha".
+          </div>
+        )}
       </div>
 
       {modalRow && (

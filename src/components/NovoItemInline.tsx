@@ -19,6 +19,7 @@ export default function NovoItemInline({ onCancel, onCreated }: { onCancel: () =
   const [unidade, setUnidade] = useState("UNID");
   const [fabricante, setFabricante] = useState("");
   const [ca, setCa] = useState("");
+  const [tamanho, setTamanho] = useState("");
   const [saving, setSaving] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -39,6 +40,7 @@ export default function NovoItemInline({ onCancel, onCreated }: { onCancel: () =
         unidade,
         fabricante: fabricante.trim() || null,
         ca: ca.trim() || null,
+        tamanho: tamanho.trim() || null,
       }),
     });
     setSaving(false);
@@ -114,7 +116,7 @@ export default function NovoItemInline({ onCancel, onCreated }: { onCancel: () =
         </label>
       )}
 
-      <div className="mb-2 grid grid-cols-2 gap-2">
+      <div className="mb-2 grid grid-cols-3 gap-2">
         <label className="block text-sm">
           <span className="mb-1 block text-xs font-medium text-gray-500">Fabricante (opcional)</span>
           <input value={fabricante} onChange={(e) => setFabricante(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
@@ -122,6 +124,10 @@ export default function NovoItemInline({ onCancel, onCreated }: { onCancel: () =
         <label className="block text-sm">
           <span className="mb-1 block text-xs font-medium text-gray-500">CA (opcional)</span>
           <input value={ca} onChange={(e) => setCa(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
+        </label>
+        <label className="block text-sm">
+          <span className="mb-1 block text-xs font-medium text-gray-500">Tamanho (opcional)</span>
+          <input value={tamanho} onChange={(e) => setTamanho(e.target.value)} placeholder="ex: 42, M, G" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
         </label>
       </div>
 

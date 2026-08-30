@@ -12,6 +12,13 @@ const patchSchema = z.object({
   tamanhoBota: z.number().int().nullable().optional(),
   tamanhoCamisa: z.string().nullable().optional(),
   tamanhoCalca: z.number().int().nullable().optional(),
+  cpf: z.string().nullable().optional(),
+  rg: z.string().nullable().optional(),
+  nascimento: z.string().nullable().optional(),
+  admissao: z.string().nullable().optional(),
+  moradia: z.string().nullable().optional(),
+  endereco: z.string().nullable().optional(),
+  numero: z.string().nullable().optional(),
 });
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
@@ -22,7 +29,15 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const parsed = patchSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
-  const colaborador = await prisma.epiColaborador.update({ where: { id: params.id }, data: parsed.data });
+  const { nascimento, admissao, ...resto } = parsed.data;
+  const colaborador = await prisma.epiColaborador.update({
+    where: { id: params.id },
+    data: {
+      ...resto,
+      ...(nascimento !== undefined ? { nascimento: nascimento ? new Date(nascimento) : null } : {}),
+      ...(admissao !== undefined ? { admissao: admissao ? new Date(admissao) : null } : {}),
+    },
+  });
   return NextResponse.json(colaborador);
 }
 

@@ -13,10 +13,25 @@ type Colaborador = {
   tamanhoCalca: number | null;
   cpf: string | null;
   rg: string | null;
+  nascimento: string | null;
+  admissao: string | null;
   moradia: string | null;
   endereco: string | null;
+  numero: string | null;
   contrato: { id: string; codigo: string; nome: string | null };
 };
+
+function fmtData(iso: string | null) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("pt-BR", { timeZone: "UTC" });
+}
+
+// yyyy-mm-dd pro value de <input type="date"> — sempre em UTC pra não
+// "voltar um dia" dependendo do fuso do navegador.
+function paraInputDate(iso: string | null) {
+  if (!iso) return "";
+  return iso.slice(0, 10);
+}
 
 export default function ColaboradoresPage() {
   const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
@@ -125,10 +140,15 @@ export default function ColaboradoresPage() {
                       {aberto === c.id && (
                         <tr className="bg-gray-50/60">
                           <td colSpan={7} className="px-5 py-3 text-xs text-gray-500">
-                            <span className="mr-4">CPF: {c.cpf ?? "—"}</span>
-                            <span className="mr-4">RG: {c.rg ?? "—"}</span>
-                            <span className="mr-4">Moradia: {c.moradia ?? "—"}</span>
-                            <span>Endereço: {c.endereco ?? "—"}</span>
+                            <div className="grid grid-cols-3 gap-x-6 gap-y-1 sm:grid-cols-4">
+                              <span>CPF: {c.cpf ?? "—"}</span>
+                              <span>RG: {c.rg ?? "—"}</span>
+                              <span>Nascimento: {fmtData(c.nascimento)}</span>
+                              <span>Admissão: {fmtData(c.admissao)}</span>
+                              <span>Moradia: {c.moradia ?? "—"}</span>
+                              <span>Endereço: {c.endereco ?? "—"}</span>
+                              <span>Número: {c.numero ?? "—"}</span>
+                            </div>
                           </td>
                         </tr>
                       )}
@@ -176,6 +196,13 @@ function EditarColaboradorModal({
   const [tamanhoBota, setTamanhoBota] = useState(colaborador.tamanhoBota?.toString() ?? "");
   const [tamanhoCamisa, setTamanhoCamisa] = useState(colaborador.tamanhoCamisa ?? "");
   const [tamanhoCalca, setTamanhoCalca] = useState(colaborador.tamanhoCalca?.toString() ?? "");
+  const [cpf, setCpf] = useState(colaborador.cpf ?? "");
+  const [rg, setRg] = useState(colaborador.rg ?? "");
+  const [nascimento, setNascimento] = useState(paraInputDate(colaborador.nascimento));
+  const [admissao, setAdmissao] = useState(paraInputDate(colaborador.admissao));
+  const [moradia, setMoradia] = useState(colaborador.moradia ?? "");
+  const [endereco, setEndereco] = useState(colaborador.endereco ?? "");
+  const [numero, setNumero] = useState(colaborador.numero ?? "");
   const [saving, setSaving] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -192,6 +219,13 @@ function EditarColaboradorModal({
         tamanhoBota: tamanhoBota.trim() ? parseInt(tamanhoBota, 10) : null,
         tamanhoCamisa: tamanhoCamisa.trim() || null,
         tamanhoCalca: tamanhoCalca.trim() ? parseInt(tamanhoCalca, 10) : null,
+        cpf: cpf.trim() || null,
+        rg: rg.trim() || null,
+        nascimento: nascimento || null,
+        admissao: admissao || null,
+        moradia: moradia.trim() || null,
+        endereco: endereco.trim() || null,
+        numero: numero.trim() || null,
       }),
     });
     setSaving(false);
@@ -246,6 +280,42 @@ function EditarColaboradorModal({
           <label className="block text-sm">
             <span className="mb-1 block text-xs font-medium text-gray-500">Calça</span>
             <input value={tamanhoCalca} onChange={(e) => setTamanhoCalca(e.target.value)} type="number" className="w-full rounded-lg border border-gray-300 px-3 py-2" />
+          </label>
+        </div>
+
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Dados pessoais</p>
+        <div className="mb-3 grid grid-cols-2 gap-2">
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-gray-500">CPF</span>
+            <input value={cpf} onChange={(e) => setCpf(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
+          </label>
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-gray-500">RG</span>
+            <input value={rg} onChange={(e) => setRg(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
+          </label>
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-gray-500">Nascimento</span>
+            <input value={nascimento} onChange={(e) => setNascimento(e.target.value)} type="date" className="w-full rounded-lg border border-gray-300 px-3 py-2" />
+          </label>
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-gray-500">Admissão</span>
+            <input value={admissao} onChange={(e) => setAdmissao(e.target.value)} type="date" className="w-full rounded-lg border border-gray-300 px-3 py-2" />
+          </label>
+        </div>
+
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Moradia</p>
+        <div className="mb-4 grid grid-cols-3 gap-2">
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-gray-500">Situação</span>
+            <input value={moradia} onChange={(e) => setMoradia(e.target.value)} placeholder="Residente/Alojamento..." className="w-full rounded-lg border border-gray-300 px-3 py-2" />
+          </label>
+          <label className="col-span-2 block text-sm">
+            <span className="mb-1 block text-xs font-medium text-gray-500">Endereço</span>
+            <input value={endereco} onChange={(e) => setEndereco(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
+          </label>
+          <label className="block text-sm">
+            <span className="mb-1 block text-xs font-medium text-gray-500">Número</span>
+            <input value={numero} onChange={(e) => setNumero(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
           </label>
         </div>
 

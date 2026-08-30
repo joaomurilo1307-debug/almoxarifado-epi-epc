@@ -38,6 +38,13 @@ const createSchema = z.object({
   tamanhoBota: z.number().int().nullable().optional(),
   tamanhoCamisa: z.string().nullable().optional(),
   tamanhoCalca: z.number().int().nullable().optional(),
+  cpf: z.string().nullable().optional(),
+  rg: z.string().nullable().optional(),
+  nascimento: z.string().nullable().optional(),
+  admissao: z.string().nullable().optional(),
+  moradia: z.string().nullable().optional(),
+  endereco: z.string().nullable().optional(),
+  numero: z.string().nullable().optional(),
 });
 
 export async function POST(req: Request) {
@@ -48,6 +55,13 @@ export async function POST(req: Request) {
   const parsed = createSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
-  const colaborador = await prisma.epiColaborador.create({ data: parsed.data });
+  const { nascimento, admissao, ...resto } = parsed.data;
+  const colaborador = await prisma.epiColaborador.create({
+    data: {
+      ...resto,
+      nascimento: nascimento ? new Date(nascimento) : null,
+      admissao: admissao ? new Date(admissao) : null,
+    },
+  });
   return NextResponse.json(colaborador, { status: 201 });
 }
