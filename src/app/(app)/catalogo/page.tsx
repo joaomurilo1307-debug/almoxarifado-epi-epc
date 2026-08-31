@@ -123,6 +123,31 @@ function compararTamanho(a: { tamanho: string | null; higienizado: boolean }, b:
 // só o texto pra mostrar na tela.
 type Grupo = { chave: string; nome: string; itens: Produto[] };
 
+// Mesmos blocos de topo do Estoque (ver grupoChaveDe lá) — pra parar de
+// mostrar EPI, Fardamento e cada categoria de Geral tudo misturado numa
+// tabela só, igual o João pediu ("separe como no estoque").
+const BLOCOS_TOPO: { value: string; label: string }[] = [
+  { value: "EPI", label: "🦺 EPI" },
+  { value: "EPC", label: "🛡️ EPC" },
+  { value: "FARDAMENTO", label: "👕 Fardamento" },
+  { value: "cat:Material de Escritório", label: "🖇️ Material de Escritório" },
+  { value: "cat:Itens Veicular", label: "🚗 Itens Veicular" },
+  { value: "cat:Insumos Alojamento", label: "🛏️ Insumos Alojamento" },
+  { value: "cat:Depósito Geral", label: "📦 Depósito Geral" },
+];
+function blocoChaveDe(p: Produto): string {
+  if (p.tipo === "GERAL" && p.categoria) return `cat:${p.categoria}`;
+  return p.tipo;
+}
+
+// Dentro do bloco EPI, subdivide por parte do corpo/função — mesma
+// classificação da planilha "EPIs Mínimos" do Matheus (CABEÇA, OLHOS/FACE,
+// AUDIÇÃO...). Sem isso, itens parecidos mas de proteção diferente (ex.:
+// MANGOTE e MANGOTE DE MALHA FIBRA ARAMIDA, ou os 2 tipos de respirador)
+// ficam espalhados em ordem alfabética junto com tudo mais, parecendo
+// duplicidade só de bater o olho.
+const CATEGORIA_EPI_ORDEM = ["CABEÇA", "OLHOS/FACE", "AUDIÇÃO", "RESPIRATÓRIO", "TRONCO", "BRAÇOS", "MÃOS", "PERNAS", "PÉS", "OUTROS"];
+
 function ProdutosTab() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [estoquePorProduto, setEstoquePorProduto] = useState<Map<string, number>>(new Map());
@@ -140,6 +165,16 @@ function ProdutosTab() {
   const [autoFotoRodando, setAutoFotoRodando] = useState(false);
   const [autoFotoResultado, setAutoFotoResultado] = useState<string | null>(null);
   const [expandidos, setExpandidos] = useState<Set<string>>(new Set());
+  const [blocosFechados, setBlocosFechados] = useState<Set<string>>(new Set());
+
+  function toggleBloco(chave: string) {
+    setBlocosFechados((prev) => {
+      const next = new Set(prev);
+      if (next.has(chave)) next.delete(chave);
+      else next.add(chave);
+      return next;
+    });
+  }
 
   function reload() {
     fetch("/api/epi/produtos").then((r) => r.json()).then(setProdutos).catch(() => {});
@@ -210,6 +245,32 @@ function ProdutosTab() {
       }))
       .sort((a, b) => a.nome.localeCompare(b.nome));
   }, [filtrados]);
+
+  // Separa em blocos (mesma lógica do Estoque) e, dentro do bloco EPI,
+  // subdivide por categoria (CABEÇA, MÃOS, PÉS...) — só cria bloco/subgrupo
+  // pra quem tem item de verdade depois do filtro atual.
+  const blocos = useMemo(() => {
+    const porBloco = new Map<string, Grupo[]>();
+    for (const g of grupos) {
+      const chave = blocoChaveDe(g.itens[0]);
+      if (!porBloco.has(chave)) porBloco.set(chave, []);
+      porBloco.get(chave)!.push(g);
+    }
+    return BLOCOS_TOPO.map((b) => {
+      const gruposDoBloco = porBloco.get(b.value) ?? [];
+      let subgrupos: { categoria: string; grupos: Grupo[] }[] | null = null;
+      if (b.value === "EPI") {
+        const porCategoria = new Map<string, Grupo[]>();
+        for (const g of gruposDoBloco) {
+          const cat = g.itens[0].categoria && CATEGORIA_EPI_ORDEM.includes(g.itens[0].categoria) ? g.itens[0].categoria : "OUTROS";
+          if (!porCategoria.has(cat)) porCategoria.set(cat, []);
+          porCategoria.get(cat)!.push(g);
+        }
+        subgrupos = CATEGORIA_EPI_ORDEM.map((cat) => ({ categoria: cat, grupos: porCategoria.get(cat) ?? [] })).filter((s) => s.grupos.length > 0);
+      }
+      return { ...b, grupos: gruposDoBloco, subgrupos };
+    }).filter((b) => b.grupos.length > 0);
+  }, [grupos]);
 
   async function salvarFabricante(id: string) {
     const fabricante = rascunhoFabricante.trim() || null;
@@ -325,8 +386,41 @@ function ProdutosTab() {
 
       {autoFotoResultado && <p className="mb-3 text-xs text-brand-dark">{autoFotoResultado}</p>}
 
-      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-sm">
+      {(() => {
+        const edProps: LinhaEditProps = {
+          editando,
+          setEditando,
+          rascunho,
+          setRascunho,
+          salvarValor,
+          editandoFabricante,
+          setEditandoFabricante,
+          rascunhoFabricante,
+          setRascunhoFabricante,
+          salvarFabricante,
+          editandoPct,
+          setEditandoPct,
+          rascunhoPct,
+          setRascunhoPct,
+          salvarPct,
+          ajustarPct,
+          setEscolhendoFoto,
+          excluir,
+        };
+        const renderGrupo = (g: Grupo) =>
+          g.itens.length === 1 ? (
+            <LinhaProduto key={g.itens[0].id} p={g.itens[0]} qtd={estoquePorProduto.get(g.itens[0].id) ?? 0} {...edProps} />
+          ) : (
+            <GrupoTamanhos
+              key={g.chave}
+              grupo={g}
+              aberto={expandidos.has(g.chave)}
+              toggle={() => toggleExpandido(g.chave)}
+              estoquePorProduto={estoquePorProduto}
+              {...edProps}
+            />
+          );
+        const cabecalho = (
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
               <th className="px-4 py-3">Foto</th>
@@ -342,70 +436,60 @@ function ProdutosTab() {
               <th className="px-4 py-3" />
             </tr>
           </thead>
-          <tbody>
-            {grupos.map((g) =>
-              g.itens.length === 1 ? (
-                <LinhaProduto
-                  key={g.itens[0].id}
-                  p={g.itens[0]}
-                  qtd={estoquePorProduto.get(g.itens[0].id) ?? 0}
-                  editando={editando}
-                  setEditando={setEditando}
-                  rascunho={rascunho}
-                  setRascunho={setRascunho}
-                  salvarValor={salvarValor}
-                  editandoFabricante={editandoFabricante}
-                  setEditandoFabricante={setEditandoFabricante}
-                  rascunhoFabricante={rascunhoFabricante}
-                  setRascunhoFabricante={setRascunhoFabricante}
-                  salvarFabricante={salvarFabricante}
-                  editandoPct={editandoPct}
-                  setEditandoPct={setEditandoPct}
-                  rascunhoPct={rascunhoPct}
-                  setRascunhoPct={setRascunhoPct}
-                  salvarPct={salvarPct}
-                  ajustarPct={ajustarPct}
-                  setEscolhendoFoto={setEscolhendoFoto}
-                  excluir={excluir}
-                />
-              ) : (
-                <GrupoTamanhos
-                  key={g.chave}
-                  grupo={g}
-                  aberto={expandidos.has(g.chave)}
-                  toggle={() => toggleExpandido(g.chave)}
-                  estoquePorProduto={estoquePorProduto}
-                  editando={editando}
-                  setEditando={setEditando}
-                  rascunho={rascunho}
-                  setRascunho={setRascunho}
-                  salvarValor={salvarValor}
-                  editandoFabricante={editandoFabricante}
-                  setEditandoFabricante={setEditandoFabricante}
-                  rascunhoFabricante={rascunhoFabricante}
-                  setRascunhoFabricante={setRascunhoFabricante}
-                  salvarFabricante={salvarFabricante}
-                  editandoPct={editandoPct}
-                  setEditandoPct={setEditandoPct}
-                  rascunhoPct={rascunhoPct}
-                  setRascunhoPct={setRascunhoPct}
-                  salvarPct={salvarPct}
-                  ajustarPct={ajustarPct}
-                  setEscolhendoFoto={setEscolhendoFoto}
-                  excluir={excluir}
-                />
-              )
+        );
+        return (
+          <div className="space-y-4">
+            {blocos.map((bloco) => {
+              const fechado = blocosFechados.has(bloco.value);
+              return (
+                <div key={bloco.value} className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                  <button
+                    onClick={() => toggleBloco(bloco.value)}
+                    className="flex w-full items-center gap-3 bg-gray-50 px-5 py-3 text-left hover:bg-gray-100"
+                  >
+                    <span className="text-xs text-gray-400">{fechado ? "▸" : "▾"}</span>
+                    <span className="font-semibold text-gray-700">{bloco.label}</span>
+                    <span className="text-xs text-gray-400">{bloco.grupos.length} itens</span>
+                  </button>
+
+                  {!fechado &&
+                    (bloco.subgrupos ? (
+                      // Bloco EPI: uma sub-tabela por categoria (CABEÇA, MÃOS, PÉS...) —
+                      // separa itens parecidos mas de proteção diferente (ex.: os 2
+                      // respiradores, os 2 mangotes) em vez de deixar tudo junto em
+                      // ordem alfabética parecendo repetido.
+                      bloco.subgrupos.map((sub) => (
+                        <div key={sub.categoria} className="border-t border-gray-100">
+                          <p className="bg-brand-light/30 px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand-dark">
+                            {sub.categoria} <span className="font-normal normal-case text-gray-400">· {sub.grupos.length} itens</span>
+                          </p>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                              {cabecalho}
+                              <tbody>{sub.grupos.map(renderGrupo)}</tbody>
+                            </table>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="overflow-x-auto border-t border-gray-100">
+                        <table className="w-full text-sm">
+                          {cabecalho}
+                          <tbody>{bloco.grupos.map(renderGrupo)}</tbody>
+                        </table>
+                      </div>
+                    ))}
+                </div>
+              );
+            })}
+            {blocos.length === 0 && (
+              <div className="rounded-2xl border border-gray-200 bg-white px-4 py-8 text-center text-sm text-gray-400 shadow-sm">
+                Nenhum item encontrado.
+              </div>
             )}
-            {grupos.length === 0 && (
-              <tr>
-                <td colSpan={11} className="px-4 py-8 text-center text-sm text-gray-400">
-                  Nenhum item encontrado.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+          </div>
+        );
+      })()}
 
       {showForm && (
         <NovoProdutoForm

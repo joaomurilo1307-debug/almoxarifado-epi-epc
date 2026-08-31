@@ -142,6 +142,37 @@ const UNIDADE_PADRAO: { nome: string; unidade: string }[] = [
 // Ver comentário completo em route.ts (fonte da verdade).
 const TIPOS_FALTANTES = ["BALACLAVA", "PROTETOR FACIAL TELADO", "MACACÃO APICULTOR", "PROTETOR SOLAR"];
 
+const CATEGORIA_EPI: Record<string, string[]> = {
+  "CABEÇA": [
+    "BALACLAVA", "CAPACETE AZUL", "CAPACETE BRANCO", "CAPACETE CINZA", "CAPACETE LARANJA",
+    "CARNEIRA", "JUGULAR PARA CAPACETE", "CHAPEU DE PALHA",
+    "TOUCA ÁRABE", "TOUCA ÁRABE COM ABA", "TOUCA ÁRABE SEM ABA",
+  ],
+  "OLHOS/FACE": [
+    "ÓCULOS DE PROTEÇÃO INCOLOR", "ÓCULOS DE PROTEÇÃO ESCURO",
+    "ÓCULOS INCOLOR COM BANDA ELÁSTICA", "ÓCULOS ESCURO COM BANDA ELÁSTICA",
+    "ÓCULOS DE AMPLA VISÃO INCOLOR", "ÓCULOS DE AMPLA VISÃO ESCURO",
+    "PROTETOR FACIAL TELADO", "PROTETOR FACIAL DE ACRÍLICO", "ADAPTADOR COM PROTETOR FACIAL PARA VISEIRA LIBUS",
+  ],
+  "AUDIÇÃO": ["PROTETOR AUDITIVO"],
+  "RESPIRATÓRIO": ["PROTETOR RESPIRATÓRIO", "RESPIRADOR C/ VALVULA PFF2", "RESPIRADOR SEMIFACIAL C/ FILTRO CARBOGRAFITE"],
+  "TRONCO": ["COLETE REFLETIVO", "COLETE SALVA-VIDAS", "BLUSÃO DE OPERADOR DE MOTOSSERRA", "AVENTAL DE PVC", "CAMISA JALECO"],
+  "BRAÇOS": ["MANGOTE", "MANGOTE DE MALHA FIBRA ARAMIDA"],
+  "MÃOS": [
+    "LUVA ANTICORTE", "LUVA DE OPERADOR DE MOTOSSERRA", "LUVA ANTI-TÉRMICA", "LUVA DE PVC",
+    "LUVA DE RASPA", "LUVA DE RASPA CANO LONGO", "LUVA DE VAQUETA", "LUVA DE LÁTEX",
+    "LUVA DE LÁTEX DESCARTÁVEL", "LUVA NITRILICA", "LUVA ANTI-IMPACTO", "LUVA PU",
+    "LUVA DE BORRACHA", "LUVA MISTA", "LUVA MISTA CANO LONGO", "LUVA TATIL BLACK",
+    "LUVA DE SEGURANÇA DESCARTÁVEL 8X100 UND", "PRESILHAS PARA LUVAS", "CLIP PORTA LUVAS DE SEGURANÇA",
+  ],
+  "PERNAS": ["CALÇA", "CALÇA DE OPERADOR DE MOTOSSERRA", "PERNEIRA DE BIDIM", "PERNEIRA COM PROTEÇÃO DE JOELHO"],
+  "PÉS": ["BOTA", "BOTA COM PROTEÇÃO DE METATARSO", "BOTA DE PVC", "BOTA MOTOSSERRISTA"],
+  "OUTROS": [
+    "CAPA DE CHUVA", "MACACÃO APICULTOR", "PROTETOR SOLAR", "PROTETOR SOLAR COM REPELENTE", "REPELENTE",
+    "BAINHA COURO P/ FACÃO", "FITA P/DEMARCAÇÃO S/ADESIVO ZEBRADA", "KIT MOTOSSERRISTA UNIFORME",
+  ],
+};
+
 async function repoint(deId: string, paraId: string) {
   const estoquesDup = await prisma.epiEstoque.findMany({ where: { produtoId: deId } });
   for (const e of estoquesDup) {
@@ -210,6 +241,11 @@ async function main() {
     const tamanhoLimpo = (p.tamanho ?? "").replace(/\s*\(Higienizada\)\s*$/i, "").trim() || null;
     await prisma.epiProduto.update({ where: { id: p.id }, data: { tamanho: tamanhoLimpo, higienizado: true } });
     console.log(`[higienizada -> flag] "${p.nome}" tamanho "${p.tamanho}" -> tamanho="${tamanhoLimpo}", higienizado=true`);
+  }
+
+  for (const [categoria, nomes] of Object.entries(CATEGORIA_EPI)) {
+    const r = await prisma.epiProduto.updateMany({ where: { nome: { in: nomes }, tipo: "EPI", categoria: null }, data: { categoria } });
+    if (r.count > 0) console.log(`[categoria] "${categoria}": ${r.count} linha(s)`);
   }
 }
 

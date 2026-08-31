@@ -291,6 +291,45 @@ const UNIDADE_PADRAO: { nome: string; unidade: string }[] = [
 // resto do catálogo) até entrar estoque de verdade.
 const TIPOS_FALTANTES = ["BALACLAVA", "PROTETOR FACIAL TELADO", "MACACÃO APICULTOR", "PROTETOR SOLAR"];
 
+// João pediu (31/08/2026): separar o catálogo em blocos/categoria igual o
+// Estoque já faz — sem isso, itens de proteção diferente mas nome parecido
+// (os 2 mangotes, os 2 respiradores, os 3 tipos de bota) ficam espalhados em
+// ordem alfabética junto com tudo mais e parecem duplicidade só de bater o
+// olho. Categoria = parte do corpo/função, mesma classificação da aba "EPIs
+// Mínimos" (Matheus): CABEÇA, OLHOS/FACE, AUDIÇÃO, RESPIRATÓRIO, TRONCO,
+// BRAÇOS, MÃOS, PERNAS, PÉS — accessório/item avulso que não é EPI de
+// verdade (fita zebrada, bainha de facão...) cai em OUTROS.
+const CATEGORIA_EPI: Record<string, string[]> = {
+  "CABEÇA": [
+    "BALACLAVA", "CAPACETE AZUL", "CAPACETE BRANCO", "CAPACETE CINZA", "CAPACETE LARANJA",
+    "CARNEIRA", "JUGULAR PARA CAPACETE", "CHAPEU DE PALHA",
+    "TOUCA ÁRABE", "TOUCA ÁRABE COM ABA", "TOUCA ÁRABE SEM ABA",
+  ],
+  "OLHOS/FACE": [
+    "ÓCULOS DE PROTEÇÃO INCOLOR", "ÓCULOS DE PROTEÇÃO ESCURO",
+    "ÓCULOS INCOLOR COM BANDA ELÁSTICA", "ÓCULOS ESCURO COM BANDA ELÁSTICA",
+    "ÓCULOS DE AMPLA VISÃO INCOLOR", "ÓCULOS DE AMPLA VISÃO ESCURO",
+    "PROTETOR FACIAL TELADO", "PROTETOR FACIAL DE ACRÍLICO", "ADAPTADOR COM PROTETOR FACIAL PARA VISEIRA LIBUS",
+  ],
+  "AUDIÇÃO": ["PROTETOR AUDITIVO"],
+  "RESPIRATÓRIO": ["PROTETOR RESPIRATÓRIO", "RESPIRADOR C/ VALVULA PFF2", "RESPIRADOR SEMIFACIAL C/ FILTRO CARBOGRAFITE"],
+  "TRONCO": ["COLETE REFLETIVO", "COLETE SALVA-VIDAS", "BLUSÃO DE OPERADOR DE MOTOSSERRA", "AVENTAL DE PVC", "CAMISA JALECO"],
+  "BRAÇOS": ["MANGOTE", "MANGOTE DE MALHA FIBRA ARAMIDA"],
+  "MÃOS": [
+    "LUVA ANTICORTE", "LUVA DE OPERADOR DE MOTOSSERRA", "LUVA ANTI-TÉRMICA", "LUVA DE PVC",
+    "LUVA DE RASPA", "LUVA DE RASPA CANO LONGO", "LUVA DE VAQUETA", "LUVA DE LÁTEX",
+    "LUVA DE LÁTEX DESCARTÁVEL", "LUVA NITRILICA", "LUVA ANTI-IMPACTO", "LUVA PU",
+    "LUVA DE BORRACHA", "LUVA MISTA", "LUVA MISTA CANO LONGO", "LUVA TATIL BLACK",
+    "LUVA DE SEGURANÇA DESCARTÁVEL 8X100 UND", "PRESILHAS PARA LUVAS", "CLIP PORTA LUVAS DE SEGURANÇA",
+  ],
+  "PERNAS": ["CALÇA", "CALÇA DE OPERADOR DE MOTOSSERRA", "PERNEIRA DE BIDIM", "PERNEIRA COM PROTEÇÃO DE JOELHO"],
+  "PÉS": ["BOTA", "BOTA COM PROTEÇÃO DE METATARSO", "BOTA DE PVC", "BOTA MOTOSSERRISTA"],
+  "OUTROS": [
+    "CAPA DE CHUVA", "MACACÃO APICULTOR", "PROTETOR SOLAR", "PROTETOR SOLAR COM REPELENTE", "REPELENTE",
+    "BAINHA COURO P/ FACÃO", "FITA P/DEMARCAÇÃO S/ADESIVO ZEBRADA", "KIT MOTOSSERRISTA UNIFORME",
+  ],
+};
+
 async function repoint(deId: string, paraId: string) {
   const estoquesDup = await prisma.epiEstoque.findMany({ where: { produtoId: deId } });
   for (const e of estoquesDup) {
@@ -379,6 +418,18 @@ export async function POST() {
     const tamanhoLimpo = (p.tamanho ?? "").replace(/\s*\(Higienizada\)\s*$/i, "").trim() || null;
     await prisma.epiProduto.update({ where: { id: p.id }, data: { tamanho: tamanhoLimpo, higienizado: true } });
     log.push(`[higienizada -> flag] "${p.nome}" tamanho "${p.tamanho}" -> tamanho="${tamanhoLimpo}", higienizado=true`);
+  }
+
+  for (const [categoria, nomes] of Object.entries(CATEGORIA_EPI)) {
+    const r = await prisma.epiProduto.updateMany({
+      where: { nome: { in: nomes }, tipo: "EPI", categoria: null },
+      data: { categoria },
+    });
+    if (r.count > 0) log.push(`[categoria] "${categoria}": ${r.count} linha(s)`);
+  }
+  const semCategoria = await prisma.epiProduto.findMany({ where: { tipo: "EPI", categoria: null }, select: { nome: true } });
+  if (semCategoria.length > 0) {
+    log.push(`[categoria] AVISO: ${semCategoria.length} produto(s) EPI sem categoria mapeada (caem em "OUTROS" na tela): ${[...new Set(semCategoria.map((p) => p.nome))].join(", ")}`);
   }
 
   return NextResponse.json({ ok: true, totalLinhas: log.length, log });
