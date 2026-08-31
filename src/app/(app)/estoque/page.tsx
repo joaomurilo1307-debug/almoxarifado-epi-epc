@@ -15,6 +15,8 @@ type EstoqueRow = {
   estoqueAtual: number;
   estoqueMinimo: number;
   minimoSugerido: number;
+  efetivoConsiderado: number;
+  sugestaoBaseadaEmTamanho: boolean;
   necessidade: number;
   status: "OK" | "ATENCAO" | "COMPRAR";
   valorEmEstoque: number | null;
@@ -296,10 +298,15 @@ export default function EstoquePage() {
                                 {r.minimoSugerido !== r.estoqueMinimo && (
                                   <button
                                     onClick={() => aplicarSugestao(r.id, r.minimoSugerido)}
-                                    title="Sugestão calculada: efetivo do contrato × % de contingência do item (ou do contrato, se o item não tiver um % próprio)"
+                                    title={
+                                      r.sugestaoBaseadaEmTamanho
+                                        ? `Sugestão: ${r.efetivoConsiderado} colaborador(es) ativo(s) usam esse tamanho na ficha de cadastro × % de contingência`
+                                        : "Sugestão calculada: efetivo do contrato × % de contingência do item (ou do contrato, se o item não tiver um % próprio) — esse produto não tem campo de tamanho na ficha de cadastro, por isso usa o efetivo geral"
+                                    }
                                     className="block text-[10px] text-brand-dark hover:underline"
                                   >
                                     sugestão: {r.minimoSugerido}
+                                    {r.sugestaoBaseadaEmTamanho && <span className="text-gray-400"> ({r.efetivoConsiderado} usam)</span>}
                                   </button>
                                 )}
                               </div>
