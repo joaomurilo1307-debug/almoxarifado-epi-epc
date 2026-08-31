@@ -101,6 +101,65 @@ const REGRAS: Regra[] = [
     nomeFinal: "ÓCULOS DE PROTEÇÃO INCOLOR",
     fontes: ["ÓCULOS DE PROTEÇÃO INCOLOR - CA11268", "ÓCULOS DE PROTEÇÃO INCOLOR - CA14991"],
   },
+  // Segunda leva (31/08/2026) — achados comparando com a aba "EPIs por
+  // Função" da mesma planilha: o MESMO EPI (mesmo nome de função) aparece
+  // com CA diferente em CADA CONTRATO (ex.: "Protetor auditivo tipo concha"
+  // é CA37132 no contrato 3687 e CA27971 nos outros) — confirma de vez que
+  // CA varia por contrato/época de compra, nunca devia ter sido usado pra
+  // separar produto.
+  {
+    nomeFinal: "LUVA DE PVC",
+    fontes: ["LUVA DE PVC", "LUVA DE PVC - CA34570"],
+  },
+  {
+    nomeFinal: "LUVA MISTA CANO LONGO",
+    fontes: ["LUVA MISTA CANO LONGO - CA36845", "LUVA MISTA CANO LONGO - CA40319"],
+  },
+  {
+    nomeFinal: "LUVA NITRILICA",
+    fontes: ["LUVA NITRILICA", "LUVA NITRILICA - CA25280"],
+  },
+  {
+    nomeFinal: "MANGOTE",
+    fontes: ["MANGOTE - CA12107", "MANGOTE - CA41029"],
+  },
+  {
+    nomeFinal: "ÓCULOS DE PROTEÇÃO ESCURO",
+    fontes: ["ÓCULOS DE PROTEÇÃO ESCURO - CA11268", "ÓCULOS DE PROTEÇÃO ESCURO - CA20716"],
+  },
+  {
+    nomeFinal: "LUVA VAQUETA",
+    fontes: ["LUVA VAQUETA", "LUVA DE VAQUETA - CA11711"],
+  },
+  {
+    // Confirmado na aba "EPIs por Função": "Perneira com proteção de
+    // joelhos" é CA41818 (bate com a TECMATER do catálogo) — as outras 2
+    // descrevem a mesma proteção de joelho com nome/marca diferente.
+    // Distinto da "PERNEIRA" simples (essa já fundida antes, CA19667/27348
+    // na planilha — sem proteção de joelho).
+    nomeFinal: "PERNEIRA COM PROTEÇÃO DE JOELHO",
+    fontes: ["PERNEIRA DE BEDIM COM JOELHEIRA - TECMATER", "PERNEIRA DE BEDIM JOELHEIRA", "Perneira com proteção nos joelhos (Sthil)"],
+  },
+  {
+    // "OCULOS BANDA ELASTICA INCOLOR/PRETO" (import MRN antigo, CA28436) e
+    // "ÓCULOS DE PROTEÇÃO .../COM BANDA ELASTICA - CA39190" (import ECC
+    // novo) descrevem o mesmo tipo de óculos (banda elástica + cor) — dois
+    // CAs diferentes de dois lotes de compra diferentes, mesma peça.
+    nomeFinal: "ÓCULOS INCOLOR COM BANDA ELÁSTICA",
+    fontes: ["OCULOS BANDA ELASTICA INCOLOR", "ÓCULOS DE PROTEÇÃO INCOLOR COM BANDA ELASTICA - CA39190"],
+  },
+  {
+    nomeFinal: "ÓCULOS ESCURO COM BANDA ELÁSTICA",
+    fontes: ["OCULOS BANDA ELASTICA PRETO", "ÓCULOS DE PROTEÇÃO ESCURO COM BANDA ELASTICA - CA39190"],
+  },
+];
+
+// Ajuste de unidade — bota é sempre contada em pares, mas ficou UNID em
+// alguns tamanhos por causa de duas importações diferentes usando unidade
+// diferente antes da fusão.
+const UNIDADE_PADRAO: { nome: string; unidade: string }[] = [
+  { nome: "BOTA", unidade: "PAR(ES)" },
+  { nome: "BOTA COM PROTEÇÃO DE METATARSO", unidade: "PAR(ES)" },
 ];
 
 async function repoint(deId: string, paraId: string) {
@@ -144,6 +203,10 @@ export async function POST() {
 
     for (const [tamanho, itens] of porTamanho) {
       const [manter, ...resto] = itens;
+      // Já processado antes (sobrou só 1, já sem CA/fabricante, já com o
+      // nome final)? Não repete — evita ficar "fundindo" a mesma linha com
+      // ela mesma toda vez que alguém roda de novo.
+      if (resto.length === 0 && manter.nome === regra.nomeFinal && manter.ca === null && manter.fabricante === null) continue;
       for (const dup of resto) {
         await repoint(dup.id, manter.id);
         await prisma.epiProduto.delete({ where: { id: dup.id } });
@@ -151,6 +214,11 @@ export async function POST() {
       await prisma.epiProduto.update({ where: { id: manter.id }, data: { nome: regra.nomeFinal, ca: null, fabricante: null } });
       log.push(`[${regra.nomeFinal}] tamanho="${tamanho || "—"}": ${itens.length} fonte(s) -> 1 produto (CA/fabricante zerados)`);
     }
+  }
+
+  for (const { nome, unidade } of UNIDADE_PADRAO) {
+    const r = await prisma.epiProduto.updateMany({ where: { nome, unidade: { not: unidade } }, data: { unidade } });
+    if (r.count > 0) log.push(`[unidade] "${nome}": ${r.count} linha(s) -> "${unidade}"`);
   }
 
   return NextResponse.json({ ok: true, totalLinhas: log.length, log });

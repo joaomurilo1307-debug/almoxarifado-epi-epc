@@ -66,6 +66,23 @@ const REGRAS: Regra[] = [
   },
   { nomeFinal: "PERNEIRA", fontes: ["PERNEIRA - CA39624", "PERNEIRA - CA44234", "PERNEIRA - CA48785"] },
   { nomeFinal: "ÓCULOS DE PROTEÇÃO INCOLOR", fontes: ["ÓCULOS DE PROTEÇÃO INCOLOR - CA11268", "ÓCULOS DE PROTEÇÃO INCOLOR - CA14991"] },
+  { nomeFinal: "LUVA DE PVC", fontes: ["LUVA DE PVC", "LUVA DE PVC - CA34570"] },
+  { nomeFinal: "LUVA MISTA CANO LONGO", fontes: ["LUVA MISTA CANO LONGO - CA36845", "LUVA MISTA CANO LONGO - CA40319"] },
+  { nomeFinal: "LUVA NITRILICA", fontes: ["LUVA NITRILICA", "LUVA NITRILICA - CA25280"] },
+  { nomeFinal: "MANGOTE", fontes: ["MANGOTE - CA12107", "MANGOTE - CA41029"] },
+  { nomeFinal: "ÓCULOS DE PROTEÇÃO ESCURO", fontes: ["ÓCULOS DE PROTEÇÃO ESCURO - CA11268", "ÓCULOS DE PROTEÇÃO ESCURO - CA20716"] },
+  { nomeFinal: "LUVA VAQUETA", fontes: ["LUVA VAQUETA", "LUVA DE VAQUETA - CA11711"] },
+  {
+    nomeFinal: "PERNEIRA COM PROTEÇÃO DE JOELHO",
+    fontes: ["PERNEIRA DE BEDIM COM JOELHEIRA - TECMATER", "PERNEIRA DE BEDIM JOELHEIRA", "Perneira com proteção nos joelhos (Sthil)"],
+  },
+  { nomeFinal: "ÓCULOS INCOLOR COM BANDA ELÁSTICA", fontes: ["OCULOS BANDA ELASTICA INCOLOR", "ÓCULOS DE PROTEÇÃO INCOLOR COM BANDA ELASTICA - CA39190"] },
+  { nomeFinal: "ÓCULOS ESCURO COM BANDA ELÁSTICA", fontes: ["OCULOS BANDA ELASTICA PRETO", "ÓCULOS DE PROTEÇÃO ESCURO COM BANDA ELASTICA - CA39190"] },
+];
+
+const UNIDADE_PADRAO: { nome: string; unidade: string }[] = [
+  { nome: "BOTA", unidade: "PAR(ES)" },
+  { nome: "BOTA COM PROTEÇÃO DE METATARSO", unidade: "PAR(ES)" },
 ];
 
 async function repoint(deId: string, paraId: string) {
@@ -102,6 +119,7 @@ async function main() {
     }
     for (const [tamanho, itens] of porTamanho) {
       const [manter, ...resto] = itens;
+      if (resto.length === 0 && manter.nome === regra.nomeFinal && manter.ca === null && manter.fabricante === null) continue;
       for (const dup of resto) {
         await repoint(dup.id, manter.id);
         await prisma.epiProduto.delete({ where: { id: dup.id } });
@@ -109,6 +127,11 @@ async function main() {
       await prisma.epiProduto.update({ where: { id: manter.id }, data: { nome: regra.nomeFinal, ca: null, fabricante: null } });
       console.log(`[${regra.nomeFinal}] tamanho="${tamanho || "—"}": ${itens.length} fonte(s) -> 1 produto`);
     }
+  }
+
+  for (const { nome, unidade } of UNIDADE_PADRAO) {
+    const r = await prisma.epiProduto.updateMany({ where: { nome, unidade: { not: unidade } }, data: { unidade } });
+    if (r.count > 0) console.log(`[unidade] "${nome}": ${r.count} linha(s) -> "${unidade}"`);
   }
 }
 
