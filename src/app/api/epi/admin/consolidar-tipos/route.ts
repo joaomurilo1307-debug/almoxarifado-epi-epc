@@ -152,6 +152,126 @@ const REGRAS: Regra[] = [
     nomeFinal: "ÓCULOS ESCURO COM BANDA ELÁSTICA",
     fontes: ["OCULOS BANDA ELASTICA PRETO", "ÓCULOS DE PROTEÇÃO ESCURO COM BANDA ELASTICA - CA39190"],
   },
+
+  // Terceira leva (31/08/2026) — João pediu pra cruzar com cuidado 3 fontes:
+  // aba "EPI - OP 3" (catálogo com foto/modelo/fabricante), aba "EPIs
+  // Mínimos" (lista canônica de ~35 tipos, feita pelo Matheus) e aba "EPIs
+  // por Função" (CA realmente distribuído por função/contrato). Achado 1:
+  // várias linhas do banco eram nome-sentença batendo 1:1 com a descrição
+  // da OP-3 ("Óculos de segurança convencional (claro ou escuro)", "Bota de
+  // segurança impermeável" etc.) — import acidental da planilha de
+  // referência (fotos) como se fosse produto de estoque real; confirmado
+  // que têm estoque=0 E mínimo=0 em TODOS os contratos, ou seja, nunca
+  // foram de fato produto rastreado, só ruído. Achado 2: as duas convenções
+  // de nome dos dois lotes de importação (MRN antiga x controle ECC novo)
+  // continuavam sem se cruzar pra vários tipos (óculos, luvas, uniforme).
+  {
+    nomeFinal: "PROTETOR AUDITIVO",
+    fontes: ["PROTETOR AUDITIVO", "ABAFADOR DE RUIDOS TP CONCHA ACOPLAR"],
+  },
+  {
+    nomeFinal: "AVENTAL DE PVC",
+    fontes: ["AVENTAL DE PVC", "AVENTAL - CA11793"],
+  },
+  {
+    // "LUVA AGENTES MECANICOS" e "LUVA PU CUT ANTI CORTE" descrevem a mesma
+    // luva anti-corte (CA36606 Volk "Cut Oil" já fundida antes) com nome de
+    // import diferente.
+    nomeFinal: "LUVA ANTICORTE",
+    fontes: ["LUVA ANTICORTE", "LUVA AGENTES MECANICOS", "LUVA PU CUT ANTI CORTE"],
+  },
+  {
+    // "Óculos de segurança convencional (claro ou escuro)" é a linha-
+    // sentença da OP-3 (CA36698, um CA só cobre as 2 cores) — zero estoque,
+    // dobra em cima do que já existe separado por cor.
+    nomeFinal: "ÓCULOS DE PROTEÇÃO INCOLOR",
+    fontes: ["ÓCULOS DE PROTEÇÃO INCOLOR", "OCULOS DE SEGURANÇA ANTIRRISCO INCOLOR", "Óculos de segurança convencional (claro ou escuro)"],
+  },
+  {
+    nomeFinal: "ÓCULOS DE PROTEÇÃO ESCURO",
+    fontes: ["ÓCULOS DE PROTEÇÃO ESCURO", "OCULOS DE SEGURANÇA ANTIRRISCO CINZA"],
+  },
+  {
+    // "Ampla visão" / "de sobreposição" = mesmo desenho (óculos que veste
+    // por cima, tipo sobrepor) em nomes diferentes dos dois lotes; CA muda
+    // por marca/lote, não por modelo.
+    nomeFinal: "ÓCULOS DE AMPLA VISÃO INCOLOR",
+    fontes: [
+      "ÓCULOS DE PROTEÇÃO INCOLOR AMPLA VISÃO - CA12572",
+      "ÓCULOS DE PROTEÇÃO INCOLOR DE SOBREPOSIÇÃO - CA16462",
+      "OCULOS SEGURANÇA SOBREPOR",
+      "ÓCULOS DE PROTEÇÃO INCOLOR DE SOBREPOSIÇÃO E BANDA ELASTICA - CA19072",
+    ],
+  },
+  {
+    nomeFinal: "ÓCULOS DE AMPLA VISÃO ESCURO",
+    fontes: ["ÓCULOS DE PROTEÇÃO ESCURO AMPLA VISÃO - CA9722", "ÓCULOS DE PROTEÇÃO ESCURO DE SOBREPOSIÇÃO - CA16462"],
+  },
+  {
+    nomeFinal: "ÓCULOS INCOLOR COM BANDA ELÁSTICA",
+    fontes: ["ÓCULOS INCOLOR COM BANDA ELÁSTICA", "Óculos de segurança com banda elástica (claro ou escuro)"],
+  },
+  {
+    // "CALÇA POLICOTON LEVE" é a mesma calça de uniforme (uma das 3 peças
+    // padrão), só nomeada pelo tecido no import ECC em vez de "CALÇA" like
+    // no import MRN. Idem jaleco e colete abaixo.
+    nomeFinal: "CALÇA",
+    fontes: ["CALÇA", "CALÇA POLICOTON LEVE"],
+  },
+  {
+    nomeFinal: "CAMISA JALECO",
+    fontes: ["CAMISA JALECO", "JALECO POLICOTON LEVE"],
+  },
+  {
+    // "EPIs por Função" descreve o colete sempre como "refletivo verde OU
+    // laranja" — cor é variação de lote, não modelo diferente; confirma que
+    // "COLETE LARANJA"/"COLETE VERDE" (import sem a palavra "refletivo" no
+    // nome) são a mesma peça de "COLETE REFLETIVO".
+    nomeFinal: "COLETE REFLETIVO",
+    fontes: ["COLETE REFLETIVO", "COLETE LARANJA", "COLETE VERDE"],
+  },
+
+  // Renomeações puras (produto único, sem duplicata de verdade) — só tira
+  // marca/CA do nome pra bater com o nome canônico da planilha EPIs
+  // Mínimos, ou corrige nome-sentença que veio direto da OP-3 (mesmo
+  // produto real, só com o nome errado).
+  { nomeFinal: "BLUSÃO DE OPERADOR DE MOTOSSERRA", fontes: ["BLUSÃO DE OPERADOR - CA46231"] },
+  { nomeFinal: "CALÇA DE OPERADOR DE MOTOSSERRA", fontes: ["CALÇA DE OPERADOR - CA36600"] },
+  { nomeFinal: "CAPACETE BRANCO", fontes: ["CAPACETE BRANCO MSA - CA498"] },
+  { nomeFinal: "CAPACETE CINZA", fontes: ["CAPACETE CINZA MSA - CA498"] },
+  { nomeFinal: "CAPACETE LARANJA", fontes: ["CAPACETE LARANJA MSA - CA498"] },
+  { nomeFinal: "CARNEIRA", fontes: ["Carneira para capacete"] },
+  // Ghost da OP-3 (CA34233, categoria "PVC" na planilha) promovido a tipo
+  // canônico real — "BOTA DE PVC" não tinha NENHUMA linha no catálogo.
+  { nomeFinal: "BOTA DE PVC", fontes: ["Bota de segurança impermeável"] },
+  // Idem: "LUVA DE OP. DE MOTOSSERRA" e "LUVA ANTI-TERMICA" da planilha
+  // EPIs Mínimos não tinham linha nenhuma — só existiam como ghost OP-3.
+  { nomeFinal: "LUVA DE OPERADOR DE MOTOSSERRA", fontes: ["Luva motosserrista vaqueta"] },
+  { nomeFinal: "LUVA ANTI-TÉRMICA", fontes: ["Luva térmica"] },
+  // "Luva impermeável (Solvex)" = luva de látex reutilizável (categoria
+  // Latex na OP-3, CA12598/12872 — CA muda por lote) -> tipo canônico
+  // "LUVA DE LÁTEX" do Matheus, que também não tinha linha nenhuma.
+  { nomeFinal: "LUVA DE LÁTEX", fontes: ["Luva impermeável (Solvex)"] },
+  // "LUVA DE LATEX - CA13030": aba "EPIs por Função" chama esse CA
+  // explicitamente de "luvas de procedimento descartáveis látex" (uso
+  // veterinário/laboratório) — produto diferente da luva de látex de
+  // trabalho pesado acima, mantido separado, só renomeado pra não
+  // confundir com o tipo genérico.
+  { nomeFinal: "LUVA DE LÁTEX DESCARTÁVEL", fontes: ["LUVA DE LATEX - CA13030"] },
+  { nomeFinal: "LUVA ANTI-IMPACTO", fontes: ["LUVA ANTI-IMPACTO - CA44549"] },
+  { nomeFinal: "LUVA DE RASPA CANO LONGO", fontes: ["LUVA DE RASPA CANO LOGO - CA40320"] }, // corrige erro de digitação "LOGO"->"LONGO"
+  { nomeFinal: "LUVA DE SEGURANÇA DESCARTÁVEL 8X100 UND", fontes: ["LUVA DE SEGURANÇA DESCATAVEL 8X100 UND"] }, // corrige "DESCATAVEL"
+  { nomeFinal: "LUVA MISTA", fontes: ["LUVA MISTA - CA52131"] },
+  { nomeFinal: "LUVA DE VAQUETA", fontes: ["LUVA VAQUETA"] },
+  { nomeFinal: "PERNEIRA DE BIDIM", fontes: ["PERNEIRA"] },
+  { nomeFinal: "PROTETOR FACIAL DE ACRÍLICO", fontes: ["PROTETOR FACIAL DE ACRILICO - CA311814"] },
+  { nomeFinal: "COLETE SALVA-VIDAS", fontes: ["Colete salva-vidas (Homolog. Marinha nº 062/2012)"] },
+  { nomeFinal: "KIT MOTOSSERRISTA UNIFORME", fontes: ["KIT MOTOSSERRISTA UNIFOEME"] }, // corrige "UNIFOEME"
+  { nomeFinal: "TOUCA ÁRABE COM ABA", fontes: ["TOUCA ARABE COM ABA"] },
+  { nomeFinal: "TOUCA ÁRABE SEM ABA", fontes: ["TOUCA ARABE SEM ABA"] },
+  // Modelo de bota alternativo (coturno cadarçado, CA37533 Marluvas) sem
+  // nenhum estoque real — mesma função de "BOTA", só nome/marca diferente.
+  { nomeFinal: "BOTA", fontes: ["Coturno Preta Bico De Aço Laranja 60C32MTAMEX Cadarço"] },
 ];
 
 // Ajuste de unidade — bota é sempre contada em pares, mas ficou UNID em

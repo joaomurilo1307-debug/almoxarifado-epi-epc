@@ -78,6 +78,60 @@ const REGRAS: Regra[] = [
   },
   { nomeFinal: "ÓCULOS INCOLOR COM BANDA ELÁSTICA", fontes: ["OCULOS BANDA ELASTICA INCOLOR", "ÓCULOS DE PROTEÇÃO INCOLOR COM BANDA ELASTICA - CA39190"] },
   { nomeFinal: "ÓCULOS ESCURO COM BANDA ELÁSTICA", fontes: ["OCULOS BANDA ELASTICA PRETO", "ÓCULOS DE PROTEÇÃO ESCURO COM BANDA ELASTICA - CA39190"] },
+
+  // Terceira leva (31/08/2026) — ver comentário completo em
+  // src/app/api/epi/admin/consolidar-tipos/route.ts (fonte da verdade).
+  { nomeFinal: "PROTETOR AUDITIVO", fontes: ["PROTETOR AUDITIVO", "ABAFADOR DE RUIDOS TP CONCHA ACOPLAR"] },
+  { nomeFinal: "AVENTAL DE PVC", fontes: ["AVENTAL DE PVC", "AVENTAL - CA11793"] },
+  { nomeFinal: "LUVA ANTICORTE", fontes: ["LUVA ANTICORTE", "LUVA AGENTES MECANICOS", "LUVA PU CUT ANTI CORTE"] },
+  {
+    nomeFinal: "ÓCULOS DE PROTEÇÃO INCOLOR",
+    fontes: ["ÓCULOS DE PROTEÇÃO INCOLOR", "OCULOS DE SEGURANÇA ANTIRRISCO INCOLOR", "Óculos de segurança convencional (claro ou escuro)"],
+  },
+  { nomeFinal: "ÓCULOS DE PROTEÇÃO ESCURO", fontes: ["ÓCULOS DE PROTEÇÃO ESCURO", "OCULOS DE SEGURANÇA ANTIRRISCO CINZA"] },
+  {
+    nomeFinal: "ÓCULOS DE AMPLA VISÃO INCOLOR",
+    fontes: [
+      "ÓCULOS DE PROTEÇÃO INCOLOR AMPLA VISÃO - CA12572",
+      "ÓCULOS DE PROTEÇÃO INCOLOR DE SOBREPOSIÇÃO - CA16462",
+      "OCULOS SEGURANÇA SOBREPOR",
+      "ÓCULOS DE PROTEÇÃO INCOLOR DE SOBREPOSIÇÃO E BANDA ELASTICA - CA19072",
+    ],
+  },
+  {
+    nomeFinal: "ÓCULOS DE AMPLA VISÃO ESCURO",
+    fontes: ["ÓCULOS DE PROTEÇÃO ESCURO AMPLA VISÃO - CA9722", "ÓCULOS DE PROTEÇÃO ESCURO DE SOBREPOSIÇÃO - CA16462"],
+  },
+  {
+    nomeFinal: "ÓCULOS INCOLOR COM BANDA ELÁSTICA",
+    fontes: ["ÓCULOS INCOLOR COM BANDA ELÁSTICA", "Óculos de segurança com banda elástica (claro ou escuro)"],
+  },
+  { nomeFinal: "CALÇA", fontes: ["CALÇA", "CALÇA POLICOTON LEVE"] },
+  { nomeFinal: "CAMISA JALECO", fontes: ["CAMISA JALECO", "JALECO POLICOTON LEVE"] },
+  { nomeFinal: "COLETE REFLETIVO", fontes: ["COLETE REFLETIVO", "COLETE LARANJA", "COLETE VERDE"] },
+  { nomeFinal: "BLUSÃO DE OPERADOR DE MOTOSSERRA", fontes: ["BLUSÃO DE OPERADOR - CA46231"] },
+  { nomeFinal: "CALÇA DE OPERADOR DE MOTOSSERRA", fontes: ["CALÇA DE OPERADOR - CA36600"] },
+  { nomeFinal: "CAPACETE BRANCO", fontes: ["CAPACETE BRANCO MSA - CA498"] },
+  { nomeFinal: "CAPACETE CINZA", fontes: ["CAPACETE CINZA MSA - CA498"] },
+  { nomeFinal: "CAPACETE LARANJA", fontes: ["CAPACETE LARANJA MSA - CA498"] },
+  { nomeFinal: "CARNEIRA", fontes: ["Carneira para capacete"] },
+  { nomeFinal: "BOTA DE PVC", fontes: ["Bota de segurança impermeável"] },
+  { nomeFinal: "LUVA DE OPERADOR DE MOTOSSERRA", fontes: ["Luva motosserrista vaqueta"] },
+  { nomeFinal: "LUVA ANTI-TÉRMICA", fontes: ["Luva térmica"] },
+  { nomeFinal: "LUVA DE LÁTEX", fontes: ["Luva impermeável (Solvex)"] },
+  { nomeFinal: "LUVA DE LÁTEX DESCARTÁVEL", fontes: ["LUVA DE LATEX - CA13030"] },
+  { nomeFinal: "LUVA ANTI-IMPACTO", fontes: ["LUVA ANTI-IMPACTO - CA44549"] },
+  { nomeFinal: "LUVA DE RASPA CANO LONGO", fontes: ["LUVA DE RASPA CANO LOGO - CA40320"] },
+  { nomeFinal: "LUVA DE SEGURANÇA DESCARTÁVEL 8X100 UND", fontes: ["LUVA DE SEGURANÇA DESCATAVEL 8X100 UND"] },
+  { nomeFinal: "LUVA MISTA", fontes: ["LUVA MISTA - CA52131"] },
+  { nomeFinal: "LUVA DE VAQUETA", fontes: ["LUVA VAQUETA"] },
+  { nomeFinal: "PERNEIRA DE BIDIM", fontes: ["PERNEIRA"] },
+  { nomeFinal: "PROTETOR FACIAL DE ACRÍLICO", fontes: ["PROTETOR FACIAL DE ACRILICO - CA311814"] },
+  { nomeFinal: "COLETE SALVA-VIDAS", fontes: ["Colete salva-vidas (Homolog. Marinha nº 062/2012)"] },
+  { nomeFinal: "KIT MOTOSSERRISTA UNIFORME", fontes: ["KIT MOTOSSERRISTA UNIFOEME"] },
+  { nomeFinal: "TOUCA ÁRABE COM ABA", fontes: ["TOUCA ARABE COM ABA"] },
+  { nomeFinal: "TOUCA ÁRABE SEM ABA", fontes: ["TOUCA ARABE SEM ABA"] },
+  { nomeFinal: "BOTA", fontes: ["Coturno Preta Bico De Aço Laranja 60C32MTAMEX Cadarço"] },
 ];
 
 const UNIDADE_PADRAO: { nome: string; unidade: string }[] = [
