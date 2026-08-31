@@ -80,6 +80,15 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.id = (user as any).id;
         token.role = (user as any).role;
+      } else if (token.id) {
+        // Sessão já aberta (sem `user`, só refresh do token) — busca o role
+        // de novo no banco. Sem isso, quem já tava logado quando o campo
+        // `role` foi criado ficaria preso num token antigo sem role até
+        // deslogar e logar de novo; assim como se alguém mudar o role de um
+        // usuário logado (na tela de Usuários), pega o valor novo na
+        // próxima requisição, sem precisar relogar.
+        const atual = await prisma.user.findUnique({ where: { id: token.id as string }, select: { role: true } });
+        if (atual) token.role = atual.role;
       }
       return token;
     },
