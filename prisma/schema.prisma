@@ -75,12 +75,35 @@ model EpiColaborador {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  contrato      EpiContrato       @relation(fields: [contratoId], references: [id], onDelete: Cascade)
-  movimentacoes EpiMovimentacao[]
+  contrato        EpiContrato          @relation(fields: [contratoId], references: [id], onDelete: Cascade)
+  movimentacoes   EpiMovimentacao[]
+  itensNecessarios EpiColaboradorItem[]
 
   @@unique([contratoId, nomeCompleto])
   @@index([contratoId])
   @@index([funcao])
+}
+
+// Tabela real de "quem usa o quê", pedida pelo João (31/08/2026) pra
+// substituir o cruzamento por palavra-chave em texto livre feito toda vez
+// que a tela carregava (frágil — já rendeu 2 rodadas de bug real: string de
+// função não batia por causa de sufixo de nível, e um typo de palavra-chave
+// deixou passar um item). Gerada uma vez (endpoint de rebuild) a partir da
+// ficha (tamanhoBota/Calca/Camisa) + da matriz EpiFuncaoRegra, e fica
+// congelada até rodar o rebuild de novo — dá pra auditar linha por linha
+// (colaborador X precisa de item Y, tamanho Z), não é mais caixa-preta.
+model EpiColaboradorItem {
+  id            String   @id @default(cuid())
+  colaboradorId String
+  produtoNome   String // nome canônico do EpiProduto (ex.: "BOTA", "CAPACETE BRANCO")
+  tamanho       String? // só quando o item tem tamanho na ficha (bota/calça/camisa)
+  origem        String // "FICHA" (veio direto do tamanhoBota/Calca/Camisa) ou "FUNCAO" (veio da regra por função)
+  createdAt     DateTime @default(now())
+
+  colaborador EpiColaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+
+  @@unique([colaboradorId, produtoNome])
+  @@index([produtoNome])
 }
 
 // Catalogo de itens (EPI/EPC/fardamento) — nome+tamanho unico, CA quando existir,
@@ -107,6 +130,10 @@ model EpiProduto {
   // vez dos 10% gerais, sem mexer no % de todo mundo.
   percentualContingencia Float?
   fotoUrl       String?
+  // Descrição de referência real (aba "EPI - OP 3", catálogo oficial da
+  // empresa com foto/modelo/fabricante) — usada no cadastro de itens como
+  // fonte de verdade do que o item é, sem depender de marca/CA.
+  descricao     String?  @db.Text
   ativo         Boolean  @default(true)
   createdAt     DateTime @default(now())
 

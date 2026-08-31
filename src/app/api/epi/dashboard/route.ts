@@ -129,13 +129,12 @@ export async function GET() {
         contrato: e.contrato?.codigo ?? "Geral",
         estoqueAtual: e.estoqueAtual,
         estoqueMinimo: e.estoqueMinimo,
-        minimoSugerido: e.minimoSugerido,
         necessidade: e.necessidade,
         valorNecessidade: e.valorNecessidade,
       })),
     totalEmAtencao: emAtencao.length,
     emAtencao: emAtencao
-      .sort((a, b) => a.estoqueAtual - a.estoqueMinimo - (b.estoqueAtual - b.estoqueMinimo))
+      .sort((a, b) => a.estoqueAtual - (a.estoqueMinimo ?? 0) - (b.estoqueAtual - (b.estoqueMinimo ?? 0)))
       .slice(0, 15)
       .map((e) => ({
         produto: e.produto.nome,

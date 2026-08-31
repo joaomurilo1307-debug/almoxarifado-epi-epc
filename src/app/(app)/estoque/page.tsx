@@ -13,24 +13,29 @@ type EstoqueRow = {
   entradas: number;
   saidas: number;
   estoqueAtual: number;
-  estoqueMinimo: number;
-  minimoSugerido: number;
-  efetivoConsiderado: number;
-  sugestaoBaseadaEmTamanho: boolean;
-  sugestaoBaseadaEmFuncao: boolean;
+  // Mínimo agora é SEMPRE calculado (quantidade real em uso × % de
+  // contingência) — nunca um número editado à mão. null quando não existe
+  // dado real de uso pra esse produto+tamanho (nenhum EpiColaboradorItem
+  // bateu) — nesse caso não existe "sugestão", existe ausência de dado.
+  estoqueMinimo: number | null;
+  estoqueMinimoAntigo: number; // valor antigo, importado da planilha — só histórico/auditoria
+  efetivoConsiderado: number | null; // quantos colaboradores ativos usam esse produto+tamanho, hoje
+  temDadoDeUso: boolean;
   necessidade: number;
-  status: "OK" | "ATENCAO" | "COMPRAR";
+  status: "OK" | "ATENCAO" | "COMPRAR" | "SEM_DADO";
   valorEmEstoque: number | null;
 };
 
-function StatusBadge({ status }: { status: "OK" | "ATENCAO" | "COMPRAR" }) {
+function StatusBadge({ status }: { status: "OK" | "ATENCAO" | "COMPRAR" | "SEM_DADO" }) {
   const estilo =
     status === "COMPRAR"
       ? "bg-rose-50 text-rose-600"
       : status === "ATENCAO"
         ? "bg-amber-50 text-amber-600"
-        : "bg-brand-light text-brand-dark";
-  const texto = status === "COMPRAR" ? "Comprar" : status === "ATENCAO" ? "Atenção" : "OK";
+        : status === "SEM_DADO"
+          ? "bg-gray-100 text-gray-400"
+          : "bg-brand-light text-brand-dark";
+  const texto = status === "COMPRAR" ? "Comprar" : status === "ATENCAO" ? "Atenção" : status === "SEM_DADO" ? "Sem dado" : "OK";
   return <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${estilo}`}>{texto}</span>;
 }
 
@@ -67,11 +72,9 @@ export default function EstoquePage() {
   const [rows, setRows] = useState<EstoqueRow[]>([]);
   const [contratoFiltro, setContratoFiltro] = useState<string>("");
   const [grupoFiltro, setGrupoFiltro] = useState<string>("");
-  const [statusFiltro, setStatusFiltro] = useState<"" | "COMPRAR" | "ATENCAO" | "OK">("");
+  const [statusFiltro, setStatusFiltro] = useState<"" | "COMPRAR" | "ATENCAO" | "OK" | "SEM_DADO">("");
   const [busca, setBusca] = useState("");
   const [modalRow, setModalRow] = useState<EstoqueRow | null>(null);
-  const [editandoMinimo, setEditandoMinimo] = useState<string | null>(null);
-  const [minimoRascunho, setMinimoRascunho] = useState("");
   const [blocosFechados, setBlocosFechados] = useState<Set<string>>(new Set());
 
   function toggleBloco(chave: string) {
@@ -130,30 +133,6 @@ export default function EstoquePage() {
     return GRUPOS.map((g) => ({ ...g, rows: porChave.get(g.value) ?? [] })).filter((b) => b.rows.length > 0);
   }, [filtered]);
 
-  async function salvarMinimo(id: string) {
-    const valor = parseFloat(minimoRascunho.replace(",", "."));
-    if (Number.isNaN(valor) || valor < 0) {
-      setEditandoMinimo(null);
-      return;
-    }
-    await fetch(`/api/epi/estoque/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ estoqueMinimo: valor }),
-    });
-    setEditandoMinimo(null);
-    reload();
-  }
-
-  async function aplicarSugestao(id: string, sugerido: number) {
-    await fetch(`/api/epi/estoque/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ estoqueMinimo: sugerido }),
-    });
-    reload();
-  }
-
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-3">
@@ -191,6 +170,7 @@ export default function EstoquePage() {
           <option value="COMPRAR">🔴 Precisa comprar</option>
           <option value="ATENCAO">🟡 Perto do mínimo</option>
           <option value="OK">✅ OK</option>
+          <option value="SEM_DADO">⚪ Sem dado de uso</option>
         </select>
         <input
           value={busca}
@@ -198,7 +178,7 @@ export default function EstoquePage() {
           placeholder="Buscar produto..."
           className="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm"
         />
-        <span className="text-xs text-gray-400">{filtered.length} itens · mínimo é editável, clique no número</span>
+        <span className="text-xs text-gray-400">{filtered.length} itens · mínimo calculado automaticamente (quantidade real em uso × % de contingência)</span>
       </div>
 
       <div className="space-y-4">
@@ -275,46 +255,23 @@ export default function EstoquePage() {
                           <td className="px-4 py-2.5 text-right text-rose-500">{r.saidas}</td>
                           <td className="px-4 py-2.5 text-right font-semibold text-gray-800">{r.estoqueAtual}</td>
                           <td className="px-4 py-2.5 text-right">
-                            {editandoMinimo === r.id ? (
-                              <input
-                                autoFocus
-                                value={minimoRascunho}
-                                onChange={(e) => setMinimoRascunho(e.target.value)}
-                                onBlur={() => salvarMinimo(r.id)}
-                                onKeyDown={(e) => e.key === "Enter" && salvarMinimo(r.id)}
-                                className="w-16 rounded border border-brand px-1 py-0.5 text-right text-sm"
-                              />
-                            ) : (
+                            {r.temDadoDeUso ? (
                               <div>
-                                <button
-                                  onClick={() => {
-                                    setEditandoMinimo(r.id);
-                                    setMinimoRascunho(String(r.estoqueMinimo));
-                                  }}
-                                  className="rounded px-1 text-gray-500 underline decoration-dotted hover:text-brand-dark"
-                                  title="Clique para editar o mínimo"
+                                <span
+                                  className="font-semibold text-gray-700"
+                                  title={`${r.efetivoConsiderado} colaborador(es) ativo(s) em uso × % de contingência (calculado, não editável)`}
                                 >
                                   {r.estoqueMinimo}
-                                </button>
-                                {r.minimoSugerido !== r.estoqueMinimo && (
-                                  <button
-                                    onClick={() => aplicarSugestao(r.id, r.minimoSugerido)}
-                                    title={
-                                      r.sugestaoBaseadaEmTamanho
-                                        ? `Sugestão: ${r.efetivoConsiderado} colaborador(es) ativo(s) usam esse tamanho na ficha de cadastro × % de contingência`
-                                        : r.sugestaoBaseadaEmFuncao
-                                          ? `Sugestão: ${r.efetivoConsiderado} colaborador(es) ativo(s) têm função que usa esse EPI, pela matriz Regras por função × % de contingência`
-                                          : "Sugestão calculada: efetivo do contrato × % de contingência do item (ou do contrato, se o item não tiver um % próprio) — esse produto não está em nenhuma regra de função nem tem tamanho na ficha, por isso usa o efetivo geral"
-                                    }
-                                    className="block text-[10px] text-brand-dark hover:underline"
-                                  >
-                                    sugestão: {r.minimoSugerido}
-                                    {(r.sugestaoBaseadaEmTamanho || r.sugestaoBaseadaEmFuncao) && (
-                                      <span className="text-gray-400"> ({r.efetivoConsiderado} usam)</span>
-                                    )}
-                                  </button>
-                                )}
+                                </span>
+                                <p className="text-[10px] text-gray-400">{r.efetivoConsiderado} em uso</p>
                               </div>
+                            ) : (
+                              <span
+                                className="text-xs italic text-gray-300"
+                                title="Nenhum colaborador ativo foi cruzado com esse produto (ficha ou matriz de função) — sem dado real de uso, não existe mínimo calculado"
+                              >
+                                sem dado de uso
+                              </span>
                             )}
                           </td>
                           <td className="px-4 py-2.5 text-right text-gray-400">{r.valorEmEstoque !== null ? fmtMoney(r.valorEmEstoque) : "—"}</td>

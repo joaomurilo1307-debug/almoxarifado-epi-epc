@@ -97,7 +97,7 @@ type ItemCritico = {
   tipo: string;
   categoria: string | null;
   contrato: string;
-  estoqueMinimo: number;
+  estoqueMinimo: number | null;
   necessidade: number;
 };
 

@@ -24,13 +24,12 @@ type DashboardData = {
     categoria: string | null;
     contrato: string;
     estoqueAtual: number;
-    estoqueMinimo: number;
-    minimoSugerido: number;
+    estoqueMinimo: number | null;
     necessidade: number;
     valorNecessidade: number | null;
   }[];
   totalEmAtencao: number;
-  emAtencao: { produto: string; contrato: string; estoqueAtual: number; estoqueMinimo: number }[];
+  emAtencao: { produto: string; contrato: string; estoqueAtual: number; estoqueMinimo: number | null }[];
   ultimasMovimentacoes: {
     id: string;
     tipo: "ENTRADA" | "SAIDA";
@@ -280,8 +279,7 @@ export default function AlmoxarifadoDashboard() {
                   <th className="pb-2">Categoria</th>
                   <th className="pb-2">Contrato</th>
                   <th className="pb-2 text-right">Atual</th>
-                  <th className="pb-2 text-right">Mínimo</th>
-                  <th className="pb-2 text-right" title="Calculado ao vivo: efetivo do contrato × % de contingência">Sugestão</th>
+                  <th className="pb-2 text-right" title="Calculado: quantidade real de colaboradores ativos em uso × % de contingência">Mínimo</th>
                   <th className="pb-2 text-right">Comprar</th>
                   <th className="pb-2 text-right">Custo estimado</th>
                 </tr>
@@ -295,8 +293,7 @@ export default function AlmoxarifadoDashboard() {
                     </td>
                     <td className="py-2 text-gray-500">{c.contrato}</td>
                     <td className="py-2 text-right text-gray-500">{c.estoqueAtual}</td>
-                    <td className="py-2 text-right text-gray-500">{c.estoqueMinimo}</td>
-                    <td className="py-2 text-right text-gray-400">{c.minimoSugerido}</td>
+                    <td className="py-2 text-right text-gray-500">{c.estoqueMinimo ?? "—"}</td>
                     <td className="py-2 text-right font-semibold text-accent">{c.necessidade}</td>
                     <td className="py-2 text-right text-gray-400">{c.valorNecessidade !== null ? fmtMoney(c.valorNecessidade) : "—"}</td>
                   </tr>
@@ -318,7 +315,7 @@ export default function AlmoxarifadoDashboard() {
               <div key={i} className="rounded-xl bg-white px-4 py-2.5 text-sm shadow-sm">
                 <p className="font-medium text-gray-700">{e.produto}</p>
                 <p className="text-xs text-gray-400">
-                  {e.contrato} · atual {e.estoqueAtual} / mínimo {e.estoqueMinimo}
+                  {e.contrato} · atual {e.estoqueAtual} / mínimo {e.estoqueMinimo ?? "—"}
                 </p>
               </div>
             ))}
