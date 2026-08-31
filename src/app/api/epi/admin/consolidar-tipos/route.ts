@@ -1,0 +1,157 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+
+// Correção de rumo pedida pelo João (31/08/2026): a Fase 5 separou tamanho
+// do nome, mas continuou tratando CADA MARCA/CA como um produto diferente
+// (ex.: "BOTA DE SEGURANÇA MARLUVAS - CA42374" e "...BRACOL - CA25687" como
+// dois produtos). Errado — conferido na planilha "INFORMAÇÕES GERAIS - MRN"
+// (aba "EPIs Mínimos" e a pivot "Informações mínimas", feita pelo Matheus):
+// o controle é por TIPO + TAMANHO, sem marca — "BOTA" é uma linha só,
+// "BOTA COM PROTEÇÃO DE METATARSO" é outra, ponto. Marca/CA não define o
+// produto, é só metadado incidental (o que tiver disponível na hora da
+// compra) — por isso zera aqui, não porque a informação não importe nunca.
+//
+// Regra usada pra decidir o que funde: nome idêntico ou nome que só muda
+// por marca/CA/cor-de-fabricante — mesma coisa física, fabricante
+// intercambiável. NÃO fundido: quando o nome carrega uma diferença de
+// DESENHO real (cor de capacete/colete = hierarquia; classe de respirador;
+// cadarço de touca sem confirmação equivalente à da bota) — aí fica
+// separado até confirmar.
+
+type Regra = { nomeFinal: string; fontes: string[] };
+
+// Pré-ajuste: alguns itens (principalmente das botas/luvas isoladas, que
+// nunca colidiram com outro item da mesma marca na Fase 5) ainda têm o
+// tamanho embutido só no nome, sem o campo `tamanho` preenchido. Extrai
+// antes de agrupar por tipo.
+const TAMANHO_EMBUTIDO: { nome: string; tamanho: string }[] = [
+  { nome: "BOTA DE SEGURANÇA 40 BRACOL - CA37455", tamanho: "40" },
+  { nome: "BOTA DE SEGURANÇA 41 (PROTEÇÃO DE METARARSO) - CA43959", tamanho: "41" },
+  { nome: "BOTA DE SEGURANÇA 41 (PROTEÇÃO DE METATARSO) - CA37450", tamanho: "41" },
+  { nome: "LUVA PU G KALIPSO - CA15272", tamanho: "G" },
+  { nome: "LUVA PU G SAFETY - CA32038", tamanho: "G" },
+  { nome: "LUVA PU G VOLK - CA30916", tamanho: "G" },
+  { nome: "LUVA ANTICORTE G - CA36606", tamanho: "G" },
+  { nome: "LUVA ANTICORTE M - CA34000", tamanho: "M" },
+];
+
+const REGRAS: Regra[] = [
+  {
+    nomeFinal: "BOTA",
+    fontes: [
+      "BOTA COM CADARÇO BICO COMPOSITE",
+      "BOTA SEM CADARÇO BICO COMPOSITE",
+      "BOTA DE SEGURANÇA BRACOL - CA25687",
+      "BOTA DE SEGURANÇA MARLUVAS - CA42374",
+      "BOTA DE SEGURANÇA BOMPEL - CA37671",
+      "BOTA DE SEGURANÇA BRACOL - CA42165",
+      "BOTA DE SEGURANÇA BRACOL - CA25259",
+      "BOTA DE SEGURANÇA 40 BRACOL - CA37455",
+    ],
+  },
+  {
+    nomeFinal: "BOTA COM PROTEÇÃO DE METATARSO",
+    fontes: ["BOTA DE SEGURANÇA 41 (PROTEÇÃO DE METARARSO) - CA43959", "BOTA DE SEGURANÇA 41 (PROTEÇÃO DE METATARSO) - CA37450"],
+  },
+  {
+    nomeFinal: "LUVA PU",
+    fontes: ["LUVA PU DANNY - CA29014", "LUVA PU DELTA - CA36365", "LUVA PU G KALIPSO - CA15272", "LUVA PU G SAFETY - CA32038", "LUVA PU G VOLK - CA30916"],
+  },
+  {
+    nomeFinal: "LUVA ANTICORTE",
+    fontes: ["LUVA ANTICORTE - CA12872", "LUVA ANTICORTE G - CA36606", "LUVA ANTICORTE M - CA34000"],
+  },
+  {
+    nomeFinal: "LUVA DE BORRACHA",
+    fontes: ["LUVA DE BORRACHA - CA25313", "LUVA DE BORRACHA - CA41918", "LUVA DE BORRACHA - CA5774"],
+  },
+  {
+    nomeFinal: "CAPA DE CHUVA",
+    fontes: ["CAPA DE CHUVA", "CAPA DE CHUVA AMARELA", "Capa de chuva (Brascamp)"],
+  },
+  {
+    nomeFinal: "CAPACETE AZUL",
+    fontes: ["CAPACETE AZUL 3M - CA29638", "CAPACETE CLASE B AZUL"],
+  },
+  {
+    nomeFinal: "TOUCA ÁRABE",
+    fontes: ["TOUCA ÁRABE - CA28998", "TOUCA ÁRABE - CA39760", "TOUCA ÁRABE - CA44963", "TOUCA ÁRABE - CA49731"],
+  },
+  {
+    nomeFinal: "PROTETOR AUDITIVO",
+    fontes: ["PROTETOR AUDITIVO 3M - CA33835", "PROTETOR AUDITIVO LIBUS - CA37134", "PROTETOR AUDITIVO LIBUS - CA43350", "PROTETOR AUDITIVO MSA - CA27971"],
+  },
+  {
+    nomeFinal: "PROTETOR RESPIRATÓRIO",
+    fontes: [
+      "PROTETOR RESPIRÁTORIO - CA10578",
+      "PROTETOR RESPIRÁTORIO - CA38812",
+      "PROTETOR RESPIRÁTORIO - CA38954",
+      "PROTETOR RESPIRÁTORIO - CA5657",
+      "PROTETOR RESPIRÁTORIO - CA7072",
+    ],
+  },
+  {
+    nomeFinal: "PERNEIRA",
+    fontes: ["PERNEIRA - CA39624", "PERNEIRA - CA44234", "PERNEIRA - CA48785"],
+  },
+  {
+    nomeFinal: "ÓCULOS DE PROTEÇÃO INCOLOR",
+    fontes: ["ÓCULOS DE PROTEÇÃO INCOLOR - CA11268", "ÓCULOS DE PROTEÇÃO INCOLOR - CA14991"],
+  },
+];
+
+async function repoint(deId: string, paraId: string) {
+  const estoquesDup = await prisma.epiEstoque.findMany({ where: { produtoId: deId } });
+  for (const e of estoquesDup) {
+    const existente = await prisma.epiEstoque.findFirst({ where: { produtoId: paraId, contratoId: e.contratoId } });
+    if (existente) {
+      await prisma.epiEstoque.update({ where: { id: existente.id }, data: { estoqueInicial: existente.estoqueInicial + e.estoqueInicial } });
+      await prisma.epiEstoque.delete({ where: { id: e.id } });
+    } else {
+      await prisma.epiEstoque.update({ where: { id: e.id }, data: { produtoId: paraId } });
+    }
+  }
+  await prisma.epiMovimentacao.updateMany({ where: { produtoId: deId }, data: { produtoId: paraId } });
+}
+
+export async function POST() {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+
+  const log: string[] = [];
+
+  for (const { nome, tamanho } of TAMANHO_EMBUTIDO) {
+    const r = await prisma.epiProduto.updateMany({ where: { nome, tamanho: null }, data: { tamanho } });
+    if (r.count > 0) log.push(`[tamanho embutido] "${nome}" -> tamanho="${tamanho}"`);
+  }
+
+  for (const regra of REGRAS) {
+    const produtos = await prisma.epiProduto.findMany({ where: { nome: { in: regra.fontes } } });
+    if (produtos.length === 0) {
+      log.push(`[pular] "${regra.nomeFinal}": nenhuma fonte encontrada (já rodado antes?)`);
+      continue;
+    }
+
+    const porTamanho = new Map<string, typeof produtos>();
+    for (const p of produtos) {
+      const chave = p.tamanho ?? "";
+      if (!porTamanho.has(chave)) porTamanho.set(chave, []);
+      porTamanho.get(chave)!.push(p);
+    }
+
+    for (const [tamanho, itens] of porTamanho) {
+      const [manter, ...resto] = itens;
+      for (const dup of resto) {
+        await repoint(dup.id, manter.id);
+        await prisma.epiProduto.delete({ where: { id: dup.id } });
+      }
+      await prisma.epiProduto.update({ where: { id: manter.id }, data: { nome: regra.nomeFinal, ca: null, fabricante: null } });
+      log.push(`[${regra.nomeFinal}] tamanho="${tamanho || "—"}": ${itens.length} fonte(s) -> 1 produto (CA/fabricante zerados)`);
+    }
+  }
+
+  return NextResponse.json({ ok: true, totalLinhas: log.length, log });
+}
