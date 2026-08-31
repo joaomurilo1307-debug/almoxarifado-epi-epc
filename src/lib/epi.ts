@@ -135,6 +135,38 @@ function bateComPadrao(padroes: PadraoFuncao[], linhaNormalizada: string): boole
   return padroes.some((p) => p.inclui.every((s) => linhaNormalizada.includes(s)) && !(p.exclui ?? []).some((s) => linhaNormalizada.includes(s)));
 }
 
+// A fun\u00e7\u00e3o na ficha do colaborador tem sufixo de n\u00edvel ("AUXILIAR DE CAMPO
+// I, II E III") que a regra de EPI n\u00e3o tem ("AUXILIAR DE CAMPO") \u2014 comparar
+// string exata zerava a contagem pra quase todo mundo (t\u00e9cnico de campo,
+// bi\u00f3logo, veterin\u00e1rio, analista ambiental...). Conferido nas 21 fun\u00e7\u00f5es
+// reais da ficha x 19 da regra: 8 s\u00f3 bateram depois de tirar acento e o
+// sufixo de n\u00edvel; 2 t\u00eam erro de digita\u00e7\u00e3o/abrevia\u00e7\u00e3o na planilha de
+// origem em si ("M\u00c9D. VETERINARIO", "AUXILIAR DE LABORA\u00d3RIO" sem o T) \u2014
+// corrigidas via alias pontual, n\u00e3o uma regra geral (evita casar coisa que
+// n\u00e3o devia).
+const ALIAS_FUNCAO: Record<string, string> = {
+  "MED VETERINARIO": "MEDICO VETERINARIO",
+  "AUXILIAR DE LABORAORIO": "AUXILIAR DE LABORATORIO",
+};
+function normFuncaoNome(s: string): string {
+  const base = s
+    .toUpperCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\./g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return ALIAS_FUNCAO[base] ?? base;
+}
+// A fun\u00e7\u00e3o da regra ("AUXILIAR DE CAMPO") \u00e9 a base \u2014 a da ficha
+// ("AUXILIAR DE CAMPO I, II E III", "COORDENADOR DE CONTRATOS") s\u00f3 pode
+// ser igual, ter s\u00f3 um "S" de plural a mais, ou continuar com espa\u00e7o/v\u00edrgula
+// (o sufixo de n\u00edvel) \u2014 nunca uma palavra diferente colada sem separador.
+function funcaoColaboradorBateComRegra(funcaoColabNorm: string, funcaoRegraNorm: string): boolean {
+  if (funcaoColabNorm === funcaoRegraNorm || funcaoColabNorm === funcaoRegraNorm + "S") return true;
+  return funcaoColabNorm.startsWith(funcaoRegraNorm + " ") || funcaoColabNorm.startsWith(funcaoRegraNorm + ",");
+}
+
 // Estoque atual de EPI/EPC nunca fica guardado direto no banco — é sempre recalculado
 // a partir de estoqueInicial + soma de entradas - soma de saídas em EpiMovimentacao,
 // pra nunca dessincronizar do histórico real (mesmo princípio da planilha Excel que
@@ -201,25 +233,34 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
   // aquela função ativa, por pool. Uma regra é por contrato específico, mas
   // a soma final agrupa por pool (mesma limitação do estoque real).
   const funcaoRegras = await prisma.epiFuncaoRegra.findMany({ select: { contratoId: true, funcao: true, categoria: true, descricao: true } });
-  const paresPorNome = new Map<string, Set<string>>(); // nome do produto -> Set("contratoId::funcao")
+  // pares = "contratoId::funçãoNormalizada(da REGRA, forma base)" — a
+  // comparação com a função da ficha (que tem o sufixo de nível) acontece
+  // depois, via funcaoColaboradorBateComRegra, não por igualdade de string.
+  const paresPorNome = new Map<string, Set<string>>();
   for (const [nome, padroes] of Object.entries(PADROES_FUNCAO)) {
     const pares = new Set<string>();
     for (const r of funcaoRegras) {
       const linhas = r.descricao.split(/\r?\n/).map(normFuncaoTexto);
-      if (linhas.some((l) => bateComPadrao(padroes, l))) pares.add(`${r.contratoId}::${r.funcao}`);
+      if (linhas.some((l) => bateComPadrao(padroes, l))) pares.add(`${r.contratoId}::${normFuncaoNome(r.funcao)}`);
     }
     if (pares.size > 0) paresPorNome.set(nome, pares);
   }
   for (const [categoriaRegra, nome] of Object.entries(NOME_POR_CATEGORIA_UNICA)) {
     const pares = new Set<string>();
-    for (const r of funcaoRegras) if (r.categoria === categoriaRegra) pares.add(`${r.contratoId}::${r.funcao}`);
+    for (const r of funcaoRegras) if (r.categoria === categoriaRegra) pares.add(`${r.contratoId}::${normFuncaoNome(r.funcao)}`);
     if (pares.size > 0) paresPorNome.set(nome, pares);
   }
   const efetivoPorFuncao = new Map<string, { ECC: number; GERAL: number }>(); // nome do produto -> contagem por pool
   for (const [nome, pares] of paresPorNome) {
     const contagem = { ECC: 0, GERAL: 0 };
+    const paresArr = [...pares].map((p) => {
+      const i = p.indexOf("::");
+      return { contratoId: p.slice(0, i), funcaoNorm: p.slice(i + 2) };
+    });
     for (const c of colaboradoresAtivos) {
-      if (pares.has(`${c.contratoId}::${c.funcao}`)) contagem[poolDoCodigo(c.contrato.codigo) as "ECC" | "GERAL"]++;
+      const funcaoColabNorm = normFuncaoNome(c.funcao);
+      const bate = paresArr.some((p) => p.contratoId === c.contratoId && funcaoColaboradorBateComRegra(funcaoColabNorm, p.funcaoNorm));
+      if (bate) contagem[poolDoCodigo(c.contrato.codigo) as "ECC" | "GERAL"]++;
     }
     efetivoPorFuncao.set(nome, contagem);
   }
