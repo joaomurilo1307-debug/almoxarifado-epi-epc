@@ -217,6 +217,7 @@ export default function EstoquePage() {
                         <th className="px-4 py-2 text-right">Saídas</th>
                         <th className="px-4 py-2 text-right">Atual</th>
                         <th className="px-4 py-2 text-right">Mínimo</th>
+                        <th className="px-4 py-2 text-right">Comprar</th>
                         <th className="px-4 py-2 text-right">Valor em estoque</th>
                         <th className="px-4 py-2">Status</th>
                         <th className="px-4 py-2" />
@@ -272,6 +273,13 @@ export default function EstoquePage() {
                               >
                                 sem dado de uso
                               </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-2.5 text-right">
+                            {r.necessidade > 0 ? (
+                              <span className="font-semibold text-rose-600">{r.necessidade}</span>
+                            ) : (
+                              <span className="text-gray-300">—</span>
                             )}
                           </td>
                           <td className="px-4 py-2.5 text-right text-gray-400">{r.valorEmEstoque !== null ? fmtMoney(r.valorEmEstoque) : "—"}</td>
