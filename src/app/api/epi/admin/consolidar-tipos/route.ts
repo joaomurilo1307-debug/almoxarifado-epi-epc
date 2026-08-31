@@ -282,6 +282,15 @@ const UNIDADE_PADRAO: { nome: string; unidade: string }[] = [
   { nome: "BOTA COM PROTEÇÃO DE METATARSO", unidade: "PAR(ES)" },
 ];
 
+// Tipos que existem na aba "EPIs Mínimos" (planilha do Matheus) mas não
+// tinham NENHUMA linha no catálogo — nem fantasma, nem com nome errado.
+// João pediu pra cadastrar mesmo assim, com estoque 0 (sem inventar
+// quantidade/CA/fabricante — só o tipo, que é dado real da planilha de
+// referência), pra bater 100% com a lista canônica dele. Fica no pool
+// "Geral" (contratoId null, mesmo pool de "Depósito central/ECC" do
+// resto do catálogo) até entrar estoque de verdade.
+const TIPOS_FALTANTES = ["BALACLAVA", "PROTETOR FACIAL TELADO", "MACACÃO APICULTOR", "PROTETOR SOLAR"];
+
 async function repoint(deId: string, paraId: string) {
   const estoquesDup = await prisma.epiEstoque.findMany({ where: { produtoId: deId } });
   for (const e of estoquesDup) {
@@ -339,6 +348,21 @@ export async function POST() {
   for (const { nome, unidade } of UNIDADE_PADRAO) {
     const r = await prisma.epiProduto.updateMany({ where: { nome, unidade: { not: unidade } }, data: { unidade } });
     if (r.count > 0) log.push(`[unidade] "${nome}": ${r.count} linha(s) -> "${unidade}"`);
+  }
+
+  for (const nome of TIPOS_FALTANTES) {
+    const existente = await prisma.epiProduto.findFirst({ where: { nome, tipo: "EPI" } });
+    if (existente) {
+      log.push(`[tipo faltante] "${nome}": já existe, não recriado`);
+      continue;
+    }
+    const produto = await prisma.epiProduto.create({
+      data: { nome, tipo: "EPI", unidade: "UNID" },
+    });
+    await prisma.epiEstoque.create({
+      data: { produtoId: produto.id, contratoId: null, estoqueInicial: 0, estoqueMinimo: 0 },
+    });
+    log.push(`[tipo faltante] "${nome}": criado (estoque 0, sem CA/fabricante)`);
   }
 
   return NextResponse.json({ ok: true, totalLinhas: log.length, log });

@@ -139,6 +139,9 @@ const UNIDADE_PADRAO: { nome: string; unidade: string }[] = [
   { nome: "BOTA COM PROTEÇÃO DE METATARSO", unidade: "PAR(ES)" },
 ];
 
+// Ver comentário completo em route.ts (fonte da verdade).
+const TIPOS_FALTANTES = ["BALACLAVA", "PROTETOR FACIAL TELADO", "MACACÃO APICULTOR", "PROTETOR SOLAR"];
+
 async function repoint(deId: string, paraId: string) {
   const estoquesDup = await prisma.epiEstoque.findMany({ where: { produtoId: deId } });
   for (const e of estoquesDup) {
@@ -186,6 +189,17 @@ async function main() {
   for (const { nome, unidade } of UNIDADE_PADRAO) {
     const r = await prisma.epiProduto.updateMany({ where: { nome, unidade: { not: unidade } }, data: { unidade } });
     if (r.count > 0) console.log(`[unidade] "${nome}": ${r.count} linha(s) -> "${unidade}"`);
+  }
+
+  for (const nome of TIPOS_FALTANTES) {
+    const existente = await prisma.epiProduto.findFirst({ where: { nome, tipo: "EPI" } });
+    if (existente) {
+      console.log(`[tipo faltante] "${nome}": já existe, não recriado`);
+      continue;
+    }
+    const produto = await prisma.epiProduto.create({ data: { nome, tipo: "EPI", unidade: "UNID" } });
+    await prisma.epiEstoque.create({ data: { produtoId: produto.id, contratoId: null, estoqueInicial: 0, estoqueMinimo: 0 } });
+    console.log(`[tipo faltante] "${nome}": criado (estoque 0, sem CA/fabricante)`);
   }
 }
 
