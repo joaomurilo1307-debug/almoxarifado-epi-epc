@@ -365,5 +365,21 @@ export async function POST() {
     log.push(`[tipo faltante] "${nome}": criado (estoque 0, sem CA/fabricante)`);
   }
 
+  // João pediu (31/08/2026): "higienizada" é flag do lote (como marca/CA),
+  // não um tamanho ou tipo diferente. Estava embutida como texto dentro de
+  // `tamanho` (ex.: "G (Higienizada)"), dobrando a lista de tamanhos de
+  // CALÇA/CAMISA DE MALHA/CAMISA JALECO. Varre TODO produto com esse texto
+  // (não só os 3 já vistos) — extrai pro campo `higienizado` de verdade,
+  // limpa o tamanho. Sem merge/repoint: cada linha já é o produto de
+  // verdade, só corrige os 2 campos nela mesma.
+  const comHigienizadaNoNome = await prisma.epiProduto.findMany({
+    where: { tamanho: { contains: "Higienizada", mode: "insensitive" } },
+  });
+  for (const p of comHigienizadaNoNome) {
+    const tamanhoLimpo = (p.tamanho ?? "").replace(/\s*\(Higienizada\)\s*$/i, "").trim() || null;
+    await prisma.epiProduto.update({ where: { id: p.id }, data: { tamanho: tamanhoLimpo, higienizado: true } });
+    log.push(`[higienizada -> flag] "${p.nome}" tamanho "${p.tamanho}" -> tamanho="${tamanhoLimpo}", higienizado=true`);
+  }
+
   return NextResponse.json({ ok: true, totalLinhas: log.length, log });
 }

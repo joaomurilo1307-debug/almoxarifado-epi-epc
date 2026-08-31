@@ -94,6 +94,12 @@ model EpiProduto {
   ca            String?
   fabricante    String?
   tamanho       String?
+  // Flag de condição do lote (peça lavada/reaproveitada, controlada à parte
+  // do estoque novo) — é metadado do MESMO tipo+tamanho, igual marca/CA, não
+  // um tamanho ou produto diferente. Corrigido em 31/08/2026: antes vinha
+  // embutido como texto dentro de `tamanho` (ex.: "G (Higienizada)"), o que
+  // dobrava a lista de tamanhos por peça e confundia o cadastro.
+  higienizado   Boolean  @default(false)
   unidade       String   @default("UNID")
   valorUnitario Float?
   // Override do % de contingência do contrato (Métricas), por item — null usa
@@ -107,7 +113,7 @@ model EpiProduto {
   movimentacoes EpiMovimentacao[]
   estoques      EpiEstoque[]
 
-  @@unique([nome, tamanho])
+  @@unique([nome, tamanho, higienizado])
 }
 
 model EpiEstoque {

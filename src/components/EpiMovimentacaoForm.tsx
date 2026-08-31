@@ -4,8 +4,18 @@ import { useState } from "react";
 import NovoItemInline, { ProdutoCriado } from "./NovoItemInline";
 
 type Contrato = { id: string; codigo: string; nome: string | null };
-type Produto = { id: string; nome: string; unidade?: string };
+type Produto = { id: string; nome: string; unidade?: string; tamanho?: string | null; higienizado?: boolean };
 type Colaborador = { id: string; nomeCompleto: string; contratoId: string };
+
+// Cada tamanho (e cada situação higienizada/nova) é uma linha de produto
+// diferente no banco — sem isso no rótulo, "CAMISA DE MALHA" apareceria
+// repetido e idêntico pra cada tamanho, impossível de saber qual escolher.
+export function rotuloProduto(p: { nome: string; tamanho?: string | null; higienizado?: boolean }) {
+  let r = p.nome;
+  if (p.tamanho) r += ` - ${p.tamanho}`;
+  if (p.higienizado) r += " (Higienizada)";
+  return r;
+}
 
 const NOVO_ITEM = "__novo__";
 
@@ -37,7 +47,9 @@ export default function EpiMovimentacaoForm({
   const [produtosExtra, setProdutosExtra] = useState<Produto[]>([]);
   const [cadastrandoNovo, setCadastrandoNovo] = useState(false);
 
-  const todosProdutos = [...produtos, ...produtosExtra];
+  const todosProdutos = [...produtos, ...produtosExtra].sort(
+    (a, b) => a.nome.localeCompare(b.nome) || (a.tamanho ?? "").localeCompare(b.tamanho ?? "") || Number(a.higienizado) - Number(b.higienizado)
+  );
 
   function produtoRecemCriado(p: ProdutoCriado) {
     setProdutosExtra((prev) => [...prev, p]);
@@ -71,7 +83,7 @@ export default function EpiMovimentacaoForm({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-elevated" onClick={(e) => e.stopPropagation()}>
-        <h3 className="mb-1 text-lg font-semibold text-ink">{produtoFixo ? produtoFixo.nome : "Nova movimentação"}</h3>
+        <h3 className="mb-1 text-lg font-semibold text-ink">{produtoFixo ? rotuloProduto(produtoFixo) : "Nova movimentação"}</h3>
         {contratoFixo && <p className="mb-4 text-xs text-gray-400">{contratoFixo.codigo}</p>}
         {!contratoFixo && <div className="mb-4" />}
 
@@ -121,7 +133,7 @@ export default function EpiMovimentacaoForm({
               <option value="">Selecione...</option>
               {todosProdutos.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.nome}
+                  {rotuloProduto(p)}
                 </option>
               ))}
               <option value={NOVO_ITEM}>+ Cadastrar item novo...</option>

@@ -12,6 +12,7 @@ type Produto = {
   ca: string | null;
   fabricante: string | null;
   tamanho: string | null;
+  higienizado: boolean;
   unidade: string;
   valorUnitario: number | null;
   percentualContingencia: number | null;
@@ -102,11 +103,12 @@ const TIPO_LABEL: Record<Produto["tipo"], string> = {
 // Ordem natural pra tamanho de roupa — usada quando o tamanho não é um
 // número (bota/calça já ordenam numericamente sozinhos).
 const TAMANHO_LETRA_ORDEM = ["PP", "P", "M", "G", "GG", "XG", "EXG", "XXG"];
-function compararTamanho(a: string, b: string) {
-  const semHig = (t: string) => t.replace(/\s*\(Higienizada\)/i, "").trim();
-  const higienizada = (t: string) => (/\(Higienizada\)/i.test(t) ? 1 : 0);
-  const ca = semHig(a);
-  const cb = semHig(b);
+// "Higienizada" é flag do lote (like marca/CA), não parte do texto do
+// tamanho — por isso entra como campo separado aqui, só pra desempate
+// (mesmo tamanho, o novo aparece antes do higienizado).
+function compararTamanho(a: { tamanho: string | null; higienizado: boolean }, b: { tamanho: string | null; higienizado: boolean }) {
+  const ca = a.tamanho ?? "";
+  const cb = b.tamanho ?? "";
   const na = Number(ca);
   const nb = Number(cb);
   if (ca !== "" && cb !== "" && !Number.isNaN(na) && !Number.isNaN(nb) && na !== nb) return na - nb;
@@ -114,7 +116,7 @@ function compararTamanho(a: string, b: string) {
   const ib = TAMANHO_LETRA_ORDEM.indexOf(cb.toUpperCase());
   if (ia >= 0 && ib >= 0 && ia !== ib) return ia - ib;
   if (ca !== cb) return ca.localeCompare(cb);
-  return higienizada(a) - higienizada(b);
+  return Number(a.higienizado) - Number(b.higienizado);
 }
 
 // `chave` identifica o grupo de verdade (nome+tipo, nunca colide) — `nome` é
@@ -204,7 +206,7 @@ function ProdutosTab() {
       .map(([chave, itens]) => ({
         chave,
         nome: itens[0].nome,
-        itens: [...itens].sort((a, b) => compararTamanho(a.tamanho ?? "", b.tamanho ?? "")),
+        itens: [...itens].sort(compararTamanho),
       }))
       .sort((a, b) => a.nome.localeCompare(b.nome));
   }, [filtrados]);
@@ -501,7 +503,14 @@ function LinhaProduto({
       <td className="px-4 py-2.5">
         {indentado ? null : editandoFabricanteCampo(p, ed)}
       </td>
-      <td className="px-4 py-2.5 font-semibold text-gray-700">{p.tamanho ?? "—"}</td>
+      <td className="px-4 py-2.5 font-semibold text-gray-700">
+        {p.tamanho ?? "—"}
+        {p.higienizado && (
+          <span className="ml-1.5 rounded-full bg-teal-50 px-1.5 py-0.5 text-[10px] font-medium text-teal-600" title="Peça higienizada, controlada à parte do estoque novo">
+            ♻️ Higienizada
+          </span>
+        )}
+      </td>
       <td className="px-4 py-2.5 text-gray-500">{p.unidade}</td>
       <td className="px-4 py-2.5 text-right text-gray-600">{qtd}</td>
       <td className="px-4 py-2.5 text-right">
@@ -670,6 +679,7 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
   const [ca, setCa] = useState("");
   const [fabricante, setFabricante] = useState("");
   const [tamanho, setTamanho] = useState("");
+  const [higienizado, setHigienizado] = useState(false);
   const [unidade, setUnidade] = useState("UNID");
   const [valorUnitario, setValorUnitario] = useState("");
   const [saving, setSaving] = useState(false);
@@ -693,6 +703,7 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
         ca: ca.trim() || null,
         fabricante: fabricante.trim() || null,
         tamanho: tamanho.trim() || null,
+        higienizado,
         unidade: unidade.trim() || "UNID",
       }),
     });
@@ -757,6 +768,11 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
         <label className="mb-3 block text-sm">
           <span className="mb-1 block text-xs font-medium text-gray-500">Fabricante (opcional)</span>
           <input value={fabricante} onChange={(e) => setFabricante(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
+        </label>
+
+        <label className="mb-3 flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={higienizado} onChange={(e) => setHigienizado(e.target.checked)} className="h-4 w-4 rounded border-gray-300" />
+          <span className="text-gray-600">Peça higienizada (lote lavado/reaproveitado, controlado à parte)</span>
         </label>
 
         <div className="mb-4 grid grid-cols-2 gap-2">

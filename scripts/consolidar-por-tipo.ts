@@ -201,6 +201,16 @@ async function main() {
     await prisma.epiEstoque.create({ data: { produtoId: produto.id, contratoId: null, estoqueInicial: 0, estoqueMinimo: 0 } });
     console.log(`[tipo faltante] "${nome}": criado (estoque 0, sem CA/fabricante)`);
   }
+
+  // Ver comentário completo em route.ts (fonte da verdade).
+  const comHigienizadaNoNome = await prisma.epiProduto.findMany({
+    where: { tamanho: { contains: "Higienizada", mode: "insensitive" } },
+  });
+  for (const p of comHigienizadaNoNome) {
+    const tamanhoLimpo = (p.tamanho ?? "").replace(/\s*\(Higienizada\)\s*$/i, "").trim() || null;
+    await prisma.epiProduto.update({ where: { id: p.id }, data: { tamanho: tamanhoLimpo, higienizado: true } });
+    console.log(`[higienizada -> flag] "${p.nome}" tamanho "${p.tamanho}" -> tamanho="${tamanhoLimpo}", higienizado=true`);
+  }
 }
 
 main()

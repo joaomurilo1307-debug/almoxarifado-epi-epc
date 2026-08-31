@@ -7,7 +7,7 @@ type Contrato = { id: string; codigo: string; nome: string | null };
 type Colaborador = { id: string; nomeCompleto: string; contratoId: string };
 type EstoqueRow = {
   id: string;
-  produto: { id: string; nome: string; tipo: string; categoria: string | null; ca: string | null; tamanho: string | null; unidade: string; valorUnitario: number | null; fotoUrl: string | null };
+  produto: { id: string; nome: string; tipo: string; categoria: string | null; ca: string | null; tamanho: string | null; higienizado: boolean; unidade: string; valorUnitario: number | null; fotoUrl: string | null };
   contrato: Contrato | null;
   estoqueInicial: number;
   entradas: number;
@@ -252,7 +252,12 @@ export default function EstoquePage() {
                           </td>
                           <td className="px-4 py-2.5">
                             <p className="font-medium text-gray-700">{r.produto.nome}</p>
-                            {r.produto.tamanho && <p className="text-xs text-gray-400">Tamanho {r.produto.tamanho}</p>}
+                            {r.produto.tamanho && (
+                              <p className="text-xs text-gray-400">
+                                Tamanho {r.produto.tamanho}
+                                {r.produto.higienizado && <span className="ml-1 text-teal-600">· ♻️ Higienizada</span>}
+                              </p>
+                            )}
                           </td>
                           <td className="px-4 py-2.5">
                             {r.produto.ca ? (

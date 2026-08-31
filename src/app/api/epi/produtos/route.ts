@@ -25,6 +25,7 @@ const createSchema = z.object({
   ca: z.string().nullable().optional(),
   fabricante: z.string().nullable().optional(),
   tamanho: z.string().nullable().optional(),
+  higienizado: z.boolean().optional(),
   unidade: z.string().default("UNID"),
 });
 

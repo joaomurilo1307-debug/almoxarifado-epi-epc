@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import EpiMovimentacaoForm from "@/components/EpiMovimentacaoForm";
+import EpiMovimentacaoForm, { rotuloProduto } from "@/components/EpiMovimentacaoForm";
 import EpiLoteForm from "@/components/EpiLoteForm";
 
 type Contrato = { id: string; codigo: string; nome: string | null };
@@ -13,7 +13,7 @@ type Movimentacao = {
   quantidade: number;
   data: string;
   observacao: string | null;
-  produto: { nome: string; unidade: string };
+  produto: { nome: string; unidade: string; tamanho: string | null; higienizado: boolean };
   contrato: { codigo: string } | null;
   colaborador: { nomeCompleto: string } | null;
   registradoPor: { name: string } | null;
@@ -84,7 +84,7 @@ export default function MovimentacoesPage() {
                     {m.tipo === "ENTRADA" ? "Entrada" : "Saída"}
                   </span>
                 </td>
-                <td className="px-4 py-2.5 font-medium text-gray-700">{m.produto.nome}</td>
+                <td className="px-4 py-2.5 font-medium text-gray-700">{rotuloProduto(m.produto)}</td>
                 <td className="px-4 py-2.5 text-gray-500">{m.contrato?.codigo ?? "Geral"}</td>
                 <td className="px-4 py-2.5 text-gray-500">{m.colaborador?.nomeCompleto ?? "—"}</td>
                 <td className="px-4 py-2.5 text-right font-semibold text-gray-700">{m.quantidade}</td>

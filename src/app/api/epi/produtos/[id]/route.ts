@@ -11,6 +11,7 @@ const patchSchema = z.object({
   ca: z.string().nullable().optional(),
   fabricante: z.string().nullable().optional(),
   tamanho: z.string().nullable().optional(),
+  higienizado: z.boolean().optional(),
   unidade: z.string().optional(),
   valorUnitario: z.number().nullable().optional(),
   percentualContingencia: z.number().min(0).max(1).nullable().optional(),

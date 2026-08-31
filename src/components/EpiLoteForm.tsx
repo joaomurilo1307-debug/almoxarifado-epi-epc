@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import NovoItemInline, { ProdutoCriado } from "./NovoItemInline";
+import { rotuloProduto } from "./EpiMovimentacaoForm";
 
 type Contrato = { id: string; codigo: string; nome: string | null };
-type Produto = { id: string; nome: string; unidade?: string };
+type Produto = { id: string; nome: string; unidade?: string; tamanho?: string | null; higienizado?: boolean };
 
 type Linha = { produtoId: string; quantidade: number };
 
@@ -35,7 +36,9 @@ export default function EpiLoteForm({
   const [produtosExtra, setProdutosExtra] = useState<Produto[]>([]);
   const [cadastrandoNovoNaLinha, setCadastrandoNovoNaLinha] = useState<number | null>(null);
 
-  const todosProdutos = [...produtos, ...produtosExtra];
+  const todosProdutos = [...produtos, ...produtosExtra].sort(
+    (a, b) => a.nome.localeCompare(b.nome) || (a.tamanho ?? "").localeCompare(b.tamanho ?? "") || Number(a.higienizado) - Number(b.higienizado)
+  );
 
   function atualizarLinha(i: number, campo: keyof Linha, valor: string | number) {
     setLinhas((prev) => prev.map((l, idx) => (idx === i ? { ...l, [campo]: valor } : l)));
@@ -150,7 +153,7 @@ export default function EpiLoteForm({
                       <option value="">Selecione o produto...</option>
                       {todosProdutos.map((p) => (
                         <option key={p.id} value={p.id}>
-                          {p.nome}
+                          {rotuloProduto(p)}
                         </option>
                       ))}
                       <option value={NOVO_ITEM}>+ Cadastrar item novo...</option>

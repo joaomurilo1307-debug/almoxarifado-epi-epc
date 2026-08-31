@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   const movimentacoes = await prisma.epiMovimentacao.findMany({
     where: { ...(produtoId ? { produtoId } : {}), ...(contratoId ? { contratoId } : {}) },
     include: {
-      produto: { select: { id: true, nome: true, unidade: true } },
+      produto: { select: { id: true, nome: true, unidade: true, tamanho: true, higienizado: true } },
       contrato: { select: { id: true, codigo: true, nome: true } },
       colaborador: { select: { id: true, nomeCompleto: true } },
       registradoPor: { select: { id: true, name: true } },
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
           registradoPorId: userId,
         },
         include: {
-          produto: { select: { id: true, nome: true, unidade: true } },
+          produto: { select: { id: true, nome: true, unidade: true, tamanho: true, higienizado: true } },
           contrato: { select: { id: true, codigo: true } },
           colaborador: { select: { id: true, nomeCompleto: true } },
         },
