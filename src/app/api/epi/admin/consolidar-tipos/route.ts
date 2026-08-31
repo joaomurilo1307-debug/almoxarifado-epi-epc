@@ -272,6 +272,20 @@ const REGRAS: Regra[] = [
   // Modelo de bota alternativo (coturno cadarçado, CA37533 Marluvas) sem
   // nenhum estoque real — mesma função de "BOTA", só nome/marca diferente.
   { nomeFinal: "BOTA", fontes: ["Coturno Preta Bico De Aço Laranja 60C32MTAMEX Cadarço"] },
+
+  // Quarta leva (31/08/2026) — João conferiu de novo e apontou que a aba
+  // "EPIs Mínimos" só tem UMA linha pra cada um destes (sem distinguir
+  // material/classe/aba), ou seja, pro controle real da empresa não são
+  // tipos diferentes: BOTA (uma linha só, sem variação de PVC/motosserra),
+  // MANGOTE (uma linha só, sem variação de aramida), RESPIRADOR PFF2 (uma
+  // linha só, sem distinguir válvula/cartucho) e TOUCA ARABE (uma linha só,
+  // sem aba/com aba). Volta atrás da separação por classe técnica feita
+  // antes — o controle oficial da planilha vale mais que a distinção de
+  // catálogo de EPI em geral.
+  { nomeFinal: "BOTA", fontes: ["BOTA", "BOTA DE PVC", "BOTA MOTOSSERRISTA"] },
+  { nomeFinal: "MANGOTE", fontes: ["MANGOTE", "MANGOTE DE MALHA FIBRA ARAMIDA"] },
+  { nomeFinal: "PROTETOR RESPIRATÓRIO", fontes: ["PROTETOR RESPIRATÓRIO", "RESPIRADOR C/ VALVULA PFF2", "RESPIRADOR SEMIFACIAL C/ FILTRO CARBOGRAFITE"] },
+  { nomeFinal: "TOUCA ÁRABE", fontes: ["TOUCA ÁRABE", "TOUCA ÁRABE COM ABA", "TOUCA ÁRABE SEM ABA"] },
 ];
 
 // Ajuste de unidade — bota é sempre contada em pares, mas ficou UNID em
@@ -302,8 +316,7 @@ const TIPOS_FALTANTES = ["BALACLAVA", "PROTETOR FACIAL TELADO", "MACACÃO APICUL
 const CATEGORIA_EPI: Record<string, string[]> = {
   "CABEÇA": [
     "BALACLAVA", "CAPACETE AZUL", "CAPACETE BRANCO", "CAPACETE CINZA", "CAPACETE LARANJA",
-    "CARNEIRA", "JUGULAR PARA CAPACETE", "CHAPEU DE PALHA",
-    "TOUCA ÁRABE", "TOUCA ÁRABE COM ABA", "TOUCA ÁRABE SEM ABA",
+    "CARNEIRA", "JUGULAR PARA CAPACETE", "CHAPEU DE PALHA", "TOUCA ÁRABE",
   ],
   "OLHOS/FACE": [
     "ÓCULOS DE PROTEÇÃO INCOLOR", "ÓCULOS DE PROTEÇÃO ESCURO",
@@ -312,9 +325,9 @@ const CATEGORIA_EPI: Record<string, string[]> = {
     "PROTETOR FACIAL TELADO", "PROTETOR FACIAL DE ACRÍLICO", "ADAPTADOR COM PROTETOR FACIAL PARA VISEIRA LIBUS",
   ],
   "AUDIÇÃO": ["PROTETOR AUDITIVO"],
-  "RESPIRATÓRIO": ["PROTETOR RESPIRATÓRIO", "RESPIRADOR C/ VALVULA PFF2", "RESPIRADOR SEMIFACIAL C/ FILTRO CARBOGRAFITE"],
+  "RESPIRATÓRIO": ["PROTETOR RESPIRATÓRIO"],
   "TRONCO": ["COLETE REFLETIVO", "COLETE SALVA-VIDAS", "BLUSÃO DE OPERADOR DE MOTOSSERRA", "AVENTAL DE PVC", "CAMISA JALECO"],
-  "BRAÇOS": ["MANGOTE", "MANGOTE DE MALHA FIBRA ARAMIDA"],
+  "BRAÇOS": ["MANGOTE"],
   "MÃOS": [
     "LUVA ANTICORTE", "LUVA DE OPERADOR DE MOTOSSERRA", "LUVA ANTI-TÉRMICA", "LUVA DE PVC",
     "LUVA DE RASPA", "LUVA DE RASPA CANO LONGO", "LUVA DE VAQUETA", "LUVA DE LÁTEX",
@@ -323,7 +336,7 @@ const CATEGORIA_EPI: Record<string, string[]> = {
     "LUVA DE SEGURANÇA DESCARTÁVEL 8X100 UND", "PRESILHAS PARA LUVAS", "CLIP PORTA LUVAS DE SEGURANÇA",
   ],
   "PERNAS": ["CALÇA", "CALÇA DE OPERADOR DE MOTOSSERRA", "PERNEIRA DE BIDIM", "PERNEIRA COM PROTEÇÃO DE JOELHO"],
-  "PÉS": ["BOTA", "BOTA COM PROTEÇÃO DE METATARSO", "BOTA DE PVC", "BOTA MOTOSSERRISTA"],
+  "PÉS": ["BOTA", "BOTA COM PROTEÇÃO DE METATARSO"],
   "OUTROS": [
     "CAPA DE CHUVA", "MACACÃO APICULTOR", "PROTETOR SOLAR", "PROTETOR SOLAR COM REPELENTE", "REPELENTE",
     "BAINHA COURO P/ FACÃO", "FITA P/DEMARCAÇÃO S/ADESIVO ZEBRADA", "KIT MOTOSSERRISTA UNIFORME",
@@ -379,7 +392,11 @@ export async function POST() {
         await repoint(dup.id, manter.id);
         await prisma.epiProduto.delete({ where: { id: dup.id } });
       }
-      await prisma.epiProduto.update({ where: { id: manter.id }, data: { nome: regra.nomeFinal, ca: null, fabricante: null } });
+      // Preserva valor unitário se o sobrevivente não tinha um definido mas
+      // algum dos fundidos tinha (ex.: "BOTA DE PVC" tinha preço cadastrado,
+      // "BOTA" simples não — não pode perder essa informação na fusão).
+      const valorUnitario = manter.valorUnitario ?? resto.find((r) => r.valorUnitario !== null)?.valorUnitario ?? null;
+      await prisma.epiProduto.update({ where: { id: manter.id }, data: { nome: regra.nomeFinal, ca: null, fabricante: null, valorUnitario } });
       log.push(`[${regra.nomeFinal}] tamanho="${tamanho || "—"}": ${itens.length} fonte(s) -> 1 produto (CA/fabricante zerados)`);
     }
   }

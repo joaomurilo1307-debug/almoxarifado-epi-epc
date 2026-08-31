@@ -132,6 +132,12 @@ const REGRAS: Regra[] = [
   { nomeFinal: "TOUCA ÁRABE COM ABA", fontes: ["TOUCA ARABE COM ABA"] },
   { nomeFinal: "TOUCA ÁRABE SEM ABA", fontes: ["TOUCA ARABE SEM ABA"] },
   { nomeFinal: "BOTA", fontes: ["Coturno Preta Bico De Aço Laranja 60C32MTAMEX Cadarço"] },
+
+  // Quarta leva — ver comentário completo em route.ts (fonte da verdade).
+  { nomeFinal: "BOTA", fontes: ["BOTA", "BOTA DE PVC", "BOTA MOTOSSERRISTA"] },
+  { nomeFinal: "MANGOTE", fontes: ["MANGOTE", "MANGOTE DE MALHA FIBRA ARAMIDA"] },
+  { nomeFinal: "PROTETOR RESPIRATÓRIO", fontes: ["PROTETOR RESPIRATÓRIO", "RESPIRADOR C/ VALVULA PFF2", "RESPIRADOR SEMIFACIAL C/ FILTRO CARBOGRAFITE"] },
+  { nomeFinal: "TOUCA ÁRABE", fontes: ["TOUCA ÁRABE", "TOUCA ÁRABE COM ABA", "TOUCA ÁRABE SEM ABA"] },
 ];
 
 const UNIDADE_PADRAO: { nome: string; unidade: string }[] = [
@@ -145,8 +151,7 @@ const TIPOS_FALTANTES = ["BALACLAVA", "PROTETOR FACIAL TELADO", "MACACÃO APICUL
 const CATEGORIA_EPI: Record<string, string[]> = {
   "CABEÇA": [
     "BALACLAVA", "CAPACETE AZUL", "CAPACETE BRANCO", "CAPACETE CINZA", "CAPACETE LARANJA",
-    "CARNEIRA", "JUGULAR PARA CAPACETE", "CHAPEU DE PALHA",
-    "TOUCA ÁRABE", "TOUCA ÁRABE COM ABA", "TOUCA ÁRABE SEM ABA",
+    "CARNEIRA", "JUGULAR PARA CAPACETE", "CHAPEU DE PALHA", "TOUCA ÁRABE",
   ],
   "OLHOS/FACE": [
     "ÓCULOS DE PROTEÇÃO INCOLOR", "ÓCULOS DE PROTEÇÃO ESCURO",
@@ -155,9 +160,9 @@ const CATEGORIA_EPI: Record<string, string[]> = {
     "PROTETOR FACIAL TELADO", "PROTETOR FACIAL DE ACRÍLICO", "ADAPTADOR COM PROTETOR FACIAL PARA VISEIRA LIBUS",
   ],
   "AUDIÇÃO": ["PROTETOR AUDITIVO"],
-  "RESPIRATÓRIO": ["PROTETOR RESPIRATÓRIO", "RESPIRADOR C/ VALVULA PFF2", "RESPIRADOR SEMIFACIAL C/ FILTRO CARBOGRAFITE"],
+  "RESPIRATÓRIO": ["PROTETOR RESPIRATÓRIO"],
   "TRONCO": ["COLETE REFLETIVO", "COLETE SALVA-VIDAS", "BLUSÃO DE OPERADOR DE MOTOSSERRA", "AVENTAL DE PVC", "CAMISA JALECO"],
-  "BRAÇOS": ["MANGOTE", "MANGOTE DE MALHA FIBRA ARAMIDA"],
+  "BRAÇOS": ["MANGOTE"],
   "MÃOS": [
     "LUVA ANTICORTE", "LUVA DE OPERADOR DE MOTOSSERRA", "LUVA ANTI-TÉRMICA", "LUVA DE PVC",
     "LUVA DE RASPA", "LUVA DE RASPA CANO LONGO", "LUVA DE VAQUETA", "LUVA DE LÁTEX",
@@ -166,7 +171,7 @@ const CATEGORIA_EPI: Record<string, string[]> = {
     "LUVA DE SEGURANÇA DESCARTÁVEL 8X100 UND", "PRESILHAS PARA LUVAS", "CLIP PORTA LUVAS DE SEGURANÇA",
   ],
   "PERNAS": ["CALÇA", "CALÇA DE OPERADOR DE MOTOSSERRA", "PERNEIRA DE BIDIM", "PERNEIRA COM PROTEÇÃO DE JOELHO"],
-  "PÉS": ["BOTA", "BOTA COM PROTEÇÃO DE METATARSO", "BOTA DE PVC", "BOTA MOTOSSERRISTA"],
+  "PÉS": ["BOTA", "BOTA COM PROTEÇÃO DE METATARSO"],
   "OUTROS": [
     "CAPA DE CHUVA", "MACACÃO APICULTOR", "PROTETOR SOLAR", "PROTETOR SOLAR COM REPELENTE", "REPELENTE",
     "BAINHA COURO P/ FACÃO", "FITA P/DEMARCAÇÃO S/ADESIVO ZEBRADA", "KIT MOTOSSERRISTA UNIFORME",
@@ -212,7 +217,8 @@ async function main() {
         await repoint(dup.id, manter.id);
         await prisma.epiProduto.delete({ where: { id: dup.id } });
       }
-      await prisma.epiProduto.update({ where: { id: manter.id }, data: { nome: regra.nomeFinal, ca: null, fabricante: null } });
+      const valorUnitario = manter.valorUnitario ?? resto.find((r) => r.valorUnitario !== null)?.valorUnitario ?? null;
+      await prisma.epiProduto.update({ where: { id: manter.id }, data: { nome: regra.nomeFinal, ca: null, fabricante: null, valorUnitario } });
       console.log(`[${regra.nomeFinal}] tamanho="${tamanho || "—"}": ${itens.length} fonte(s) -> 1 produto`);
     }
   }
