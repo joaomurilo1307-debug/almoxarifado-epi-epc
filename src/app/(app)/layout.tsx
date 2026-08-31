@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import ConsominasLogo from "@/components/ConsominasLogo";
 
 const tabs = [
@@ -17,6 +17,11 @@ const tabs = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { data: sessionData } = useSession();
+  // "Usuários" só aparece pra quem é ADMIN — a API também bloqueia (403) quem
+  // não é, isso aqui é só pra não mostrar a aba pra quem não vai poder usar.
+  const isAdmin = (sessionData?.user as any)?.role === "ADMIN";
+  const tabsVisiveis = isAdmin ? [...tabs, { href: "/usuarios", label: "Usuários" }] : tabs;
 
   return (
     <div className="min-h-screen">
@@ -37,7 +42,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <div className="mx-auto max-w-7xl px-6 py-6">
         <div className="mb-6 flex flex-wrap gap-1 border-b border-gray-200">
-          {tabs.map((t) => {
+          {tabsVisiveis.map((t) => {
             const active = pathname?.startsWith(t.href);
             return (
               <Link

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import EpiMovimentacaoForm from "@/components/EpiMovimentacaoForm";
+import { DonutChart, LegendaDonut, MatrizMaterialidade, corCategoria } from "@/components/DashboardCharts";
 
 type DashboardData = {
   totalContratos: number;
@@ -166,24 +167,29 @@ export default function AlmoxarifadoDashboard() {
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <h2 className="mb-1 text-sm font-semibold text-gray-700">Distribuição por categoria</h2>
           <p className="mb-4 text-xs text-gray-400">EPI, EPC, Fardamento e cada categoria de item geral (escritório, veicular, alojamento, depósito), separados.</p>
-          <div className="space-y-2">
-            {data.porCategoria.map((c) => {
-              const label = labelCategoria(c.tipo, c.categoria);
-              return (
-                <div key={`${c.tipo}-${c.categoria ?? ""}`} className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3">
-                  <span className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <span>{ICONE_CATEGORIA[label] ?? "📦"}</span>
-                    {label}
-                    {c.categoria && <span className="rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] font-normal text-gray-500">Geral</span>}
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    {c.total} itens {c.abaixoMinimo > 0 && <span className="font-medium text-accent">· {c.abaixoMinimo} abaixo do mínimo</span>}
-                  </span>
-                </div>
-              );
-            })}
-            {data.porCategoria.length === 0 && <p className="text-sm text-gray-400">Sem dados ainda.</p>}
-          </div>
+          {data.porCategoria.length === 0 ? (
+            <p className="text-sm text-gray-400">Sem dados ainda.</p>
+          ) : (
+            <div className="flex flex-col items-center gap-5 sm:flex-row">
+              <DonutChart
+                centroLabel="itens"
+                centroValor={data.porCategoria.reduce((s, c) => s + c.total, 0)}
+                dados={data.porCategoria.map((c, i) => ({
+                  label: labelCategoria(c.tipo, c.categoria),
+                  value: c.total,
+                  color: corCategoria(labelCategoria(c.tipo, c.categoria), i),
+                }))}
+              />
+              <LegendaDonut
+                dados={data.porCategoria.map((c, i) => ({
+                  label: `${ICONE_CATEGORIA[labelCategoria(c.tipo, c.categoria)] ?? "📦"} ${labelCategoria(c.tipo, c.categoria)}`,
+                  value: c.total,
+                  color: corCategoria(labelCategoria(c.tipo, c.categoria), i),
+                  sub: c.abaixoMinimo > 0 ? ` · ${c.abaixoMinimo} abaixo do mín.` : undefined,
+                }))}
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -232,6 +238,16 @@ export default function AlmoxarifadoDashboard() {
           </div>
         </div>
       </div>
+
+      {data.criticos.length > 0 && (
+        <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 className="mb-1 text-sm font-semibold text-gray-700">🎯 Matriz de priorização de compra</h2>
+          <p className="mb-4 text-xs text-gray-400">
+            Cada bolha é um item crítico — quanto mais em cima e mais à direita, mais prioritário. Passe o mouse pra ver o item.
+          </p>
+          <MatrizMaterialidade itens={data.criticos} labelCategoria={labelCategoria} />
+        </div>
+      )}
 
       <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center justify-between">

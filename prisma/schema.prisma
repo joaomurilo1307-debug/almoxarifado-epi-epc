@@ -8,15 +8,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Usuario simples de login (sem os niveis/hierarquia do consominas-gestao —
-// este e um sistema a parte, feito pra depois ser incorporado ao sistema de
-// chamados; login aqui e so pra nao deixar a tela de estoque aberta pra
-// qualquer um enquanto isso nao acontece).
+// Usuario de login. Era "sem nivel/hierarquia" (comentario antigo — a ideia
+// original era incorporar isso ao sistema de chamados depois), mas o João
+// pediu login de verdade pra outras pessoas (Matheus, Samuel, Nilmara) com
+// controle de acesso — por isso o `role` abaixo. ADMIN ve tudo, incluindo
+// esta tela de cadastro de usuarios; OPERADOR ve o resto do sistema mas nao
+// gerencia outros usuarios.
+enum UserRole {
+  ADMIN
+  OPERADOR
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
   email        String   @unique
   passwordHash String
+  role         UserRole @default(ADMIN)
   createdAt    DateTime @default(now())
 
   epiMovimentacoesRegistradas EpiMovimentacao[]

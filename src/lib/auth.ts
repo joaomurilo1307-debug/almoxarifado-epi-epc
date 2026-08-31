@@ -71,18 +71,31 @@ export const authOptions: AuthOptions = {
         }
 
         recordSuccess(email);
-        return { id: user.id, name: user.name, email: user.email } as any;
+        return { id: user.id, name: user.name, email: user.email, role: user.role } as any;
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.id = (user as any).id;
+      if (user) {
+        token.id = (user as any).id;
+        token.role = (user as any).role;
+      }
       return token;
     },
     async session({ session, token }) {
-      if (session.user) (session.user as any).id = token.id;
+      if (session.user) {
+        (session.user as any).id = token.id;
+        (session.user as any).role = token.role;
+      }
       return session;
     },
   },
 };
+
+// Helper pras rotas de API que só o ADMIN pode usar (cadastro de usuários).
+// Sessão sem role (token antigo, de antes desse campo existir) é tratada
+// como não-admin — força relogar em vez de assumir acesso.
+export function isAdmin(session: { user?: { role?: string } } | null): boolean {
+  return session?.user?.role === "ADMIN";
+}
