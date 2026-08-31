@@ -97,8 +97,13 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
     const efetivo = e.contratoId ? efetivoMap.get(e.contratoId) ?? 0 : efetivoTotal;
     // Resolução em 3 níveis, do mais específico pro mais genérico: % do
     // próprio produto > % da categoria (Material de Escritório, etc.) > %
-    // do contrato > 10% de fallback.
-    const categoriaChave = e.produto.categoria ?? e.produto.tipo;
+    // do contrato > 10% de fallback. `categoria` só vale como chave pra
+    // GERAL (as 4 prateleiras) — em EPI ela virou a subcategoria por parte
+    // do corpo (CABEÇA, MÃOS...) usada no Catálogo, dimensão diferente da
+    // config de % "por categoria" da aba Métricas (que só conhece
+    // EPI/EPC/FARDAMENTO + as 4 de Geral). Sem essa guarda, todo item EPI
+    // deixaria de bater com a config "EPI" e cairia sempre no % do contrato.
+    const categoriaChave = (e.produto.tipo === "GERAL" ? e.produto.categoria : null) ?? e.produto.tipo;
     const percentualEfetivo =
       e.produto.percentualContingencia ??
       categoriaPercentualMap.get(categoriaChave) ??

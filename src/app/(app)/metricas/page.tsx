@@ -211,7 +211,10 @@ export default function MetricasPage() {
               {produtosFiltrados.map((p) => (
                 <tr key={p.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
                   <td className="px-4 py-2 font-medium text-gray-700">{p.nome}</td>
-                  <td className="px-4 py-2 text-xs text-gray-400">{p.categoria ?? p.tipo}</td>
+                  {/* Mesma regra do lib/epi.ts: só GERAL usa a categoria real como
+                      chave do % — em EPI ela virou subcategoria de corpo (Catálogo),
+                      dimensão diferente da config "2. Por categoria" acima. */}
+                  <td className="px-4 py-2 text-xs text-gray-400">{p.tipo === "GERAL" ? p.categoria ?? p.tipo : p.tipo}</td>
                   <td className="px-4 py-2">
                     <PercentStepper value={p.percentualContingencia} onChange={(v) => salvarProduto(p.id, v)} allowNull />
                   </td>

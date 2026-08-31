@@ -120,7 +120,12 @@ export async function GET() {
       .map((e) => ({
         produto: e.produto.nome,
         tipo: e.produto.tipo,
-        categoria: e.produto.categoria,
+        // Mesma regra do porCategoria acima: categoria só identifica a
+        // prateleira dentro de "Geral" (Material de Escritório etc.) — pra
+        // EPI agora existe uma categoria por parte do corpo (CABEÇA, MÃOS...,
+        // usada no Catálogo), mas aqui ela mostraria ícone/rótulo errado
+        // (a coluna espera tipo, não subcategoria de EPI).
+        categoria: e.produto.tipo === "GERAL" ? e.produto.categoria : null,
         contrato: e.contrato?.codigo ?? "Geral",
         estoqueAtual: e.estoqueAtual,
         estoqueMinimo: e.estoqueMinimo,
