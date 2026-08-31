@@ -17,6 +17,7 @@ type EstoqueRow = {
   minimoSugerido: number;
   efetivoConsiderado: number;
   sugestaoBaseadaEmTamanho: boolean;
+  sugestaoBaseadaEmFuncao: boolean;
   necessidade: number;
   status: "OK" | "ATENCAO" | "COMPRAR";
   valorEmEstoque: number | null;
@@ -301,12 +302,16 @@ export default function EstoquePage() {
                                     title={
                                       r.sugestaoBaseadaEmTamanho
                                         ? `Sugestão: ${r.efetivoConsiderado} colaborador(es) ativo(s) usam esse tamanho na ficha de cadastro × % de contingência`
-                                        : "Sugestão calculada: efetivo do contrato × % de contingência do item (ou do contrato, se o item não tiver um % próprio) — esse produto não tem campo de tamanho na ficha de cadastro, por isso usa o efetivo geral"
+                                        : r.sugestaoBaseadaEmFuncao
+                                          ? `Sugestão: ${r.efetivoConsiderado} colaborador(es) ativo(s) têm função que usa esse EPI, pela matriz Regras por função × % de contingência`
+                                          : "Sugestão calculada: efetivo do contrato × % de contingência do item (ou do contrato, se o item não tiver um % próprio) — esse produto não está em nenhuma regra de função nem tem tamanho na ficha, por isso usa o efetivo geral"
                                     }
                                     className="block text-[10px] text-brand-dark hover:underline"
                                   >
                                     sugestão: {r.minimoSugerido}
-                                    {r.sugestaoBaseadaEmTamanho && <span className="text-gray-400"> ({r.efetivoConsiderado} usam)</span>}
+                                    {(r.sugestaoBaseadaEmTamanho || r.sugestaoBaseadaEmFuncao) && (
+                                      <span className="text-gray-400"> ({r.efetivoConsiderado} usam)</span>
+                                    )}
                                   </button>
                                 )}
                               </div>
