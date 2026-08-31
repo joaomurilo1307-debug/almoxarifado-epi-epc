@@ -105,7 +105,7 @@ const PADROES_FUNCAO: Record<string, PadraoFuncao[]> = {
   "LUVA PU": [{ inclui: ["luva pu"] }],
   "LUVA DE VAQUETA": [{ inclui: ["vaqueta"], exclui: ["punho em raspa"] }],
   "LUVA DE RASPA CANO LONGO": [{ inclui: ["raspa cano longo"] }],
-  "LUVA ANTI-IMPACTO": [{ inclui: ["anti impacto"] }, { inclui: ["anti-impacto"] }],
+  "LUVA ANTI-IMPACTO": [{ inclui: ["impacto"] }], // fonte real: "luva anti - impacto - 5.774" (hífen com espaço nos dois lados)
   "LUVA ANTI-TÉRMICA": [{ inclui: ["agentes termicos"] }],
   "PERNEIRA COM PROTEÇÃO DE JOELHO": [{ inclui: ["protecao de joelho"] }],
   "PERNEIRA DE BIDIM": [{ inclui: ["perneira"], exclui: ["protecao de joelho"] }],
