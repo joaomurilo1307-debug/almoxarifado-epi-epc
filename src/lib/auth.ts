@@ -96,6 +96,9 @@ export const authOptions: AuthOptions = {
 // Helper pras rotas de API que só o ADMIN pode usar (cadastro de usuários).
 // Sessão sem role (token antigo, de antes desse campo existir) é tratada
 // como não-admin — força relogar em vez de assumir acesso.
-export function isAdmin(session: { user?: { role?: string } } | null): boolean {
+// any de propósito — o tipo de Session do next-auth não tem `role` (não foi
+// declarado um next-auth.d.ts pra isso), então o resto do código já lida com
+// user.role via cast (ver jwt/session acima). Mesma convenção aqui.
+export function isAdmin(session: any): boolean {
   return session?.user?.role === "ADMIN";
 }
