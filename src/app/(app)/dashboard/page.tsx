@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import EpiMovimentacaoForm from "@/components/EpiMovimentacaoForm";
-import { DonutChart, LegendaDonut, MatrizMaterialidade, corCategoria } from "@/components/DashboardCharts";
+import { DonutChart, LegendaDonut, RankingCompras, BarrasAbaixoMinimoPorContrato, corCategoria } from "@/components/DashboardCharts";
 
 type DashboardData = {
   totalContratos: number;
@@ -239,13 +239,24 @@ export default function AlmoxarifadoDashboard() {
         </div>
       </div>
 
-      {data.criticos.length > 0 && (
-        <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="mb-1 text-sm font-semibold text-gray-700">🎯 Matriz de priorização de compra</h2>
-          <p className="mb-4 text-xs text-gray-400">
-            Cada bolha é um item crítico — quanto mais em cima e mais à direita, mais prioritário. Passe o mouse pra ver o item.
-          </p>
-          <MatrizMaterialidade itens={data.criticos} labelCategoria={labelCategoria} />
+      {(data.criticos.length > 0 || data.porContrato.length > 0) && (
+        <div className="mb-6 grid gap-6 lg:grid-cols-2">
+          {data.criticos.length > 0 && (
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <h2 className="mb-1 text-sm font-semibold text-gray-700">🎯 Top 10 — comprar mais unidades</h2>
+              <p className="mb-4 text-xs text-gray-400">Ranking dos itens críticos por quantidade a comprar.</p>
+              <RankingCompras itens={data.criticos} labelCategoria={labelCategoria} />
+            </div>
+          )}
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <h2 className="mb-1 text-sm font-semibold text-gray-700">📋 Abaixo do mínimo por contrato</h2>
+            <p className="mb-4 text-xs text-gray-400">Onde focar a reposição primeiro.</p>
+            <BarrasAbaixoMinimoPorContrato
+              dados={[
+                ...data.porContrato.map((c) => ({ label: `${c.contrato.codigo}${c.contrato.nome ? ` — ${c.contrato.nome}` : ""}`, total: c.totalItens, abaixoMinimo: c.abaixoMinimo })),
+              ]}
+            />
+          </div>
         </div>
       )}
 
