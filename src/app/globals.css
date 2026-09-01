@@ -2,14 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Densidade padrão do sistema: reduz a escala geral (como um "zoom" de
-   navegador) pra caber mais coluna/linha na tela sem precisar rolar
-   horizontalmente e sem cortar nome de item/colaborador. Como tudo no
-   Tailwind é baseado em rem, isso encolhe a UI inteira de forma proporcional
-   (texto, espaçamento, ícones) — não é um ajuste isolado de uma página. */
-html {
-  font-size: 80%;
-}
+/* João pediu (01/09/2026) pra tirar o "zoom" global daqui — encolhia a
+   UI inteira (texto, espaçamento, ícones) igual, mas isso NÃO evitava
+   cabeçalho de tabela quebrando em 2 linhas (o problema real era largura
+   de coluna, não tamanho de fonte geral) e deixava o resto do app menor
+   do que precisava. Compactação de tabela agora é tratada localmente, só
+   nas tabelas que precisam (ver Estoque/Catálogo: cabeçalho com
+   whitespace-nowrap + fonte um pouco menor só ali, dentro do
+   overflow-x-auto que já existia). */
 
 body {
   @apply text-ink;

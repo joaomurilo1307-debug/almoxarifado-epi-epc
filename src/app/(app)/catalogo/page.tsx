@@ -410,18 +410,18 @@ function ProdutosTab() {
           );
         const cabecalho = (
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
-              <th className="px-4 py-3">Foto</th>
-              <th className="px-4 py-3">Item</th>
-              <th className="px-4 py-3">Código</th>
-              <th className="px-4 py-3">Tipo</th>
-              <th className="px-4 py-3">CA</th>
-              <th className="px-4 py-3">Fabricante</th>
-              <th className="px-4 py-3">Tamanho</th>
-              <th className="px-4 py-3">Unid.</th>
-              <th className="px-4 py-3 text-right">Valor unitário</th>
-              <th className="px-4 py-3 text-center">% Contingência</th>
-              <th className="px-4 py-3" />
+            <tr className="whitespace-nowrap border-b border-gray-100 bg-gray-50 text-left text-[10px] uppercase tracking-wide text-gray-400">
+              <th className="px-3 py-2">Foto</th>
+              <th className="px-3 py-2">Item</th>
+              <th className="px-3 py-2">Código</th>
+              <th className="px-3 py-2">Tipo</th>
+              <th className="px-3 py-2">CA</th>
+              <th className="px-3 py-2">Fabricante</th>
+              <th className="px-3 py-2">Tamanho</th>
+              <th className="px-3 py-2">Unid.</th>
+              <th className="px-3 py-2 text-right">Valor unitário</th>
+              <th className="px-3 py-2 text-center">% Conting.</th>
+              <th className="px-3 py-2" />
             </tr>
           </thead>
         );
@@ -452,7 +452,7 @@ function ProdutosTab() {
                             {sub.categoria} <span className="font-normal normal-case text-gray-400">· {sub.grupos.length} itens</span>
                           </p>
                           <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
+                            <table className="w-full text-xs">
                               {cabecalho}
                               <tbody>{sub.grupos.map(renderGrupo)}</tbody>
                             </table>
@@ -461,7 +461,7 @@ function ProdutosTab() {
                       ))
                     ) : (
                       <div className="overflow-x-auto border-t border-gray-100">
-                        <table className="w-full text-sm">
+                        <table className="w-full text-xs">
                           {cabecalho}
                           <tbody>{bloco.grupos.map(renderGrupo)}</tbody>
                         </table>

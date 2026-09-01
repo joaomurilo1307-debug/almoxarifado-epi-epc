@@ -205,93 +205,93 @@ export default function EstoquePage() {
 
               {!fechado && (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full text-xs">
                     <thead>
-                      <tr className="border-b border-gray-100 text-left text-xs uppercase tracking-wide text-gray-400">
-                        <th className="px-4 py-2" />
-                        <th className="px-4 py-2">Produto</th>
-                        <th className="px-4 py-2">Código</th>
-                        <th className="px-4 py-2">Contrato</th>
-                        <th className="px-4 py-2 text-right">Inicial</th>
-                        <th className="px-4 py-2 text-right">Entradas</th>
-                        <th className="px-4 py-2 text-right">Saídas</th>
-                        <th className="px-4 py-2 text-right">Estoque Atual</th>
-                        <th className="px-4 py-2 text-right" title="Quantos colaboradores ativos usam esse item, nesse tamanho — vem da ficha de cadastro ou da matriz de função">Em Utilização</th>
-                        <th className="px-4 py-2 text-right" title="Em Utilização × % de contingência (arredondado pra cima)">Estoque Mínimo</th>
-                        <th className="px-4 py-2 text-right" title="Estoque Mínimo − Estoque Atual, quando positivo">A Comprar</th>
-                        <th className="px-4 py-2 text-right">Valor em Estoque</th>
-                        <th className="px-4 py-2">Status</th>
-                        <th className="px-4 py-2" />
+                      <tr className="whitespace-nowrap border-b border-gray-100 text-left text-[10px] uppercase tracking-wide text-gray-400">
+                        <th className="px-3 py-2" />
+                        <th className="px-3 py-2">Produto</th>
+                        <th className="px-3 py-2">Código</th>
+                        <th className="px-3 py-2">Contrato</th>
+                        <th className="px-3 py-2 text-right">Inicial</th>
+                        <th className="px-3 py-2 text-right">Entradas</th>
+                        <th className="px-3 py-2 text-right">Saídas</th>
+                        <th className="px-3 py-2 text-right" title="Quantos colaboradores ativos usam esse item, nesse tamanho — vem da ficha de cadastro ou da matriz de função">Em Utilização</th>
+                        <th className="px-3 py-2 text-right" title="Em Utilização × % de contingência (arredondado pra cima)">Estoque Mínimo</th>
+                        <th className="px-3 py-2 text-right" title="O que realmente tem, pelo histórico de movimentação">Estoque Atual</th>
+                        <th className="px-3 py-2 text-right" title="Estoque Mínimo − Estoque Atual, quando positivo — se o Estoque Atual já cobre o Mínimo, não precisa comprar">A Comprar</th>
+                        <th className="px-3 py-2 text-right">Valor em Estoque</th>
+                        <th className="px-3 py-2">Status</th>
+                        <th className="px-3 py-2" />
                       </tr>
                     </thead>
                     <tbody>
                       {bloco.rows.map((r) => (
                         <tr key={r.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
-                          <td className="px-4 py-2.5">
-                            <div className="h-9 w-9 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                          <td className="px-3 py-2">
+                            <div className="h-8 w-8 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
                               {r.produto.fotoUrl ? (
                                 // eslint-disable-next-line @next/next/no-img-element
                                 <img src={r.produto.fotoUrl} alt={r.produto.nome} className="h-full w-full object-contain" />
                               ) : null}
                             </div>
                           </td>
-                          <td className="px-4 py-2.5">
+                          <td className="px-3 py-2">
                             <p className="font-medium text-gray-700">{r.produto.nome}</p>
                             {r.produto.tamanho && (
-                              <p className="text-xs text-gray-400">
+                              <p className="text-[10px] text-gray-400">
                                 Tamanho {r.produto.tamanho}
                                 {r.produto.higienizado && <span className="ml-1 text-teal-600">· ♻️ Higienizada</span>}
                               </p>
                             )}
                           </td>
-                          <td className="px-4 py-2.5">
+                          <td className="px-3 py-2">
                             <div className="flex flex-col gap-0.5">
                               {r.produto.codigo && (
-                                <span className="w-fit rounded-md bg-brand-light px-2 py-0.5 font-mono text-[11px] font-semibold text-brand-dark">{r.produto.codigo}</span>
+                                <span className="w-fit rounded-md bg-brand-light px-1.5 py-0.5 font-mono text-[10px] font-semibold text-brand-dark">{r.produto.codigo}</span>
                               )}
                               {r.produto.ca ? (
-                                <span className="w-fit rounded-md bg-gray-100 px-2 py-0.5 font-mono text-[11px] font-semibold text-gray-600">CA {r.produto.ca}</span>
+                                <span className="w-fit rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-gray-600">CA {r.produto.ca}</span>
                               ) : !r.produto.codigo ? (
-                                <span className="text-xs text-gray-300">—</span>
+                                <span className="text-gray-300">—</span>
                               ) : null}
                             </div>
                           </td>
-                          <td className="px-4 py-2.5 text-gray-500">{r.contrato?.codigo ?? "Geral"}</td>
-                          <td className="px-4 py-2.5 text-right text-gray-500">{r.estoqueInicial}</td>
-                          <td className="px-4 py-2.5 text-right text-brand-dark">{r.entradas}</td>
-                          <td className="px-4 py-2.5 text-right text-rose-500">{r.saidas}</td>
-                          <td className="px-4 py-2.5 text-right font-semibold text-gray-800">{r.estoqueAtual}</td>
-                          <td className="px-4 py-2.5 text-right text-gray-600">
+                          <td className="px-3 py-2 text-gray-500">{r.contrato?.codigo ?? "Geral"}</td>
+                          <td className="px-3 py-2 text-right text-gray-500">{r.estoqueInicial}</td>
+                          <td className="px-3 py-2 text-right text-brand-dark">{r.entradas}</td>
+                          <td className="px-3 py-2 text-right text-rose-500">{r.saidas}</td>
+                          <td className="px-3 py-2 text-right text-gray-600">
                             {r.temDadoDeUso ? (
                               r.efetivoConsiderado
                             ) : (
-                              <span className="text-xs italic text-gray-300" title="Nenhum colaborador ativo foi cruzado com esse produto (ficha ou matriz de função)">
+                              <span className="italic text-gray-300" title="Nenhum colaborador ativo foi cruzado com esse produto (ficha ou matriz de função)">
                                 sem dado
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-2.5 text-right font-semibold text-gray-700">
+                          <td className="px-3 py-2 text-right font-semibold text-gray-700">
                             {r.temDadoDeUso ? (
                               r.estoqueMinimo
                             ) : (
-                              <span className="text-xs italic text-gray-300">sem dado de uso</span>
+                              <span className="italic text-gray-300">sem dado</span>
                             )}
                           </td>
-                          <td className="px-4 py-2.5 text-right">
+                          <td className="px-3 py-2 text-right font-semibold text-gray-800">{r.estoqueAtual}</td>
+                          <td className="px-3 py-2 text-right">
                             {r.necessidade > 0 ? (
                               <span className="font-semibold text-rose-600">{r.necessidade}</span>
                             ) : (
                               <span className="text-gray-300">—</span>
                             )}
                           </td>
-                          <td className="px-4 py-2.5 text-right text-gray-400">{r.valorEmEstoque !== null ? fmtMoney(r.valorEmEstoque) : "—"}</td>
-                          <td className="px-4 py-2.5">
+                          <td className="px-3 py-2 text-right text-gray-400">{r.valorEmEstoque !== null ? fmtMoney(r.valorEmEstoque) : "—"}</td>
+                          <td className="px-3 py-2">
                             <StatusBadge status={r.status} />
                           </td>
-                          <td className="px-4 py-2.5 text-right">
+                          <td className="whitespace-nowrap px-3 py-2 text-right">
                             <button
                               onClick={() => setModalRow(r)}
-                              className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
+                              className="rounded-lg bg-brand px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-brand-dark"
                             >
                               + Movimentação
                             </button>
