@@ -215,10 +215,11 @@ export default function EstoquePage() {
                         <th className="px-4 py-2 text-right">Inicial</th>
                         <th className="px-4 py-2 text-right">Entradas</th>
                         <th className="px-4 py-2 text-right">Saídas</th>
-                        <th className="px-4 py-2 text-right">Atual</th>
-                        <th className="px-4 py-2 text-right">Mínimo</th>
-                        <th className="px-4 py-2 text-right">Comprar</th>
-                        <th className="px-4 py-2 text-right">Valor em estoque</th>
+                        <th className="px-4 py-2 text-right">Estoque Atual</th>
+                        <th className="px-4 py-2 text-right" title="Quantos colaboradores ativos usam esse item, nesse tamanho — vem da ficha de cadastro ou da matriz de função">Em Utilização</th>
+                        <th className="px-4 py-2 text-right" title="Em Utilização × % de contingência (arredondado pra cima)">Estoque Mínimo</th>
+                        <th className="px-4 py-2 text-right" title="Estoque Mínimo − Estoque Atual, quando positivo">A Comprar</th>
+                        <th className="px-4 py-2 text-right">Valor em Estoque</th>
                         <th className="px-4 py-2">Status</th>
                         <th className="px-4 py-2" />
                       </tr>
@@ -260,24 +261,20 @@ export default function EstoquePage() {
                           <td className="px-4 py-2.5 text-right text-brand-dark">{r.entradas}</td>
                           <td className="px-4 py-2.5 text-right text-rose-500">{r.saidas}</td>
                           <td className="px-4 py-2.5 text-right font-semibold text-gray-800">{r.estoqueAtual}</td>
-                          <td className="px-4 py-2.5 text-right">
+                          <td className="px-4 py-2.5 text-right text-gray-600">
                             {r.temDadoDeUso ? (
-                              <div>
-                                <span
-                                  className="font-semibold text-gray-700"
-                                  title={`${r.efetivoConsiderado} colaborador(es) ativo(s) em uso × % de contingência (calculado, não editável)`}
-                                >
-                                  {r.estoqueMinimo}
-                                </span>
-                                <p className="text-[10px] text-gray-400">{r.efetivoConsiderado} em uso</p>
-                              </div>
+                              r.efetivoConsiderado
                             ) : (
-                              <span
-                                className="text-xs italic text-gray-300"
-                                title="Nenhum colaborador ativo foi cruzado com esse produto (ficha ou matriz de função) — sem dado real de uso, não existe mínimo calculado"
-                              >
-                                sem dado de uso
+                              <span className="text-xs italic text-gray-300" title="Nenhum colaborador ativo foi cruzado com esse produto (ficha ou matriz de função)">
+                                sem dado
                               </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-2.5 text-right font-semibold text-gray-700">
+                            {r.temDadoDeUso ? (
+                              r.estoqueMinimo
+                            ) : (
+                              <span className="text-xs italic text-gray-300">sem dado de uso</span>
                             )}
                           </td>
                           <td className="px-4 py-2.5 text-right">
