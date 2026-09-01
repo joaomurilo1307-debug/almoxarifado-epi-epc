@@ -18,6 +18,7 @@ type Produto = {
   valorUnitario: number | null;
   percentualContingencia: number | null;
   fotoUrl: string | null;
+  descricao: string | null;
   ativo: boolean;
 };
 
@@ -151,7 +152,6 @@ const CATEGORIA_EPI_ORDEM = ["CABEÇA", "OLHOS/FACE", "AUDIÇÃO", "RESPIRATÓRI
 
 function ProdutosTab() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
-  const [estoquePorProduto, setEstoquePorProduto] = useState<Map<string, number>>(new Map());
   const [busca, setBusca] = useState("");
   const [filtroTipo, setFiltroTipo] = useState<"" | Produto["tipo"]>("");
   const [filtroFabricante, setFiltroFabricante] = useState("");
@@ -179,18 +179,6 @@ function ProdutosTab() {
 
   function reload() {
     fetch("/api/epi/produtos").then((r) => r.json()).then(setProdutos).catch(() => {});
-    fetch("/api/epi/estoque")
-      .then((r) => r.json())
-      .then((estoque: { produtoId?: string; produto?: { id: string }; estoqueAtual: number }[]) => {
-        const map = new Map<string, number>();
-        for (const e of estoque) {
-          const id = e.produtoId ?? e.produto?.id;
-          if (!id) continue;
-          map.set(id, (map.get(id) ?? 0) + e.estoqueAtual);
-        }
-        setEstoquePorProduto(map);
-      })
-      .catch(() => {});
   }
   useEffect(reload, []);
 
@@ -410,14 +398,13 @@ function ProdutosTab() {
         };
         const renderGrupo = (g: Grupo) =>
           g.itens.length === 1 ? (
-            <LinhaProduto key={g.itens[0].id} p={g.itens[0]} qtd={estoquePorProduto.get(g.itens[0].id) ?? 0} {...edProps} />
+            <LinhaProduto key={g.itens[0].id} p={g.itens[0]} {...edProps} />
           ) : (
             <GrupoTamanhos
               key={g.chave}
               grupo={g}
               aberto={expandidos.has(g.chave)}
               toggle={() => toggleExpandido(g.chave)}
-              estoquePorProduto={estoquePorProduto}
               {...edProps}
             />
           );
@@ -432,7 +419,6 @@ function ProdutosTab() {
               <th className="px-4 py-3">Fabricante</th>
               <th className="px-4 py-3">Tamanho</th>
               <th className="px-4 py-3">Unid.</th>
-              <th className="px-4 py-3 text-right">Em estoque</th>
               <th className="px-4 py-3 text-right">Valor unitário</th>
               <th className="px-4 py-3 text-center">% Contingência</th>
               <th className="px-4 py-3" />
@@ -558,10 +544,9 @@ type LinhaEditProps = {
 // linha-pai do grupo (foto/tipo/CA/fabricante), pra não repetir informação.
 function LinhaProduto({
   p,
-  qtd,
   indentado,
   ...ed
-}: { p: Produto; qtd: number; indentado?: boolean } & LinhaEditProps) {
+}: { p: Produto; indentado?: boolean } & LinhaEditProps) {
   return (
     <tr className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
       <td className="px-4 py-2.5">
@@ -576,7 +561,14 @@ function LinhaProduto({
           </button>
         )}
       </td>
-      <td className={`px-4 py-2.5 font-medium text-gray-700 ${indentado ? "pl-10 text-gray-400" : ""}`}>{indentado ? "↳" : p.nome}</td>
+      <td className={`px-4 py-2.5 font-medium text-gray-700 ${indentado ? "pl-10 text-gray-400" : ""}`}>
+        {indentado ? "↳" : p.nome}
+        {!indentado && p.descricao && (
+          <p className="mt-0.5 max-w-xs whitespace-normal text-[11px] font-normal text-gray-400" title={p.descricao}>
+            {p.descricao.length > 110 ? `${p.descricao.slice(0, 110)}…` : p.descricao}
+          </p>
+        )}
+      </td>
       <td className="px-4 py-2.5">
         {indentado
           ? null
@@ -605,7 +597,6 @@ function LinhaProduto({
         )}
       </td>
       <td className="px-4 py-2.5 text-gray-500">{p.unidade}</td>
-      <td className="px-4 py-2.5 text-right text-gray-600">{qtd}</td>
       <td className="px-4 py-2.5 text-right">
         {ed.editando === p.id ? (
           <input
@@ -705,13 +696,11 @@ function GrupoTamanhos({
   grupo,
   aberto,
   toggle,
-  estoquePorProduto,
   ...ed
-}: { grupo: Grupo; aberto: boolean; toggle: () => void; estoquePorProduto: Map<string, number> } & LinhaEditProps) {
+}: { grupo: Grupo; aberto: boolean; toggle: () => void } & LinhaEditProps) {
   const primeiro = grupo.itens[0];
   const cas = new Set(grupo.itens.map((i) => i.ca ?? ""));
   const fabricantes = new Set(grupo.itens.map((i) => i.fabricante ?? ""));
-  const totalQtd = grupo.itens.reduce((soma, i) => soma + (estoquePorProduto.get(i.id) ?? 0), 0);
 
   return (
     <>
@@ -731,6 +720,11 @@ function GrupoTamanhos({
             <span className="text-xs text-brand-dark">{aberto ? "▾" : "▸"}</span>
             {grupo.nome}
           </button>
+          {primeiro.descricao && (
+            <p className="mt-0.5 max-w-xs whitespace-normal pl-5 text-[11px] font-normal text-gray-400" title={primeiro.descricao}>
+              {primeiro.descricao.length > 110 ? `${primeiro.descricao.slice(0, 110)}…` : primeiro.descricao}
+            </p>
+          )}
         </td>
         <td className="px-4 py-2.5">
           {primeiro.codigo ? (
@@ -751,12 +745,11 @@ function GrupoTamanhos({
           </button>
         </td>
         <td className="px-4 py-2.5 text-gray-500">{primeiro.unidade}</td>
-        <td className="px-4 py-2.5 text-right font-semibold text-gray-700">{totalQtd}</td>
         <td className="px-4 py-2.5 text-right text-gray-400">—</td>
         <td className="px-4 py-2.5 text-center text-gray-400">—</td>
         <td className="px-4 py-2.5" />
       </tr>
-      {aberto && grupo.itens.map((item) => <LinhaProduto key={item.id} p={item} qtd={estoquePorProduto.get(item.id) ?? 0} indentado {...ed} />)}
+      {aberto && grupo.itens.map((item) => <LinhaProduto key={item.id} p={item} indentado {...ed} />)}
     </>
   );
 }
