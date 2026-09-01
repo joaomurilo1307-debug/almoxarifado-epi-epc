@@ -134,6 +134,13 @@ model EpiProduto {
   // empresa com foto/modelo/fabricante) — usada no cadastro de itens como
   // fonte de verdade do que o item é, sem depender de marca/CA.
   descricao     String?  @db.Text
+  // Código interno sequencial (ex.: "EPI-PES-001") — identifica o TIPO do
+  // item (nome+tipo), não a linha/tamanho: todos os tamanhos de uma mesma
+  // "BOTA DE SEGURANÇA MARLUVAS" compartilham o mesmo código. Gerado uma vez
+  // por /api/epi/admin/gerar-codigos (agrupa por nome+tipo, sequencial por
+  // categoria) — não é @unique porque várias linhas (uma por tamanho) usam
+  // o mesmo valor de propósito.
+  codigo        String?
   ativo         Boolean  @default(true)
   createdAt     DateTime @default(now())
 

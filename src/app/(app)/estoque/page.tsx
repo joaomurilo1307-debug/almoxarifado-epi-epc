@@ -7,7 +7,7 @@ type Contrato = { id: string; codigo: string; nome: string | null };
 type Colaborador = { id: string; nomeCompleto: string; contratoId: string };
 type EstoqueRow = {
   id: string;
-  produto: { id: string; nome: string; tipo: string; categoria: string | null; ca: string | null; tamanho: string | null; higienizado: boolean; unidade: string; valorUnitario: number | null; fotoUrl: string | null };
+  produto: { id: string; nome: string; tipo: string; categoria: string | null; ca: string | null; codigo: string | null; tamanho: string | null; higienizado: boolean; unidade: string; valorUnitario: number | null; fotoUrl: string | null };
   contrato: Contrato | null;
   estoqueInicial: number;
   entradas: number;
@@ -244,11 +244,16 @@ export default function EstoquePage() {
                             )}
                           </td>
                           <td className="px-4 py-2.5">
-                            {r.produto.ca ? (
-                              <span className="rounded-md bg-gray-100 px-2 py-1 font-mono text-xs font-semibold text-gray-600">CA {r.produto.ca}</span>
-                            ) : (
-                              <span className="text-xs text-gray-300">—</span>
-                            )}
+                            <div className="flex flex-col gap-0.5">
+                              {r.produto.codigo && (
+                                <span className="w-fit rounded-md bg-brand-light px-2 py-0.5 font-mono text-[11px] font-semibold text-brand-dark">{r.produto.codigo}</span>
+                              )}
+                              {r.produto.ca ? (
+                                <span className="w-fit rounded-md bg-gray-100 px-2 py-0.5 font-mono text-[11px] font-semibold text-gray-600">CA {r.produto.ca}</span>
+                              ) : !r.produto.codigo ? (
+                                <span className="text-xs text-gray-300">—</span>
+                              ) : null}
+                            </div>
                           </td>
                           <td className="px-4 py-2.5 text-gray-500">{r.contrato?.codigo ?? "Geral"}</td>
                           <td className="px-4 py-2.5 text-right text-gray-500">{r.estoqueInicial}</td>

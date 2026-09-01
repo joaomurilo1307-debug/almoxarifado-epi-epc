@@ -10,6 +10,7 @@ type Produto = {
   tipo: "EPI" | "EPC" | "FARDAMENTO" | "GERAL";
   categoria: string | null;
   ca: string | null;
+  codigo: string | null;
   fabricante: string | null;
   tamanho: string | null;
   higienizado: boolean;
@@ -425,6 +426,7 @@ function ProdutosTab() {
             <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
               <th className="px-4 py-3">Foto</th>
               <th className="px-4 py-3">Item</th>
+              <th className="px-4 py-3">Código</th>
               <th className="px-4 py-3">Tipo</th>
               <th className="px-4 py-3">CA</th>
               <th className="px-4 py-3">Fabricante</th>
@@ -576,6 +578,13 @@ function LinhaProduto({
       </td>
       <td className={`px-4 py-2.5 font-medium text-gray-700 ${indentado ? "pl-10 text-gray-400" : ""}`}>{indentado ? "↳" : p.nome}</td>
       <td className="px-4 py-2.5">
+        {indentado
+          ? null
+          : p.codigo
+            ? <span className="rounded-md bg-brand-light px-2 py-1 font-mono text-xs font-semibold text-brand-dark">{p.codigo}</span>
+            : <span className="text-xs text-gray-300">—</span>}
+      </td>
+      <td className="px-4 py-2.5">
         {indentado ? null : (
           <>
             <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{TIPO_LABEL[p.tipo]}</span>
@@ -722,6 +731,13 @@ function GrupoTamanhos({
             <span className="text-xs text-brand-dark">{aberto ? "▾" : "▸"}</span>
             {grupo.nome}
           </button>
+        </td>
+        <td className="px-4 py-2.5">
+          {primeiro.codigo ? (
+            <span className="rounded-md bg-brand-light px-2 py-1 font-mono text-xs font-semibold text-brand-dark">{primeiro.codigo}</span>
+          ) : (
+            <span className="text-xs text-gray-300">—</span>
+          )}
         </td>
         <td className="px-4 py-2.5">
           <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{TIPO_LABEL[primeiro.tipo]}</span>
