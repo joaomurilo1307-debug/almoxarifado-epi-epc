@@ -29,7 +29,7 @@ const REGRAS: { re: RegExp; foto: string }[] = [
   { re: /[ÓO]CULOS.*(BANDA|EL[ÁA]STICA)/i, foto: "026__culos_de_seguran_a_com_banda_el_stica_claro_ou_es.png" },
   { re: /[ÓO]CULOS/i, foto: "025__culos_de_seguran_a_convenciona_claro_ou_escuro_.png" },
   { re: /ABAFADOR|PROTETOR AUDITIVO/i, foto: "027_Kit_Abafador_XLS.png" },
-  { re: /M[ÁA]SCARA|RESPIRADOR|PFF ?2/i, foto: "028_Mascara_semifacial_descart_vel_particulados_.png" },
+  { re: /M[ÁA]SCARA|RESPIRAD|RESPIRAT[ÓO]RIO|PFF ?2/i, foto: "028_Mascara_semifacial_descart_vel_particulados_.png" },
   { re: /PROTETOR SOLAR/i, foto: "029_PROTETOR_SOLAR_FPS_50_COM_REPELENTE_DE_INSETOS_SUN.png" },
   { re: /COLETE.*SALVA/i, foto: "032_Colete_salva_vidas.png" },
   { re: /COLETE/i, foto: "030_Colete_refletivo.png" },
