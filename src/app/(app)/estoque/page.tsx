@@ -204,9 +204,9 @@ export default function EstoquePage() {
               </button>
 
               {!fechado && (
-                <div className="overflow-x-auto">
+                <div className="max-h-[65vh] overflow-x-auto overflow-y-auto">
                   <table className="w-full min-w-max text-xs">
-                    <thead>
+                    <thead className="sticky top-0 z-10 bg-white">
                       <tr className="whitespace-nowrap border-b border-gray-100 text-left text-[10px] uppercase tracking-wide text-gray-400">
                         <th className="px-3 py-2" />
                         <th className="px-3 py-2">Produto</th>
