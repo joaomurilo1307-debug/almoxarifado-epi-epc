@@ -409,7 +409,7 @@ function ProdutosTab() {
             />
           );
         const cabecalho = (
-          <thead>
+          <thead className="sticky top-0 z-10">
             <tr className="whitespace-nowrap border-b border-gray-100 bg-gray-50 text-left text-[10px] uppercase tracking-wide text-gray-400">
               <th className="px-3 py-2">Foto</th>
               <th className="px-3 py-2">Item</th>
@@ -451,7 +451,7 @@ function ProdutosTab() {
                           <p className="bg-brand-light/30 px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand-dark">
                             {sub.categoria} <span className="font-normal normal-case text-gray-400">· {sub.grupos.length} itens</span>
                           </p>
-                          <div className="overflow-x-auto">
+                          <div className="max-h-[65vh] overflow-x-auto overflow-y-auto">
                             <table className="w-full min-w-max text-xs">
                               {cabecalho}
                               <tbody>{sub.grupos.map(renderGrupo)}</tbody>
@@ -460,7 +460,7 @@ function ProdutosTab() {
                         </div>
                       ))
                     ) : (
-                      <div className="overflow-x-auto border-t border-gray-100">
+                      <div className="max-h-[65vh] overflow-x-auto overflow-y-auto border-t border-gray-100">
                         <table className="w-full min-w-max text-xs">
                           {cabecalho}
                           <tbody>{bloco.grupos.map(renderGrupo)}</tbody>

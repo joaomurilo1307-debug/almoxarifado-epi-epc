@@ -58,9 +58,9 @@ export default function MovimentacoesPage() {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
         <table className="w-full min-w-max text-sm">
-          <thead>
+          <thead className="sticky top-0 z-10">
             <tr className="whitespace-nowrap border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
               <th className="px-4 py-3">Data</th>
               <th className="px-4 py-3">Tipo</th>
