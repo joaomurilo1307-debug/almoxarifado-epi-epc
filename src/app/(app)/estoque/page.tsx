@@ -205,7 +205,7 @@ export default function EstoquePage() {
 
               {!fechado && (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
+                  <table className="w-full min-w-max text-xs">
                     <thead>
                       <tr className="whitespace-nowrap border-b border-gray-100 text-left text-[10px] uppercase tracking-wide text-gray-400">
                         <th className="px-3 py-2" />
@@ -226,7 +226,7 @@ export default function EstoquePage() {
                     </thead>
                     <tbody>
                       {bloco.rows.map((r) => (
-                        <tr key={r.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
+                        <tr key={r.id} className="whitespace-nowrap border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
                           <td className="px-3 py-2">
                             <div className="h-8 w-8 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
                               {r.produto.fotoUrl ? (

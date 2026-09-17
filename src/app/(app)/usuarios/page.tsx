@@ -67,9 +67,9 @@ export default function UsuariosPage() {
       {erroCarregar && <p className="mb-3 text-sm text-rose-600">{erroCarregar}</p>}
 
       <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-max text-sm">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
+            <tr className="whitespace-nowrap border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
               <th className="px-4 py-3">Nome</th>
               <th className="px-4 py-3">E-mail (login)</th>
               <th className="px-4 py-3">Acesso</th>
@@ -79,7 +79,7 @@ export default function UsuariosPage() {
           </thead>
           <tbody>
             {usuarios.map((u) => (
-              <tr key={u.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
+              <tr key={u.id} className="whitespace-nowrap border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
                 <td className="px-4 py-2.5 font-medium text-gray-700">
                   {u.name}
                   {u.id === (sessionData?.user as any)?.id && <span className="ml-2 text-xs text-gray-400">(você)</span>}

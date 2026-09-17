@@ -198,10 +198,10 @@ export default function MetricasPage() {
           placeholder="Buscar produto..."
           className="mb-3 w-72 rounded-lg border border-gray-300 px-3 py-2 text-sm"
         />
-        <div className="max-h-[420px] overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
-          <table className="w-full text-sm">
+        <div className="max-h-[420px] overflow-y-auto overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <table className="w-full min-w-max text-sm">
             <thead className="sticky top-0 bg-gray-50">
-              <tr className="border-b border-gray-100 text-left text-xs uppercase tracking-wide text-gray-400">
+              <tr className="whitespace-nowrap border-b border-gray-100 text-left text-xs uppercase tracking-wide text-gray-400">
                 <th className="px-4 py-3">Produto</th>
                 <th className="px-4 py-3">Categoria</th>
                 <th className="px-4 py-3 text-center">%</th>
@@ -209,7 +209,7 @@ export default function MetricasPage() {
             </thead>
             <tbody>
               {produtosFiltrados.map((p) => (
-                <tr key={p.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
+                <tr key={p.id} className="whitespace-nowrap border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
                   <td className="px-4 py-2 font-medium text-gray-700">{p.nome}</td>
                   {/* Mesma regra do lib/epi.ts: só GERAL usa a categoria real como
                       chave do % — em EPI ela virou subcategoria de corpo (Catálogo),

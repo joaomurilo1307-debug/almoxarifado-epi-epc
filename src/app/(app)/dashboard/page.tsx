@@ -272,9 +272,9 @@ export default function AlmoxarifadoDashboard() {
           <p className="text-sm text-gray-400">Nenhum item abaixo do mínimo. 🎉</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-max text-sm">
               <thead>
-                <tr className="border-b border-gray-100 text-left text-xs uppercase tracking-wide text-gray-400">
+                <tr className="whitespace-nowrap border-b border-gray-100 text-left text-xs uppercase tracking-wide text-gray-400">
                   <th className="pb-2">Produto</th>
                   <th className="pb-2">Categoria</th>
                   <th className="pb-2">Contrato</th>
@@ -286,7 +286,7 @@ export default function AlmoxarifadoDashboard() {
               </thead>
               <tbody>
                 {data.criticos.map((c, i) => (
-                  <tr key={i} className="border-b border-gray-50 last:border-0">
+                  <tr key={i} className="whitespace-nowrap border-b border-gray-50 last:border-0">
                     <td className="py-2 font-medium text-gray-700">{c.produto}</td>
                     <td className="py-2 text-xs text-gray-500">
                       {ICONE_CATEGORIA[labelCategoria(c.tipo, c.categoria)] ?? "📦"} {labelCategoria(c.tipo, c.categoria)}

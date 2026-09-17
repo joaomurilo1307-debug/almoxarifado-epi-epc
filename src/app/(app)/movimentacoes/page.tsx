@@ -59,9 +59,9 @@ export default function MovimentacoesPage() {
       </div>
 
       <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-max text-sm">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
+            <tr className="whitespace-nowrap border-b border-gray-100 bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-400">
               <th className="px-4 py-3">Data</th>
               <th className="px-4 py-3">Tipo</th>
               <th className="px-4 py-3">Produto</th>
@@ -73,7 +73,7 @@ export default function MovimentacoesPage() {
           </thead>
           <tbody>
             {movs.map((m) => (
-              <tr key={m.id} className="border-b border-gray-50 last:border-0">
+              <tr key={m.id} className="whitespace-nowrap border-b border-gray-50 last:border-0">
                 <td className="px-4 py-2.5 text-gray-500">{new Date(m.data).toLocaleDateString("pt-BR")}</td>
                 <td className="px-4 py-2.5">
                   <span

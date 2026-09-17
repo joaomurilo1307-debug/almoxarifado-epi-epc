@@ -452,7 +452,7 @@ function ProdutosTab() {
                             {sub.categoria} <span className="font-normal normal-case text-gray-400">· {sub.grupos.length} itens</span>
                           </p>
                           <div className="overflow-x-auto">
-                            <table className="w-full text-xs">
+                            <table className="w-full min-w-max text-xs">
                               {cabecalho}
                               <tbody>{sub.grupos.map(renderGrupo)}</tbody>
                             </table>
@@ -461,7 +461,7 @@ function ProdutosTab() {
                       ))
                     ) : (
                       <div className="overflow-x-auto border-t border-gray-100">
-                        <table className="w-full text-xs">
+                        <table className="w-full min-w-max text-xs">
                           {cabecalho}
                           <tbody>{bloco.grupos.map(renderGrupo)}</tbody>
                         </table>
@@ -548,7 +548,7 @@ function LinhaProduto({
   ...ed
 }: { p: Produto; indentado?: boolean } & LinhaEditProps) {
   return (
-    <tr className="border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
+    <tr className="whitespace-nowrap border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
       <td className="px-4 py-2.5">
         {indentado ? null : (
           <button onClick={() => ed.setEscolhendoFoto(p.id)} className="block h-11 w-11 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
@@ -704,7 +704,7 @@ function GrupoTamanhos({
 
   return (
     <>
-      <tr className="border-b border-gray-50 bg-brand-light/20 hover:bg-brand-light/30">
+      <tr className="whitespace-nowrap border-b border-gray-50 bg-brand-light/20 hover:bg-brand-light/30">
         <td className="px-4 py-2.5">
           <button onClick={() => setEscolhendoFotoDoGrupo(grupo, ed)} className="block h-11 w-11 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
             {primeiro.fotoUrl ? (

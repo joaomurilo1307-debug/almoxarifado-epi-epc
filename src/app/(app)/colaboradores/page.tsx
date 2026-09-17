@@ -92,9 +92,9 @@ export default function ColaboradoresPage() {
               <span className="text-xs text-gray-400">{grupo.itens.length} pessoas</span>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full min-w-max text-sm">
                 <thead>
-                  <tr className="text-left text-xs uppercase tracking-wide text-gray-400">
+                  <tr className="whitespace-nowrap text-left text-xs uppercase tracking-wide text-gray-400">
                     <th className="px-5 py-2">Nome</th>
                     <th className="px-5 py-2">Função</th>
                     <th className="px-5 py-2">Situação</th>
@@ -107,7 +107,7 @@ export default function ColaboradoresPage() {
                 <tbody>
                   {grupo.itens.map((c) => (
                     <Fragment key={c.id}>
-                      <tr className="border-t border-gray-50 hover:bg-gray-50/60">
+                      <tr className="whitespace-nowrap border-t border-gray-50 hover:bg-gray-50/60">
                         <td className="px-5 py-2 font-medium text-gray-700">{c.nomeCompleto}</td>
                         <td className="px-5 py-2 text-gray-500">{c.funcao}</td>
                         <td className="px-5 py-2">
