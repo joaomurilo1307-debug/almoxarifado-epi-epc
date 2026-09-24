@@ -10,6 +10,8 @@ type LinhaPedido = {
   contrato: Contrato | null;
   estoqueAtual: number;
   estoqueMinimo: number | null;
+  efetivoConsiderado: number | null;
+  temDadoDeUso: boolean;
   necessidade: number;
   valorNecessidade: number | null;
 };
@@ -38,14 +40,24 @@ export default function EstoqueMinimoPage() {
       .finally(() => setCarregando(false));
   }, [contratoFiltro]);
 
-  const ordenadas = useMemo(
-    () => [...linhas].sort((a, b) => (a.contrato?.codigo ?? "Geral").localeCompare(b.contrato?.codigo ?? "Geral") || a.produto.nome.localeCompare(b.produto.nome)),
-    [linhas]
-  );
+  // Agrupado por contrato (mesmo padrão da tela Colaboradores) — cada bloco
+  // mostra pra onde vai o pedido e o subtotal dele, pra Luana montar as
+  // requisições separadas por destino em vez de uma lista solta.
+  const porContrato = useMemo(() => {
+    const map = new Map<string, { codigo: string; nome: string | null; itens: LinhaPedido[] }>();
+    for (const r of linhas) {
+      const key = r.contrato?.id ?? "geral";
+      if (!map.has(key)) map.set(key, { codigo: r.contrato?.codigo ?? "Geral", nome: r.contrato?.nome ?? "Depósito central", itens: [] });
+      map.get(key)!.itens.push(r);
+    }
+    for (const grupo of map.values()) grupo.itens.sort((a, b) => a.produto.nome.localeCompare(b.produto.nome));
+    return [...map.values()].sort((a, b) => a.codigo.localeCompare(b.codigo));
+  }, [linhas]);
 
-  const totalUnidades = ordenadas.reduce((s, r) => s + r.necessidade, 0);
-  const totalCusto = ordenadas.reduce((s, r) => s + (r.valorNecessidade ?? 0), 0);
-  const semCusto = ordenadas.filter((r) => r.valorNecessidade === null).length;
+  const totalItens = linhas.length;
+  const totalUnidades = linhas.reduce((s, r) => s + r.necessidade, 0);
+  const totalCusto = linhas.reduce((s, r) => s + (r.valorNecessidade ?? 0), 0);
+  const semCusto = linhas.filter((r) => r.valorNecessidade === null).length;
 
   const nomeContratoAtual = contratoFiltro
     ? contratoFiltro === "geral"
@@ -54,12 +66,14 @@ export default function EstoqueMinimoPage() {
     : "todos-os-contratos";
 
   function exportar() {
+    const ordenadas = porContrato.flatMap((g) => g.itens);
     const dados = ordenadas.map((r) => ({
       Contrato: r.contrato?.codigo ?? "Geral",
       Produto: r.produto.nome,
       Tamanho: r.produto.tamanho ?? "",
       Código: r.produto.codigo ?? "",
       CA: r.produto.ca ?? "",
+      "Em Utilização": r.temDadoDeUso ? r.efetivoConsiderado : "sem dado",
       "Estoque Atual": r.estoqueAtual,
       "Estoque Mínimo": r.estoqueMinimo ?? "",
       "Quantidade a Comprar": r.necessidade,
@@ -71,7 +85,7 @@ export default function EstoqueMinimoPage() {
     const ws = XLSX.utils.json_to_sheet(dados);
     ws["!cols"] = [
       { wch: 12 }, { wch: 40 }, { wch: 10 }, { wch: 14 }, { wch: 10 },
-      { wch: 12 }, { wch: 12 }, { wch: 18 }, { wch: 10 }, { wch: 16 }, { wch: 18 },
+      { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 18 }, { wch: 10 }, { wch: 16 }, { wch: 18 },
     ];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Pedido de Compra");
@@ -86,7 +100,7 @@ export default function EstoqueMinimoPage() {
         <div>
           <h1 className="text-lg font-semibold text-gray-800">Estoque Mínimo — Pedido de Compra</h1>
           <p className="text-xs text-gray-400">
-            Itens abaixo do mínimo calculado, por contrato. Escolha o contrato e exporte a planilha do pedido.
+            Itens abaixo do mínimo calculado, agrupados por contrato — pra saber pra onde vai cada pedido e conferir se o mínimo bate com quem realmente usa.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -105,7 +119,7 @@ export default function EstoqueMinimoPage() {
           </select>
           <button
             onClick={exportar}
-            disabled={ordenadas.length === 0}
+            disabled={totalItens === 0}
             className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40"
           >
             ⬇ Exportar pedido (.xlsx)
@@ -116,7 +130,7 @@ export default function EstoqueMinimoPage() {
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
           <p className="text-xs text-gray-400">Itens a comprar</p>
-          <p className="text-2xl font-semibold text-gray-800">{ordenadas.length}</p>
+          <p className="text-2xl font-semibold text-gray-800">{totalItens}</p>
         </div>
         <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
           <p className="text-xs text-gray-400">Unidades a comprar (total)</p>
@@ -129,45 +143,65 @@ export default function EstoqueMinimoPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <div className="max-h-[65vh] overflow-x-auto overflow-y-auto">
-          <table className="w-full min-w-max text-xs">
-            <thead className="sticky top-0 z-10 bg-white">
-              <tr className="whitespace-nowrap border-b border-gray-100 text-left text-[10px] uppercase tracking-wide text-gray-400">
-                <th className="px-3 py-2">Contrato</th>
-                <th className="px-3 py-2">Produto</th>
-                <th className="px-3 py-2">Código</th>
-                <th className="px-3 py-2 text-right">Atual</th>
-                <th className="px-3 py-2 text-right">Mínimo</th>
-                <th className="px-3 py-2 text-right">Comprar</th>
-                <th className="px-3 py-2 text-right">Valor Unit.</th>
-                <th className="px-3 py-2 text-right">Valor do Item</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ordenadas.map((r) => (
-                <tr key={r.id} className="whitespace-nowrap border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
-                  <td className="px-3 py-2 text-gray-500">{r.contrato?.codigo ?? "Geral"}</td>
-                  <td className="px-3 py-2">
-                    <p className="font-medium text-gray-700">{r.produto.nome}</p>
-                    {r.produto.tamanho && <p className="text-[10px] text-gray-400">Tamanho {r.produto.tamanho}{r.produto.higienizado && " · ♻️ Higienizada"}</p>}
-                  </td>
-                  <td className="px-3 py-2">
-                    {r.produto.codigo && <span className="w-fit rounded-md bg-brand-light px-1.5 py-0.5 font-mono text-[10px] font-semibold text-brand-dark">{r.produto.codigo}</span>}
-                    {r.produto.ca && <span className="ml-1 w-fit rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-gray-600">CA {r.produto.ca}</span>}
-                  </td>
-                  <td className="px-3 py-2 text-right text-gray-500">{r.estoqueAtual}</td>
-                  <td className="px-3 py-2 text-right text-gray-500">{r.estoqueMinimo ?? "—"}</td>
-                  <td className="px-3 py-2 text-right font-semibold text-rose-600">{r.necessidade}</td>
-                  <td className="px-3 py-2 text-right text-gray-400">{r.produto.valorUnitario !== null ? fmtMoney(r.produto.valorUnitario) : "—"}</td>
-                  <td className="px-3 py-2 text-right font-medium text-gray-700">{r.valorNecessidade !== null ? fmtMoney(r.valorNecessidade) : "—"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {!carregando && ordenadas.length === 0 && (
-          <div className="p-8 text-center text-sm text-gray-400">
+      <div className="space-y-4">
+        {porContrato.map((grupo) => {
+          const unidadesGrupo = grupo.itens.reduce((s, r) => s + r.necessidade, 0);
+          const custoGrupo = grupo.itens.reduce((s, r) => s + (r.valorNecessidade ?? 0), 0);
+          return (
+            <div key={grupo.codigo} className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 bg-gray-50 px-5 py-3">
+                <h2 className="text-sm font-semibold text-gray-700">
+                  Contrato {grupo.codigo} {grupo.nome ? `— ${grupo.nome}` : ""}
+                </h2>
+                <div className="flex items-center gap-3 text-xs text-gray-400">
+                  <span>{grupo.itens.length} itens</span>
+                  <span>{unidadesGrupo} unidades</span>
+                  <span className="font-semibold text-gray-600">{fmtMoney(custoGrupo)}</span>
+                </div>
+              </div>
+              <div className="max-h-[55vh] overflow-x-auto overflow-y-auto">
+                <table className="w-full min-w-max text-xs">
+                  <thead className="sticky top-0 z-10 bg-white">
+                    <tr className="whitespace-nowrap border-b border-gray-100 text-left text-[10px] uppercase tracking-wide text-gray-400">
+                      <th className="px-3 py-2">Produto</th>
+                      <th className="px-3 py-2">Código</th>
+                      <th className="px-3 py-2 text-right" title="Quantos colaboradores ativos usam esse item, nesse tamanho, hoje — vem da ficha ou da matriz de função">Em Utilização</th>
+                      <th className="px-3 py-2 text-right">Atual</th>
+                      <th className="px-3 py-2 text-right" title="Em Utilização × % de contingência do contrato/categoria/produto">Mínimo</th>
+                      <th className="px-3 py-2 text-right">Comprar</th>
+                      <th className="px-3 py-2 text-right">Valor Unit.</th>
+                      <th className="px-3 py-2 text-right">Valor do Item</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {grupo.itens.map((r) => (
+                      <tr key={r.id} className="whitespace-nowrap border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
+                        <td className="px-3 py-2">
+                          <p className="font-medium text-gray-700">{r.produto.nome}</p>
+                          {r.produto.tamanho && <p className="text-[10px] text-gray-400">Tamanho {r.produto.tamanho}{r.produto.higienizado && " · ♻️ Higienizada"}</p>}
+                        </td>
+                        <td className="px-3 py-2">
+                          {r.produto.codigo && <span className="w-fit rounded-md bg-brand-light px-1.5 py-0.5 font-mono text-[10px] font-semibold text-brand-dark">{r.produto.codigo}</span>}
+                          {r.produto.ca && <span className="ml-1 w-fit rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-gray-600">CA {r.produto.ca}</span>}
+                        </td>
+                        <td className="px-3 py-2 text-right text-gray-600">
+                          {r.temDadoDeUso ? r.efetivoConsiderado : <span className="italic text-gray-300">sem dado</span>}
+                        </td>
+                        <td className="px-3 py-2 text-right text-gray-500">{r.estoqueAtual}</td>
+                        <td className="px-3 py-2 text-right text-gray-500">{r.estoqueMinimo ?? "—"}</td>
+                        <td className="px-3 py-2 text-right font-semibold text-rose-600">{r.necessidade}</td>
+                        <td className="px-3 py-2 text-right text-gray-400">{r.produto.valorUnitario !== null ? fmtMoney(r.produto.valorUnitario) : "—"}</td>
+                        <td className="px-3 py-2 text-right font-medium text-gray-700">{r.valorNecessidade !== null ? fmtMoney(r.valorNecessidade) : "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          );
+        })}
+        {!carregando && porContrato.length === 0 && (
+          <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center text-sm text-gray-400 shadow-sm">
             {contratoFiltro ? "Nenhum item abaixo do mínimo nesse contrato — nada a comprar agora." : "Nenhum item abaixo do mínimo em nenhum contrato — nada a comprar agora."}
           </div>
         )}
