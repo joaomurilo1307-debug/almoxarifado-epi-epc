@@ -8,6 +8,7 @@ import ConsominasLogo from "@/components/ConsominasLogo";
 const tabs = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/estoque", label: "Estoque" },
+  { href: "/estoque-minimo", label: "Estoque Mínimo" },
   { href: "/movimentacoes", label: "Movimentações" },
   { href: "/colaboradores", label: "Colaboradores" },
   { href: "/catalogo", label: "Catálogo por função" },
