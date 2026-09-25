@@ -121,9 +121,41 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
     return { entradas, saidas };
   }
 
-  return estoques.map((e) => {
+  // Higienizado é só um metadado de condição do lote (peça lavada/reaproveitada),
+  // não um item ou tamanho diferente — mesmo nome+tamanho, mesmo mínimo calculado
+  // (o cruzamento de uso nem sabe distinguir). João pediu (25/09/2026): "ninguém
+  // faz aquisição de camisa higienizada" — comprar deve olhar o estoque
+  // SOMADO (normal + higienizada) contra o mínimo, senão cada linha compara
+  // só a própria metade contra o mínimo cheio e pede compra em dobro.
+  // Agrupa por nome+tamanho+contrato pra somar o estoque atual do par antes
+  // de decidir quanto falta.
+  const estoqueAtualPorGrupo = new Map<string, number>();
+  function chaveGrupo(nome: string, tamanho: string | null, contratoId: string | null) {
+    return `${nome}__${tamanho ?? ""}__${contratoId ?? ""}`;
+  }
+  const atualPorLinha = new Map<string, number>();
+  const movsPorLinha = new Map<string, { entradas: number; saidas: number }>();
+  for (const e of estoques) {
     const { entradas, saidas } = movFor(e.produtoId, e.contratoId);
     const atual = e.estoqueInicial + entradas - saidas;
+    atualPorLinha.set(e.id, atual);
+    movsPorLinha.set(e.id, { entradas, saidas });
+    const chave = chaveGrupo(e.produto.nome, e.produto.tamanho, e.contratoId);
+    estoqueAtualPorGrupo.set(chave, (estoqueAtualPorGrupo.get(chave) ?? 0) + atual);
+  }
+  // Dentro de cada grupo, só a linha NÃO higienizada carrega a necessidade de
+  // compra (é o que se compra de verdade); se só existir a higienizada nesse
+  // grupo, ela mesma carrega.
+  const linhaResponsavelPorGrupo = new Map<string, string>();
+  for (const e of estoques) {
+    const chave = chaveGrupo(e.produto.nome, e.produto.tamanho, e.contratoId);
+    const atual = linhaResponsavelPorGrupo.get(chave);
+    if (!atual || !e.produto.higienizado) linhaResponsavelPorGrupo.set(chave, e.id);
+  }
+
+  return estoques.map((e) => {
+    const atual = atualPorLinha.get(e.id)!;
+    const { entradas, saidas } = movsPorLinha.get(e.id)!;
     const valorUnitario = e.produto.valorUnitario ?? null;
     const poolDoEstoque = e.contrato?.codigo === "ECC" ? "ECC" : "GERAL";
     const chaveTamanho = e.produto.tamanho ?? "";
@@ -151,16 +183,26 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
     // importada da planilha original) só serve de referência histórica
     // agora, não entra mais no status nem na necessidade de compra.
     const minimo = temDadoReal ? calcularMinimoSugerido(efetivo!, percentualEfetivo) : null;
-    const necessidade = minimo !== null ? Math.max(0, Math.ceil(minimo - atual)) : 0;
+
+    // Compara o mínimo contra o estoque do GRUPO (normal + higienizada
+    // somados), não só a linha — só a linha "responsável" do grupo carrega a
+    // necessidade, a outra mostra 0 (já contabilizada ali) pra não duplicar
+    // no pedido de compra.
+    const chaveDoGrupo = chaveGrupo(e.produto.nome, e.produto.tamanho, e.contratoId);
+    const atualDoGrupo = estoqueAtualPorGrupo.get(chaveDoGrupo) ?? atual;
+    const ehResponsavelDoGrupo = linhaResponsavelPorGrupo.get(chaveDoGrupo) === e.id;
+    const necessidade = minimo !== null && ehResponsavelDoGrupo ? Math.max(0, Math.ceil(minimo - atualDoGrupo)) : 0;
 
     // Além de "abaixo do mínimo" (COMPRAR), avisa quando já está chegando
     // perto (dentro de 20% acima do mínimo) — "ATENCAO", pra não deixar
     // descobrir só quando já faltou. Sem mínimo calculado, não dá pra
     // avaliar — "SEM_DADO", não "OK" (OK seria afirmar algo que não sabemos).
+    // Usa o estoque do GRUPO (normal + higienizada) pra decidir o status das
+    // duas linhas igual, já que fisicamente é o mesmo par cobrindo o mínimo.
     let status: "OK" | "ATENCAO" | "COMPRAR" | "SEM_DADO" = "SEM_DADO";
     if (minimo !== null) {
-      if (atual < minimo) status = "COMPRAR";
-      else if (minimo > 0 && atual < minimo * 1.2) status = "ATENCAO";
+      if (atualDoGrupo < minimo) status = "COMPRAR";
+      else if (minimo > 0 && atualDoGrupo < minimo * 1.2) status = "ATENCAO";
       else status = "OK";
     }
 
