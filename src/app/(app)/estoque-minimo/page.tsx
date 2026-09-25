@@ -6,7 +6,7 @@ import * as XLSX from "xlsx";
 type Contrato = { id: string; codigo: string; nome: string | null };
 type LinhaPedido = {
   id: string;
-  produto: { nome: string; tipo: string; ca: string | null; codigo: string | null; tamanho: string | null; higienizado: boolean; unidade: string; valorUnitario: number | null };
+  produto: { id: string; nome: string; tipo: string; ca: string | null; codigo: string | null; tamanho: string | null; higienizado: boolean; unidade: string; valorUnitario: number | null };
   contrato: Contrato | null;
   estoqueAtual: number;
   estoqueMinimo: number | null;
@@ -44,15 +44,31 @@ function destinoDe(codigoContrato: string | null): string {
 export default function EstoqueMinimoPage() {
   const [todasLinhas, setTodasLinhas] = useState<LinhaPedido[]>([]);
   const [carregando, setCarregando] = useState(false);
+  const [editandoProdutoId, setEditandoProdutoId] = useState<string | null>(null);
+  const [rascunhoValor, setRascunhoValor] = useState("");
 
-  useEffect(() => {
+  function reload() {
     setCarregando(true);
     fetch("/api/epi/estoque")
       .then((r) => r.json())
       .then(setTodasLinhas)
       .catch(() => {})
       .finally(() => setCarregando(false));
-  }, []);
+  }
+
+  useEffect(reload, []);
+
+  async function salvarValorUnitario(produtoId: string) {
+    const texto = rascunhoValor.trim();
+    const valor = texto ? parseFloat(texto.replace(",", ".")) : null;
+    setEditandoProdutoId(null);
+    await fetch(`/api/epi/produtos/${produtoId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ valorUnitario: valor !== null && !Number.isNaN(valor) ? valor : null }),
+    });
+    reload();
+  }
 
   const linhas = useMemo(() => todasLinhas.filter((r) => r.necessidade > 0), [todasLinhas]);
 
@@ -225,7 +241,33 @@ export default function EstoqueMinimoPage() {
                     );
                   })}
                   <td className="px-3 py-2 text-right font-bold text-gray-800">{p.total}</td>
-                  <td className="px-3 py-2 text-right text-gray-400">{p.produto.valorUnitario !== null ? fmtMoney(p.produto.valorUnitario) : "—"}</td>
+                  <td className="px-3 py-2 text-right">
+                    {editandoProdutoId === p.produto.id ? (
+                      <input
+                        autoFocus
+                        value={rascunhoValor}
+                        onChange={(e) => setRascunhoValor(e.target.value)}
+                        onBlur={() => salvarValorUnitario(p.produto.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") salvarValorUnitario(p.produto.id);
+                          if (e.key === "Escape") setEditandoProdutoId(null);
+                        }}
+                        placeholder="0,00"
+                        className="w-20 rounded border border-brand px-1.5 py-0.5 text-right text-xs"
+                      />
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setEditandoProdutoId(p.produto.id);
+                          setRascunhoValor(p.produto.valorUnitario !== null ? String(p.produto.valorUnitario) : "");
+                        }}
+                        className="text-gray-400 underline decoration-dotted hover:text-brand-dark"
+                        title="Clique pra editar o valor unitário"
+                      >
+                        {p.produto.valorUnitario !== null ? fmtMoney(p.produto.valorUnitario) : "definir"}
+                      </button>
+                    )}
+                  </td>
                   <td className="px-3 py-2 text-right font-medium text-gray-700">{p.valorTotal !== null ? fmtMoney(p.valorTotal) : "—"}</td>
                 </tr>
               ))}
