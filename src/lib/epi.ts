@@ -45,8 +45,19 @@ export function calcularMinimoSugerido(efetivo: number, percentual: number): num
   return Math.max(0, Math.ceil(efetivo * percentual));
 }
 
+// João confirmou (25/09/2026): ECC é o depósito físico que abastece os
+// contratos MRN (código numérico: 3581, 3686, 3687, 3748, 4343...) — o
+// colaborador pode estar cadastrado num desses contratos, mas o EPI dele sai
+// do estoque do ECC. O "Geral" abastece Sede e os contratos AGA. Antes disso
+// só quem estava LITERALMENTE cadastrado no contrato "ECC" contava pro pool
+// ECC (só 4 pessoas de escritório) — todo o efetivo real dos contratos MRN
+// caía errado no pool GERAL, inflando o "em uso" do Geral e esvaziando o do
+// ECC (por isso o ECC não pedia quase nada de compra apesar do estoque real
+// zerado em dezenas de itens).
 function poolDoCodigo(codigo: string): "ECC" | "GERAL" {
-  return codigo === "ECC" ? "ECC" : "GERAL";
+  if (codigo === "ECC") return "ECC";
+  if (/^\d+$/.test(codigo)) return "ECC"; // contrato MRN, codigo numerico
+  return "GERAL"; // AGA CB/CDS/QZ, Sede, e qualquer outro
 }
 
 // Estoque atual de EPI/EPC nunca fica guardado direto no banco — é sempre recalculado
