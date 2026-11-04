@@ -6,10 +6,11 @@
 //
 // A lista oficial está em src/lib/data/catalogoItens.json (gerada e conferida fora do sistema: sem código repetido, sem
 // item repetido, todo item com categoria). Recriar o catálogo apaga o cadastro atual, o estoque e as movimentações, mas ANTES
-// guarda uma cópia de cada tabela (_bkp_cat_*) — nada se perde.
+// guarda uma cópia de cada tabela (esquema "bkp", ver backupBanco.ts) — nada se perde.
 
 import type { PrismaClient } from "@prisma/client";
 import catalogo from "@/lib/data/catalogoItens.json";
+import { copiarTabelas } from "@/lib/backupBanco";
 
 export type ItemCatalogo = (typeof catalogo.itens)[number];
 export const ITENS_CATALOGO: ItemCatalogo[] = catalogo.itens;
@@ -101,12 +102,7 @@ export async function recriarCatalogo(prisma: PrismaClient) {
   if (problemas.length) throw new Error(`A lista oficial do catálogo tem problema e nada foi gravado: ${problemas.slice(0, 5).join("; ")}`);
 
   const selo = carimbo();
-  const backups: string[] = [];
-  for (const tabela of ["EpiProduto", "EpiEstoque", "EpiMovimentacao"]) {
-    const nome = `_bkp_cat_${selo}_${tabela}`;
-    await prisma.$executeRawUnsafe(`CREATE TABLE "${nome}" AS TABLE "${tabela}"`);
-    backups.push(nome);
-  }
+  const backups = await copiarTabelas(prisma, `cat_${selo}`, ["EpiProduto", "EpiEstoque", "EpiMovimentacao"]);
 
   const heranca = await herancaPorNome(prisma);
   let comValor = 0, comFoto = 0;

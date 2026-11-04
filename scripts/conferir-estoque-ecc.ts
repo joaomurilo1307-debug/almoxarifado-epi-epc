@@ -26,8 +26,8 @@ async function main() {
     for (const x of conf.soSistema) console.log(`[conferir-ecc] SO_SISTEMA "${x.nome}"${x.tamanho ? ` t${x.tamanho}` : ""}${x.higienizado ? " H" : ""}: ${x.atualHoje}`);
 
     if (process.env.CONFERIR_ESTOQUE_MODO === "analisar") return console.log("[conferir-ecc] modo ANALISAR: nada foi gravado.");
-    const jaCorrigido = (await prisma.$queryRawUnsafe<{ tablename: string }[]>(`SELECT tablename FROM pg_tables WHERE tablename LIKE '\\_bkp\\_conf\\_%\\_EpiEstoque'`)).length > 0;
-    if (jaCorrigido) return console.log("[conferir-ecc] já existe cópia _bkp_conf_*: correção automática já foi feita antes — nada gravado agora.");
+    const jaCorrigido = (await prisma.$queryRawUnsafe<{ tablename: string }[]>(`SELECT tablename FROM pg_tables WHERE schemaname = 'bkp' AND tablename LIKE 'conf\\_%\\_EpiEstoque'`)).length > 0;
+    if (jaCorrigido) return console.log("[conferir-ecc] já existe cópia bkp.conf_*: correção automática já foi feita antes — nada gravado agora.");
     if (r.diferentes === 0) return console.log("[conferir-ecc] nada a corrigir.");
     const res = await aplicarCorrecoes(prisma, "corrigir");
     console.log(`[conferir-ecc] CORRIGIDO ${res.alterados} item(ns). Cópia de segurança: ${res.backup}`);

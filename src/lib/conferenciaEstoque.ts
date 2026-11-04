@@ -13,6 +13,7 @@ import type { PrismaClient } from "@prisma/client";
 import inventario from "@/lib/data/inventarioEcc20260914.json";
 import geralMrn from "@/lib/data/estoqueGeralMrn20260829.json";
 import { canonizar, type Canon } from "@/lib/chaveCanonica";
+import { copiarTabelas } from "@/lib/backupBanco";
 
 export { canonizar };
 export type { Canon };
@@ -231,8 +232,7 @@ export async function aplicarCorrecoes(prisma: PrismaClient, acao: "corrigir" | 
     const [produtos, estoquesGeral] = await Promise.all([prisma.epiProduto.findMany({ where: { ativo: true } }), prisma.epiEstoque.findMany({ where: { contratoId: null } })]);
     const dup = await acharGeralDuplicado(prisma, produtos, estoquesGeral);
     if (dup.length === 0) return { acao, alterados: 0, backup: null as string | null, itens: [] as string[] };
-    const backup = `_bkp_conf_${selo}_EpiEstoque`;
-    await prisma.$executeRawUnsafe(`CREATE TABLE "${backup}" AS TABLE "EpiEstoque"`);
+    const [backup] = await copiarTabelas(prisma, `conf_${selo}`, ["EpiEstoque"]);
     await prisma.$transaction(async (tx) => {
       for (const d of dup) await tx.epiEstoque.update({ where: { id: d.estoqueId }, data: { estoqueInicial: 0 } });
     });
@@ -242,8 +242,7 @@ export async function aplicarCorrecoes(prisma: PrismaClient, acao: "corrigir" | 
   if (acao === "corrigir") {
     const alvo = conf.linhas.filter((l) => l.status === "DIFERENTE" && l.sistema && l.novoInicial !== null);
     if (alvo.length === 0) return { acao, alterados: 0, backup: null as string | null, itens: [] as string[] };
-    const backup = `_bkp_conf_${selo}_EpiEstoque`;
-    await prisma.$executeRawUnsafe(`CREATE TABLE "${backup}" AS TABLE "EpiEstoque"`);
+    const [backup] = await copiarTabelas(prisma, `conf_${selo}`, ["EpiEstoque"]);
     await prisma.$transaction(async (tx) => {
       for (const l of alvo) {
         const existente = await tx.epiEstoque.findFirst({ where: { produtoId: l.sistema!.produtoId, contratoId: ecc.id } });
@@ -256,9 +255,7 @@ export async function aplicarCorrecoes(prisma: PrismaClient, acao: "corrigir" | 
 
   const novos = conf.linhas.filter((l) => l.status === "SEM_CADASTRO" && l.sugestaoCadastro);
   if (novos.length === 0) return { acao, alterados: 0, backup: null as string | null, itens: [] as string[] };
-  const backupE = `_bkp_conf_${selo}_EpiEstoque`, backupP = `_bkp_conf_${selo}_EpiProduto`;
-  await prisma.$executeRawUnsafe(`CREATE TABLE "${backupE}" AS TABLE "EpiEstoque"`);
-  await prisma.$executeRawUnsafe(`CREATE TABLE "${backupP}" AS TABLE "EpiProduto"`);
+  const [backupE, backupP] = await copiarTabelas(prisma, `conf_${selo}`, ["EpiEstoque", "EpiProduto"]);
   await prisma.$transaction(async (tx) => {
     for (const l of novos) {
       const s = l.sugestaoCadastro!;

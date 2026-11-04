@@ -11,10 +11,11 @@
 // sem família, só relata. Nunca junta cor, CA ou modelo diferentes: a chave é só nome-base + tamanho + higienizada.
 //
 // Junta o estoque (inicial somado por contrato; mínimo antigo = o maior) e leva as movimentações. Antes de gravar, copia
-// as 3 tabelas para _bkp_unif_AAAAMMDD_HHMM_* (volta atrás com INSERT ... SELECT dessas cópias).
+// as 3 tabelas para bkp.unif_AAAAMMDD_HHMMSS_* (esquema "bkp") (volta atrás com INSERT ... SELECT dessas cópias).
 // UNIFICAR_MODO=analisar só relata; qualquer outro valor (padrão) aplica. Idempotente: sem duplicidade, não faz nada.
 
 import { PrismaClient } from "@prisma/client";
+import { copiarTabelas } from "../src/lib/backupBanco";
 
 type Prod = {
   id: string; nome: string; tipo: string; categoria: string | null; ca: string | null; fabricante: string | null;
@@ -105,10 +106,8 @@ export async function unificar(prisma: PrismaClient, aplicar: boolean, log: (s: 
   if (!aplicar) { log("[unificar] modo ANALISAR: nada foi gravado."); return { grupos: acoes.length, aplicado: false }; }
 
   const carimbo = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14).replace(/^(\d{8})(\d{6})$/, "$1_$2");
-  for (const tabela of ["EpiProduto", "EpiEstoque", "EpiMovimentacao"]) {
-    await prisma.$executeRawUnsafe(`CREATE TABLE "_bkp_unif_${carimbo}_${tabela}" AS TABLE "${tabela}"`);
-  }
-  log(`[unificar] cópia de segurança criada: _bkp_unif_${carimbo}_EpiProduto / _EpiEstoque / _EpiMovimentacao`);
+  const copias = await copiarTabelas(prisma, `unif_${carimbo}`, ["EpiProduto", "EpiEstoque", "EpiMovimentacao"]);
+  log(`[unificar] cópia de segurança criada: ${copias.join(" / ")}`);
 
   for (const g of acoes) {
     await prisma.$transaction(async (tx) => {
