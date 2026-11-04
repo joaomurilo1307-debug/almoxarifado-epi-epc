@@ -12,6 +12,9 @@ fi
 echo "Carregando o catalogo unico de itens (uma unica vez)..."
 npx tsx scripts/carregar-catalogo.ts || true
 
+echo "Preenchendo fotos de referencia do catalogo (uma unica vez)..."
+npx tsx scripts/preencher-fotos.ts || true
+
 echo "Conferindo cadastros duplicados (mesmo item com tamanho/higienizada no nome)..."
 npx tsx scripts/unificar-duplicados.ts || true
 

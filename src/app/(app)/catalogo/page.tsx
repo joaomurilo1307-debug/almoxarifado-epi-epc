@@ -24,6 +24,20 @@ type Produto = {
   ativo: boolean;
 };
 
+// Código do modelo (TIPO-CAT-NNN) a partir do código de um tamanho (TIPO-CAT-NNN-TAMANHO[-H]).
+function familiaDoCodigo(codigo: string | null): string | null {
+  if (!codigo) return null;
+  return /^([A-Z]{3}-[A-Z]{3}-\d{3})(-|$)/.exec(codigo)?.[1] ?? codigo;
+}
+
+// "7 tamanhos · 14 códigos" (cada tamanho e cada versão, normal ou higienizada, tem o seu código).
+function rotuloDoGrupo(itens: { tamanho: string | null }[]): string {
+  const tams = new Set(itens.map((i) => i.tamanho).filter((t): t is string => !!t)).size;
+  const n = itens.length;
+  const tamanhos = tams === 0 ? "sem tamanho" : `${tams} ${tams === 1 ? "tamanho" : "tamanhos"}`;
+  return `${tamanhos} · ${n} ${n === 1 ? "código" : "códigos"}`;
+}
+
 function fmtMoney(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
@@ -213,7 +227,8 @@ function ProdutosTab() {
           (!busca ||
             p.nome.toLowerCase().includes(busca.toLowerCase()) ||
             (p.tamanho ?? "").toLowerCase().includes(busca.toLowerCase()) ||
-            (p.ca ?? "").toLowerCase().includes(busca.toLowerCase())) &&
+            (p.ca ?? "").toLowerCase().includes(busca.toLowerCase()) ||
+            (p.codigo ?? "").toLowerCase().includes(busca.toLowerCase())) &&
           (!filtroTipo || p.tipo === filtroTipo) &&
           (!filtroFabricante || p.fabricante === filtroFabricante)
       ),
@@ -341,7 +356,7 @@ function ProdutosTab() {
         <input
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
-          placeholder="Buscar item..."
+          placeholder="Buscar item, tamanho, CA ou código..."
           className="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm"
         />
         <select
@@ -367,7 +382,7 @@ function ProdutosTab() {
             </option>
           ))}
         </select>
-        <span className="text-xs text-gray-400">{filtrados.length} itens ativos</span>
+        <span className="text-xs text-gray-400">{grupos.length} modelos · {filtrados.length} códigos</span>
         <button
           onClick={rodarAutoFoto}
           disabled={autoFotoRodando}
@@ -375,17 +390,23 @@ function ProdutosTab() {
         >
           {autoFotoRodando ? "Buscando fotos..." : "📷 Preencher fotos automaticamente"}
         </button>
+        <button
+          onClick={() => setExpandidos(expandidos.size > 0 ? new Set() : new Set(grupos.filter((g) => g.itens.length > 1).map((g) => g.chave)))}
+          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50"
+        >
+          {expandidos.size > 0 ? "Fechar todos os tamanhos" : "Abrir todos os tamanhos"}
+        </button>
         {admin && (
           <button
             onClick={() => setRecriando(true)}
-            className="ml-auto rounded-lg border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50"
+            className="rounded-lg border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50"
           >
             Recriar catálogo do zero
           </button>
         )}
         <button
           onClick={() => setShowForm(true)}
-          className={`${admin ? "" : "ml-auto "}rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark`}
+          className="ml-auto rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
         >
           + Novo item
         </button>
@@ -455,7 +476,7 @@ function ProdutosTab() {
                   >
                     <span className="text-xs text-gray-400">{fechado ? "▸" : "▾"}</span>
                     <span className="font-semibold text-gray-700">{bloco.label}</span>
-                    <span className="text-xs text-gray-400">{bloco.grupos.length} itens</span>
+                    <span className="text-xs text-gray-400">{bloco.grupos.length} modelos · {bloco.grupos.reduce((n, g) => n + g.itens.length, 0)} códigos</span>
                   </button>
 
                   {!fechado &&
@@ -467,7 +488,7 @@ function ProdutosTab() {
                       bloco.subgrupos.map((sub) => (
                         <div key={sub.categoria} className="border-t border-gray-100">
                           <p className="bg-brand-light/30 px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand-dark">
-                            {sub.categoria} <span className="font-normal normal-case text-gray-400">· {sub.grupos.length} itens</span>
+                            {sub.categoria} <span className="font-normal normal-case text-gray-400">· {sub.grupos.length} modelos · {sub.grupos.reduce((n, g) => n + g.itens.length, 0)} códigos</span>
                           </p>
                           <div className="max-h-[65vh] overflow-x-auto overflow-y-auto">
                             <table className="w-full min-w-max text-xs">
@@ -590,11 +611,9 @@ function LinhaProduto({
         )}
       </td>
       <td className="px-4 py-2.5">
-        {indentado
-          ? null
-          : p.codigo
-            ? <span className="rounded-md bg-brand-light px-2 py-1 font-mono text-xs font-semibold text-brand-dark">{p.codigo}</span>
-            : <span className="text-xs text-gray-300">—</span>}
+        {p.codigo
+          ? <span className={`rounded-md px-2 py-1 font-mono text-xs font-semibold ${indentado ? "bg-white text-gray-700 ring-1 ring-brand/30" : "bg-brand-light text-brand-dark"}`}>{p.codigo}</span>
+          : <span className="text-xs text-gray-300">—</span>}
       </td>
       <td className="px-4 py-2.5">
         {indentado ? null : (
@@ -748,7 +767,7 @@ function GrupoTamanhos({
         </td>
         <td className="px-4 py-2.5">
           {primeiro.codigo ? (
-            <span className="rounded-md bg-brand-light px-2 py-1 font-mono text-xs font-semibold text-brand-dark">{primeiro.codigo}</span>
+            <span className="rounded-md bg-brand-light px-2 py-1 font-mono text-xs font-semibold text-brand-dark" title="Código do modelo — cada tamanho tem o seu, com o tamanho no final">{familiaDoCodigo(primeiro.codigo)}-…</span>
           ) : (
             <span className="text-xs text-gray-300">—</span>
           )}
@@ -761,7 +780,7 @@ function GrupoTamanhos({
         <td className="px-4 py-2.5 text-gray-500">{fabricantes.size === 1 ? [...fabricantes][0] || "—" : "vário"}</td>
         <td className="px-4 py-2.5">
           <button onClick={toggle} className="rounded-full bg-brand-light px-2 py-0.5 text-xs font-semibold text-brand-dark hover:bg-brand/20">
-            {grupo.itens.length} tamanhos
+            {rotuloDoGrupo(grupo.itens)}
           </button>
         </td>
         <td className="px-4 py-2.5 text-gray-500">{primeiro.unidade}</td>
