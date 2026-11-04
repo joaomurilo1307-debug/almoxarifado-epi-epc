@@ -9,6 +9,9 @@ if [ "$RUN_SEED" = "true" ]; then
   npx tsx prisma/seed.ts || true
 fi
 
+echo "Carregando o catalogo unico de itens (uma unica vez)..."
+npx tsx scripts/carregar-catalogo.ts || true
+
 echo "Conferindo cadastros duplicados (mesmo item com tamanho/higienizada no nome)..."
 npx tsx scripts/unificar-duplicados.ts || true
 
