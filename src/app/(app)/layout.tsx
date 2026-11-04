@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
+import TrocarSenhaModal from "@/components/TrocarSenhaModal";
 import ConsominasLogo from "@/components/ConsominasLogo";
 
 const tabs = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/estoque", label: "Estoque" },
   { href: "/estoque-minimo", label: "Estoque Mínimo" },
+  { href: "/conferencia-estoque", label: "Conferência ECC" },
   { href: "/movimentacoes", label: "Movimentações" },
   { href: "/colaboradores", label: "Colaboradores" },
   { href: "/catalogo", label: "Catálogo por função" },
@@ -19,6 +22,7 @@ const tabs = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { data: sessionData } = useSession();
+  const [trocandoSenha, setTrocandoSenha] = useState(false);
   // "Usuários" só aparece pra quem é ADMIN — a API também bloqueia (403) quem
   // não é, isso aqui é só pra não mostrar a aba pra quem não vai poder usar.
   const isAdmin = (sessionData?.user as any)?.role === "ADMIN";
@@ -35,9 +39,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <p className="text-xs text-gray-400">Grupo Consominas</p>
             </div>
           </div>
-          <button onClick={() => signOut({ callbackUrl: "/login" })} className="text-xs font-medium text-gray-400 hover:text-accent">
-            Sair
-          </button>
+          <div className="flex items-center gap-4">
+            <button onClick={() => setTrocandoSenha(true)} className="text-xs font-medium text-gray-400 hover:text-accent">
+              Trocar minha senha
+            </button>
+            <button onClick={() => signOut({ callbackUrl: "/login" })} className="text-xs font-medium text-gray-400 hover:text-accent">
+              Sair
+            </button>
+          </div>
         </div>
       </header>
 
@@ -61,6 +70,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         {children}
       </div>
+      {trocandoSenha && <TrocarSenhaModal onClose={() => setTrocandoSenha(false)} />}
     </div>
   );
 }

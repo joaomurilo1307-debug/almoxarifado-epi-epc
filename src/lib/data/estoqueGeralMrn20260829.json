@@ -1,0 +1,574 @@
+{
+ "data": "2026-08-29",
+ "fonte": "INFORMAÇÕES GERAIS - MRN.xlsx, aba \"Estoque do ECC\" (a lista que foi importada sem contrato e virou \"Geral\")",
+ "itens": [
+  {
+   "produto": "AVENTAL - CA11793",
+   "inicial": 9
+  },
+  {
+   "produto": "BLUSÃO DE OPERADOR - CA46231",
+   "inicial": 4
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 35 BRACOL - CA25687",
+   "inicial": 1
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 35 MARLUVAS - CA42374",
+   "inicial": 2
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 36 MARLUVAS - CA42374",
+   "inicial": 1
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 37 MARLUVAS - CA42374",
+   "inicial": 0
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 38 BOMPEL - CA37671",
+   "inicial": 1
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 38 BRACOL - CA25687",
+   "inicial": 3
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 38 MARLUVAS - CA42374",
+   "inicial": 6
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 39 BRACOL - CA25687",
+   "inicial": 2
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 39 MARLUVAS - CA42374",
+   "inicial": 0
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 40 BOMPEL - CA37671",
+   "inicial": 2
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 40 BRACOL - CA25687",
+   "inicial": 3
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 40 BRACOL - CA37455",
+   "inicial": 2
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 40 BRACOL - CA42165",
+   "inicial": 2
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 40 MARLUVAS - CA42374",
+   "inicial": 3
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 41 (PROTEÇÃO DE METARARSO) - CA43959",
+   "inicial": 3
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 41 (PROTEÇÃO DE METATARSO) - CA37450",
+   "inicial": 1
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 41 BOMPEL - CA37671",
+   "inicial": 2
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 41 MARLUVAS - CA42374",
+   "inicial": 0
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 42 BRACOL - CA25259",
+   "inicial": 2
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 42 MARLUVAS - CA42374",
+   "inicial": 12
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 43 BRACOL - CA25259",
+   "inicial": 2
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 43 MARLUVAS - CA42374",
+   "inicial": 5
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 44 BRACOL - CA25687",
+   "inicial": 1
+  },
+  {
+   "produto": "BOTA DE SEGURANÇA 44 BRACOL - CA42165",
+   "inicial": 1
+  },
+  {
+   "produto": "CALÇA 36",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 36 (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 38",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 38 (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 40",
+   "inicial": 15
+  },
+  {
+   "produto": "CALÇA 40 (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 42",
+   "inicial": 2
+  },
+  {
+   "produto": "CALÇA 42 (HIGIENIZADA)",
+   "inicial": 4
+  },
+  {
+   "produto": "CALÇA 44",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 44 (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 46",
+   "inicial": 2
+  },
+  {
+   "produto": "CALÇA 46 (HIGIENIZADA)",
+   "inicial": 1
+  },
+  {
+   "produto": "CALÇA 48",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 48 (HIGIENIZADA)",
+   "inicial": 1
+  },
+  {
+   "produto": "CALÇA 50",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 50 (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 52",
+   "inicial": 14
+  },
+  {
+   "produto": "CALÇA 52 (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 54",
+   "inicial": 15
+  },
+  {
+   "produto": "CALÇA 54 (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 56",
+   "inicial": 20
+  },
+  {
+   "produto": "CALÇA 56 (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA 58",
+   "inicial": 15
+  },
+  {
+   "produto": "CALÇA 58 (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CALÇA DE OPERADOR - CA36600",
+   "inicial": 4
+  },
+  {
+   "produto": "CAMISA DE MALHA G",
+   "inicial": 20
+  },
+  {
+   "produto": "CAMISA DE MALHA G (HIGIENIZADA)",
+   "inicial": 4
+  },
+  {
+   "produto": "CAMISA DE MALHA GG",
+   "inicial": 10
+  },
+  {
+   "produto": "CAMISA DE MALHA GG (HIGIENIZADA)",
+   "inicial": 1
+  },
+  {
+   "produto": "CAMISA DE MALHA M",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA DE MALHA M (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA DE MALHA P",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA DE MALHA P (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA DE MALHA PP",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA DE MALHA PP (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA DE MALHA XG",
+   "inicial": 23
+  },
+  {
+   "produto": "CAMISA DE MALHA XG (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA DE MALHA XXG",
+   "inicial": 18
+  },
+  {
+   "produto": "CAMISA DE MALHA XXG (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA JALECO G",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA JALECO G (HIGIENIZADA)",
+   "inicial": 13
+  },
+  {
+   "produto": "CAMISA JALECO GG",
+   "inicial": 66
+  },
+  {
+   "produto": "CAMISA JALECO GG (HIGIENIZADA)",
+   "inicial": 6
+  },
+  {
+   "produto": "CAMISA JALECO M",
+   "inicial": 4
+  },
+  {
+   "produto": "CAMISA JALECO M (HIGIENIZADA)",
+   "inicial": 6
+  },
+  {
+   "produto": "CAMISA JALECO P",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA JALECO P (HIGIENIZADA)",
+   "inicial": 8
+  },
+  {
+   "produto": "CAMISA JALECO XG",
+   "inicial": 28
+  },
+  {
+   "produto": "CAMISA JALECO XG (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CAMISA JALECO XXG",
+   "inicial": 6
+  },
+  {
+   "produto": "CAMISA JALECO XXG (HIGIENIZADA)",
+   "inicial": 0
+  },
+  {
+   "produto": "CAPA DE CHUVA AMARELA",
+   "inicial": 9
+  },
+  {
+   "produto": "CAPACETE AZUL 3M - CA29638",
+   "inicial": 10
+  },
+  {
+   "produto": "CAPACETE BRANCO MSA - CA498",
+   "inicial": 8
+  },
+  {
+   "produto": "CAPACETE CINZA MSA - CA498",
+   "inicial": 15
+  },
+  {
+   "produto": "CAPACETE LARANJA MSA - CA498",
+   "inicial": 12
+  },
+  {
+   "produto": "COLETE LARANJA - G",
+   "inicial": 17
+  },
+  {
+   "produto": "COLETE VERDE - G",
+   "inicial": 12
+  },
+  {
+   "produto": "COLETE VERDE - GG",
+   "inicial": 1
+  },
+  {
+   "produto": "COLETE VERDE - M",
+   "inicial": 10
+  },
+  {
+   "produto": "LUVA ANTICORTE - CA12872",
+   "inicial": 8
+  },
+  {
+   "produto": "LUVA ANTICORTE G - CA36606",
+   "inicial": 19
+  },
+  {
+   "produto": "LUVA ANTICORTE M - CA34000",
+   "inicial": 1
+  },
+  {
+   "produto": "LUVA ANTI-IMPACTO - CA44549",
+   "inicial": 3
+  },
+  {
+   "produto": "LUVA DE BORRACHA - CA25313",
+   "inicial": 1
+  },
+  {
+   "produto": "LUVA DE BORRACHA - CA5774",
+   "inicial": 1
+  },
+  {
+   "produto": "LUVA DE BORRACHA G - CA41918",
+   "inicial": 15
+  },
+  {
+   "produto": "LUVA DE BORRACHA M - CA41918",
+   "inicial": 5
+  },
+  {
+   "produto": "LUVA DE LATEX - CA13030",
+   "inicial": 5
+  },
+  {
+   "produto": "LUVA DE PVC - CA34570",
+   "inicial": 9
+  },
+  {
+   "produto": "LUVA DE RASPA CANO LOGO - CA40320",
+   "inicial": 8
+  },
+  {
+   "produto": "LUVA DE VAQUETA - CA11711",
+   "inicial": 13
+  },
+  {
+   "produto": "LUVA MISTA - CA52131",
+   "inicial": 17
+  },
+  {
+   "produto": "LUVA MISTA CANO LONGO - CA36845",
+   "inicial": 15
+  },
+  {
+   "produto": "LUVA MISTA CANO LONGO - CA40319",
+   "inicial": 6
+  },
+  {
+   "produto": "LUVA NITRILICA - CA25280",
+   "inicial": 9
+  },
+  {
+   "produto": "LUVA PU G DANNY - CA29014",
+   "inicial": 120
+  },
+  {
+   "produto": "LUVA PU G DELTA - CA36365",
+   "inicial": 13
+  },
+  {
+   "produto": "LUVA PU G KALIPSO - CA15272",
+   "inicial": 1
+  },
+  {
+   "produto": "LUVA PU G SAFETY - CA32038",
+   "inicial": 1
+  },
+  {
+   "produto": "LUVA PU G VOLK - CA30916",
+   "inicial": 36
+  },
+  {
+   "produto": "LUVA PU GG DELTA - CA36365",
+   "inicial": 1
+  },
+  {
+   "produto": "LUVA PU M DANNY - CA29014",
+   "inicial": 23
+  },
+  {
+   "produto": "LUVA PU M DELTA - CA36365",
+   "inicial": 7
+  },
+  {
+   "produto": "LUVA PU P DELTA - CA36365",
+   "inicial": 2
+  },
+  {
+   "produto": "MANGOTE - CA12107",
+   "inicial": 2
+  },
+  {
+   "produto": "MANGOTE - CA41029",
+   "inicial": 4
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO - CA11268",
+   "inicial": 1
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO - CA20716",
+   "inicial": 14
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO AMPLA VISÃO - CA9722",
+   "inicial": 32
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO COM BANDA ELASTICA - CA39190",
+   "inicial": 1
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO DE SOBREPOSIÇÃO - CA16462",
+   "inicial": 5
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR - CA11268",
+   "inicial": 5
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR - CA14991",
+   "inicial": 1
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR AMPLA VISÃO - CA12572",
+   "inicial": 53
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR COM BANDA ELASTICA - CA39190",
+   "inicial": 8
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR DE SOBREPOSIÇÃO - CA16462",
+   "inicial": 5
+  },
+  {
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR DE SOBREPOSIÇÃO E BANDA ELASTICA - CA19072",
+   "inicial": 20
+  },
+  {
+   "produto": "PERNEIRA - CA39624",
+   "inicial": 1
+  },
+  {
+   "produto": "PERNEIRA - CA44234",
+   "inicial": 13
+  },
+  {
+   "produto": "PERNEIRA - CA48785",
+   "inicial": 23
+  },
+  {
+   "produto": "PRESILHAS PARA LUVAS",
+   "inicial": 30
+  },
+  {
+   "produto": "PROTETOR AUDITIVO 3M - CA33835",
+   "inicial": 2
+  },
+  {
+   "produto": "PROTETOR AUDITIVO LIBUS - CA37134",
+   "inicial": 1
+  },
+  {
+   "produto": "PROTETOR AUDITIVO LIBUS - CA43350",
+   "inicial": 1
+  },
+  {
+   "produto": "PROTETOR AUDITIVO MSA - CA27971",
+   "inicial": 6
+  },
+  {
+   "produto": "PROTETOR FACIAL DE ACRILICO - CA311814",
+   "inicial": 5
+  },
+  {
+   "produto": "PROTETOR RESPIRÁTORIO - CA10578",
+   "inicial": 87
+  },
+  {
+   "produto": "PROTETOR RESPIRÁTORIO - CA38812",
+   "inicial": 20
+  },
+  {
+   "produto": "PROTETOR RESPIRÁTORIO - CA38954",
+   "inicial": 3
+  },
+  {
+   "produto": "PROTETOR RESPIRÁTORIO - CA5657",
+   "inicial": 10
+  },
+  {
+   "produto": "PROTETOR RESPIRÁTORIO - CA7072",
+   "inicial": 5
+  },
+  {
+   "produto": "TOUCA ÁRABE - CA28998",
+   "inicial": 2
+  },
+  {
+   "produto": "TOUCA ÁRABE - CA39760",
+   "inicial": 18
+  },
+  {
+   "produto": "TOUCA ÁRABE - CA44963",
+   "inicial": 43
+  },
+  {
+   "produto": "TOUCA ÁRABE - CA49731",
+   "inicial": 36
+  }
+ ]
+}

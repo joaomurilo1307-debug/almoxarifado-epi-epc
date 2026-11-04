@@ -6,6 +6,8 @@
 // contrato usam o item (a mesma contagem que gerou o mínimo). A soma dos centros é sempre igual à compra do destino:
 // o rateio usa o maior resto, então não sobra nem falta unidade por arredondamento.
 
+import { compararItens } from "@/lib/chaveCanonica";
+
 export type GrupoCentro = "ECC" | "GERAL";
 
 export type LinhaParaRateio = {
@@ -104,9 +106,7 @@ export function montarPedidoPorCentro(linhas: LinhaParaRateio[], centrosCadastra
       usados.add(codigo);
     }
   }
-  const linhasFinais = [...mapa.values()].sort(
-    (a, b) => a.produto.nome.localeCompare(b.produto.nome, "pt-BR") || (a.produto.tamanho ?? "").localeCompare(b.produto.tamanho ?? "", "pt-BR", { numeric: true })
-  );
+  const linhasFinais = [...mapa.values()].sort((a, b) => compararItens(a.produto, b.produto));
   for (const l of linhasFinais) if (l.valorTotal !== null) l.valorTotal = l.total * (l.produto.valorUnitario ?? 0);
 
   const centros = [...usados].sort(compararCentros).map((codigo) => ({ codigo, grupo: grupoDoCodigo(codigo) }));

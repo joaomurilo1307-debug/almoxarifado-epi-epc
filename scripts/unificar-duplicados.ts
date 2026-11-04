@@ -36,6 +36,11 @@ export function normalizar(p: Pick<Prod, "nome" | "tamanho" | "higienizado">): {
     const m = nome.match(RE_TAM_PALAVRA) ?? nome.match(RE_TAM_FIM);
     if (m) { nome = m[1].trim(); tamanho = m[2]; nomeTinhaTamanho = true; }
   }
+  // Calça tem tamanho numérico no fim do nome ("CALÇA 42"): só vale com a família já cadastrada (mesma guarda de sempre)
+  if (!tamanho && /^CAL[CÇ]A\b/.test(nome)) {
+    const m = nome.match(/^(.*?)\s+(3[2-9]|4\d|5[0-8])$/);
+    if (m) { nome = m[1].trim(); tamanho = m[2]; nomeTinhaTamanho = true; }
+  }
   return { base: nome, tamanho, higienizado, nomeTinhaTamanho };
 }
 
