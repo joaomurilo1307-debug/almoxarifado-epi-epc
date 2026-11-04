@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import * as XLSX from "xlsx";
+import { montarPedidoPorCentro, type LinhaParaRateio } from "@/lib/pedidoPorCentro";
 
 type Contrato = { id: string; codigo: string; nome: string | null };
 type LinhaPedido = {
@@ -14,6 +15,7 @@ type LinhaPedido = {
   temDadoDeUso: boolean;
   necessidade: number;
   valorNecessidade: number | null;
+  efetivoPorCentro: Record<string, number> | null;
 };
 
 function fmtMoney(v: number) {
@@ -46,17 +48,37 @@ export default function EstoqueMinimoPage() {
   const [carregando, setCarregando] = useState(false);
   const [editandoProdutoId, setEditandoProdutoId] = useState<string | null>(null);
   const [rascunhoValor, setRascunhoValor] = useState("");
+  const [contratosAtivos, setContratosAtivos] = useState<string[]>([]);
+  const [atualizadoEm, setAtualizadoEm] = useState<Date | null>(null);
 
   function reload() {
     setCarregando(true);
-    fetch("/api/epi/estoque")
-      .then((r) => r.json())
-      .then(setTodasLinhas)
+    Promise.all([
+      fetch("/api/epi/estoque").then((r) => r.json()),
+      fetch("/api/epi/contratos").then((r) => r.json()),
+    ])
+      .then(([linhasApi, contratosApi]) => {
+        if (Array.isArray(linhasApi)) setTodasLinhas(linhasApi);
+        if (Array.isArray(contratosApi)) setContratosAtivos(contratosApi.filter((c: { ativo: boolean }) => c.ativo).map((c: { codigo: string }) => c.codigo));
+        setAtualizadoEm(new Date());
+      })
       .catch(() => {})
       .finally(() => setCarregando(false));
   }
 
   useEffect(reload, []);
+
+  // O pedido por centro de custo acompanha o estoque: ao voltar para esta aba (depois de dar entrada, cadastrar
+  // colaborador ou contrato em outra tela), recarrega sozinho.
+  useEffect(() => {
+    const aoVoltar = () => { if (document.visibilityState === "visible") reload(); };
+    document.addEventListener("visibilitychange", aoVoltar);
+    window.addEventListener("focus", aoVoltar);
+    return () => {
+      document.removeEventListener("visibilitychange", aoVoltar);
+      window.removeEventListener("focus", aoVoltar);
+    };
+  }, []);
 
   async function salvarValorUnitario(produtoId: string) {
     const texto = rascunhoValor.trim();
@@ -112,6 +134,16 @@ export default function EstoqueMinimoPage() {
     return [...map.values()].sort((a, b) => a.produto.nome.localeCompare(b.produto.nome) || (a.produto.tamanho ?? "").localeCompare(b.produto.tamanho ?? ""));
   }, [linhas]);
 
+  // Mesma compra de cima, repartida por centro de custo (contrato), como na tela de Colaboradores.
+  const porCentro = useMemo(() => montarPedidoPorCentro(linhas as unknown as LinhaParaRateio[], contratosAtivos), [linhas, contratosAtivos]);
+  const gruposCentro = useMemo(
+    () =>
+      (["GERAL", "ECC"] as const)
+        .map((g) => ({ grupo: g, rotulo: g === "GERAL" ? "Geral — Sede e AGA" : "ECC — contratos MRN e ECC", centros: porCentro.centros.filter((c) => c.grupo === g) }))
+        .filter((g) => g.centros.length > 0),
+    [porCentro]
+  );
+
   const totalItens = pivot.length;
   const totalUnidades = linhas.reduce((s, r) => s + r.necessidade, 0);
   const totalCusto = linhas.reduce((s, r) => s + (r.valorNecessidade ?? 0), 0);
@@ -162,6 +194,31 @@ export default function EstoqueMinimoPage() {
       { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 18 }, { wch: 16 }, { wch: 18 },
     ];
     XLSX.utils.book_append_sheet(wb, wsDetalhe, "Detalhe por linha");
+
+    // Terceira aba: o mesmo pedido separado por centro de custo (contrato), com subtotal por grupo e total.
+    const dadosCentro = porCentro.linhas.map((l) => {
+      const linha: Record<string, string | number> = { Produto: l.produto.nome, Tamanho: l.produto.tamanho ?? "", Código: l.produto.codigo ?? "" };
+      for (const g of gruposCentro) {
+        for (const c of g.centros) linha[c.codigo] = l.porCentro[c.codigo] ?? 0;
+        linha[`Subtotal ${g.grupo === "GERAL" ? "Geral" : "ECC"}`] = g.centros.reduce((s, c) => s + (l.porCentro[c.codigo] ?? 0), 0);
+      }
+      linha["TOTAL A COMPRAR"] = l.total;
+      linha["Valor Unitário (R$)"] = l.produto.valorUnitario ?? "";
+      linha["Valor Total (R$)"] = l.valorTotal ?? "";
+      return linha;
+    });
+    const totais: Record<string, string | number> = { Produto: "TOTAL (unidades)", Tamanho: "", Código: "" };
+    const valores: Record<string, string | number> = { Produto: "TOTAL (R$)", Tamanho: "", Código: "" };
+    for (const g of gruposCentro) {
+      for (const c of g.centros) { totais[c.codigo] = porCentro.totalPorCentro[c.codigo]; valores[c.codigo] = Math.round(porCentro.valorPorCentro[c.codigo] * 100) / 100; }
+      totais[`Subtotal ${g.grupo === "GERAL" ? "Geral" : "ECC"}`] = g.centros.reduce((s, c) => s + porCentro.totalPorCentro[c.codigo], 0);
+      valores[`Subtotal ${g.grupo === "GERAL" ? "Geral" : "ECC"}`] = Math.round(g.centros.reduce((s, c) => s + porCentro.valorPorCentro[c.codigo], 0) * 100) / 100;
+    }
+    totais["TOTAL A COMPRAR"] = porCentro.totalUnidades;
+    valores["TOTAL A COMPRAR"] = Math.round(porCentro.totalValor * 100) / 100;
+    const wsCentro = XLSX.utils.json_to_sheet([...dadosCentro, totais, valores]);
+    wsCentro["!cols"] = [{ wch: 40 }, { wch: 10 }, { wch: 14 }, ...Array(gruposCentro.reduce((n, g) => n + g.centros.length + 1, 0) + 3).fill({ wch: 12 })];
+    XLSX.utils.book_append_sheet(wb, wsCentro, "Por Centro de Custo");
 
     const hoje = new Date().toISOString().slice(0, 10);
     XLSX.writeFile(wb, `Pedido_Compra_Estoque_Minimo_${hoje}.xlsx`);
@@ -277,6 +334,121 @@ export default function EstoqueMinimoPage() {
         {!carregando && pivot.length === 0 && (
           <div className="p-8 text-center text-sm text-gray-400">Nenhum item abaixo do mínimo em nenhum contrato — nada a comprar agora.</div>
         )}
+      </div>
+
+      <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-100 bg-gray-50 px-5 py-3">
+          <div>
+            <h2 className="text-sm font-semibold text-gray-700">Pedido por centro de custo (contrato)</h2>
+            <p className="max-w-3xl text-xs text-gray-400">
+              A mesma compra da tabela de cima, repartida entre os contratos na proporção de pessoas ativas de cada um que usam o item. O estoque é um só por
+              destino (ECC ou Geral); aqui você vê quanto da compra é de cada centro de custo. Atualiza sozinho com o estoque, os colaboradores e os contratos.
+            </p>
+          </div>
+          <div className="text-right text-[11px] text-gray-400">
+            {porCentro.totalUnidades === totalUnidades ? (
+              <span className="rounded-full bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700">✓ confere com o pedido de cima ({totalUnidades} un.)</span>
+            ) : (
+              <span className="rounded-full bg-rose-50 px-2 py-0.5 font-medium text-rose-700">diferença: {porCentro.totalUnidades} × {totalUnidades} un.</span>
+            )}
+            {atualizadoEm && <p className="mt-1">Atualizado às {atualizadoEm.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>}
+            <button onClick={reload} className="mt-1 text-brand-dark underline">atualizar agora</button>
+          </div>
+        </div>
+        <div className="max-h-[70vh] overflow-x-auto overflow-y-auto">
+          <table className="w-full min-w-max text-xs">
+            <thead className="sticky top-0 z-10 bg-white">
+              <tr className="whitespace-nowrap border-b border-gray-100 text-[10px] uppercase tracking-wide text-gray-400">
+                <th colSpan={2} className="px-3 py-1" />
+                {gruposCentro.map((g) => (
+                  <th key={g.grupo} colSpan={g.centros.length + 1} className={`border-l border-gray-100 px-3 py-1 text-center font-semibold ${g.grupo === "GERAL" ? "text-sky-600" : "text-emerald-600"}`}>
+                    {g.rotulo}
+                  </th>
+                ))}
+                <th colSpan={3} className="border-l border-gray-100 px-3 py-1" />
+              </tr>
+              <tr className="whitespace-nowrap border-b border-gray-100 text-left text-[10px] uppercase tracking-wide text-gray-400">
+                <th className="px-3 py-2">Produto</th>
+                <th className="px-3 py-2">Código</th>
+                {gruposCentro.map((g) => (
+                  <Fragment key={g.grupo}>
+                    {g.centros.map((c, i) => (
+                      <th key={c.codigo} className={`px-3 py-2 text-right ${i === 0 ? "border-l border-gray-100" : ""}`}>{c.codigo}</th>
+                    ))}
+                    <th className="px-3 py-2 text-right font-bold text-gray-500">Subtotal</th>
+                  </Fragment>
+                ))}
+                <th className="border-l border-gray-100 px-3 py-2 text-right font-bold text-gray-500">Total</th>
+                <th className="px-3 py-2 text-right">Valor Unit.</th>
+                <th className="px-3 py-2 text-right">Valor Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {porCentro.linhas.map((l) => (
+                <tr key={l.chave} className="whitespace-nowrap border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
+                  <td className="px-3 py-2">
+                    <p className="font-medium text-gray-700">{l.produto.nome}</p>
+                    {l.produto.tamanho && <p className="text-[10px] text-gray-400">Tamanho {l.produto.tamanho}{l.produto.higienizado && " · ♻️ Higienizada"}</p>}
+                  </td>
+                  <td className="px-3 py-2">
+                    {l.produto.codigo && <span className="w-fit rounded-md bg-brand-light px-1.5 py-0.5 font-mono text-[10px] font-semibold text-brand-dark">{l.produto.codigo}</span>}
+                  </td>
+                  {gruposCentro.map((g) => (
+                    <Fragment key={g.grupo}>
+                      {g.centros.map((c, i) => {
+                        const q = l.porCentro[c.codigo];
+                        return (
+                          <td key={c.codigo} className={`px-3 py-2 text-right ${i === 0 ? "border-l border-gray-100" : ""}`}>
+                            {q ? <span className="font-semibold text-rose-600">{q}</span> : <span className="text-gray-200">—</span>}
+                          </td>
+                        );
+                      })}
+                      <td className="px-3 py-2 text-right font-semibold text-gray-600">{g.centros.reduce((s, c) => s + (l.porCentro[c.codigo] ?? 0), 0) || <span className="text-gray-200">—</span>}</td>
+                    </Fragment>
+                  ))}
+                  <td className="border-l border-gray-100 px-3 py-2 text-right font-bold text-gray-800">{l.total}</td>
+                  <td className="px-3 py-2 text-right text-gray-500">{l.produto.valorUnitario !== null ? fmtMoney(l.produto.valorUnitario) : "—"}</td>
+                  <td className="px-3 py-2 text-right font-medium text-gray-700">{l.valorTotal !== null ? fmtMoney(l.valorTotal) : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+            {porCentro.linhas.length > 0 && (
+              <tfoot className="sticky bottom-0 bg-gray-50 text-xs font-semibold text-gray-700">
+                <tr className="whitespace-nowrap border-t border-gray-200">
+                  <td colSpan={2} className="px-3 py-2">Total de unidades</td>
+                  {gruposCentro.map((g) => (
+                    <Fragment key={g.grupo}>
+                      {g.centros.map((c) => (
+                        <td key={c.codigo} className="px-3 py-2 text-right">{porCentro.totalPorCentro[c.codigo] || <span className="text-gray-300">0</span>}</td>
+                      ))}
+                      <td className="px-3 py-2 text-right">{g.centros.reduce((s, c) => s + porCentro.totalPorCentro[c.codigo], 0)}</td>
+                    </Fragment>
+                  ))}
+                  <td className="px-3 py-2 text-right">{porCentro.totalUnidades}</td>
+                  <td />
+                  <td className="px-3 py-2 text-right">{fmtMoney(porCentro.totalValor)}</td>
+                </tr>
+                <tr className="whitespace-nowrap">
+                  <td colSpan={2} className="px-3 py-2">Valor estimado (R$)</td>
+                  {gruposCentro.map((g) => (
+                    <Fragment key={g.grupo}>
+                      {g.centros.map((c) => (
+                        <td key={c.codigo} className="px-3 py-2 text-right">{porCentro.valorPorCentro[c.codigo] ? fmtMoney(porCentro.valorPorCentro[c.codigo]) : <span className="text-gray-300">—</span>}</td>
+                      ))}
+                      <td className="px-3 py-2 text-right">{fmtMoney(g.centros.reduce((s, c) => s + porCentro.valorPorCentro[c.codigo], 0))}</td>
+                    </Fragment>
+                  ))}
+                  <td className="px-3 py-2 text-right">{fmtMoney(porCentro.totalValor)}</td>
+                  <td colSpan={2} />
+                </tr>
+              </tfoot>
+            )}
+          </table>
+        </div>
+        {!carregando && porCentro.linhas.length === 0 && (
+          <div className="p-8 text-center text-sm text-gray-400">Nada a comprar agora — nenhum centro de custo com item abaixo do mínimo.</div>
+        )}
+        {porCentro.semValor > 0 && <p className="border-t border-gray-100 px-5 py-2 text-[11px] text-amber-600">{porCentro.semValor} item(ns) sem valor unitário cadastrado — não entram nos valores.</p>}
       </div>
     </div>
   );

@@ -98,6 +98,8 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
   // EpiColaboradorItem, já filtrando quem foi desligado depois do último
   // rebuild (não precisa rodar o rebuild toda vez que alguém sai).
   const efetivoPorProduto = new Map<string, Map<string, Map<string, number>>>(); // nome -> pool -> tamanho("" se null) -> contagem
+  // Mesma contagem, aberta por contrato (centro de custo): alimenta o pedido por centro de custo na tela de Estoque Mínimo.
+  const efetivoPorCentroMap = new Map<string, Record<string, number>>(); // `nome|pool|tamanho` -> código do contrato -> contagem
   for (const item of itensNecessarios) {
     if (item.colaborador.situacao !== "ATIVO") continue;
     const pool = poolDoCodigo(item.colaborador.contrato.codigo);
@@ -107,6 +109,10 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
     if (!porPool.has(pool)) porPool.set(pool, new Map());
     const porTamanho = porPool.get(pool)!;
     porTamanho.set(chaveTamanho, (porTamanho.get(chaveTamanho) ?? 0) + 1);
+    const chaveCentro = `${item.produtoNome}|${pool}|${chaveTamanho}`;
+    const porCentro = efetivoPorCentroMap.get(chaveCentro) ?? {};
+    porCentro[item.colaborador.contrato.codigo] = (porCentro[item.colaborador.contrato.codigo] ?? 0) + 1;
+    efetivoPorCentroMap.set(chaveCentro, porCentro);
   }
 
   function movFor(produtoId: string, contratoId: string | null) {
@@ -217,6 +223,7 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
       estoqueMinimoAntigo: e.estoqueMinimo, // histórico, importado — não usado no status/necessidade
       estoqueMinimo: minimo,
       efetivoConsiderado: efetivo ?? null,
+      efetivoPorCentro: temDadoReal ? efetivoPorCentroMap.get(`${e.produto.nome}|${poolDoEstoque}|${chaveTamanho}`) ?? null : null,
       temDadoDeUso: temDadoReal,
       necessidade,
       status,
