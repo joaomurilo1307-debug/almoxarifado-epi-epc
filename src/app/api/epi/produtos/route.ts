@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { codigoNovoProduto } from "@/lib/catalogoBase";
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
@@ -37,6 +38,16 @@ export async function POST(req: Request) {
   const parsed = createSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
-  const produto = await prisma.epiProduto.create({ data: { ...parsed.data, tamanho: parsed.data.tamanho ?? null } });
-  return NextResponse.json(produto, { status: 201 });
+  const dados = { ...parsed.data, tamanho: parsed.data.tamanho?.trim() || null };
+  // o banco não barra repetido quando o tamanho é vazio (NULL), então confere aqui
+  const jaExiste = await prisma.epiProduto.findFirst({ where: { nome: dados.nome, tamanho: dados.tamanho, higienizado: dados.higienizado ?? false }, select: { id: true } });
+  if (jaExiste) return NextResponse.json({ error: "Esse item já existe no catálogo (mesmo nome, tamanho e higienizada)." }, { status: 409 });
+  const codigo = await codigoNovoProduto(prisma, dados);
+  try {
+    const produto = await prisma.epiProduto.create({ data: { ...dados, codigo } });
+    return NextResponse.json(produto, { status: 201 });
+  } catch (e: any) {
+    if (e?.code === "P2002") return NextResponse.json({ error: "Esse item já existe no catálogo (mesmo nome, tamanho e higienizada)." }, { status: 409 });
+    throw e;
+  }
 }

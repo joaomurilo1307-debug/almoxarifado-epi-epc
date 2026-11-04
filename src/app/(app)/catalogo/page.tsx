@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
+import RecriarCatalogoModal from "@/components/RecriarCatalogoModal";
 
 type Contrato = { id: string; codigo: string; nome: string | null; percentualContingencia: number };
 type Regra = { id: string; funcao: string; categoria: string; descricao: string; contrato: { id: string; codigo: string } };
@@ -148,7 +150,11 @@ function blocoChaveDe(p: Produto): string {
 // MANGOTE e MANGOTE DE MALHA FIBRA ARAMIDA, ou os 2 tipos de respirador)
 // ficam espalhados em ordem alfabética junto com tudo mais, parecendo
 // duplicidade só de bater o olho.
-const CATEGORIA_EPI_ORDEM = ["CABEÇA", "OLHOS/FACE", "AUDIÇÃO", "RESPIRATÓRIO", "TRONCO", "BRAÇOS", "MÃOS", "PERNAS", "PÉS", "OUTROS"];
+const CATEGORIA_EPI_ORDEM = ["CABEÇA", "OLHOS/FACE", "AUDIÇÃO", "RESPIRATÓRIO", "TRONCO", "BRAÇOS", "MÃOS", "PERNAS", "PÉS", "PELE"];
+// Fardamento também se divide por categoria (camisa, calça, kit). Item de EPI/Fardamento sem categoria reconhecida aparece em
+// "SEM CATEGORIA" só para ficar visível e ser corrigido — o catálogo oficial não tem nenhum.
+const SUBGRUPOS_POR_BLOCO: Record<string, string[]> = { EPI: CATEGORIA_EPI_ORDEM, FARDAMENTO: ["CAMISA", "CALÇA", "KIT"] };
+const SEM_CATEGORIA = "SEM CATEGORIA";
 
 function ProdutosTab() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -167,6 +173,9 @@ function ProdutosTab() {
   const [autoFotoResultado, setAutoFotoResultado] = useState<string | null>(null);
   const [expandidos, setExpandidos] = useState<Set<string>>(new Set());
   const [blocosFechados, setBlocosFechados] = useState<Set<string>>(new Set());
+  const { data: sessao } = useSession();
+  const admin = (sessao?.user as any)?.role === "ADMIN";
+  const [recriando, setRecriando] = useState(false);
 
   function toggleBloco(chave: string) {
     setBlocosFechados((prev) => {
@@ -248,14 +257,15 @@ function ProdutosTab() {
     return BLOCOS_TOPO.map((b) => {
       const gruposDoBloco = porBloco.get(b.value) ?? [];
       let subgrupos: { categoria: string; grupos: Grupo[] }[] | null = null;
-      if (b.value === "EPI") {
+      const ordem = SUBGRUPOS_POR_BLOCO[b.value];
+      if (ordem) {
         const porCategoria = new Map<string, Grupo[]>();
         for (const g of gruposDoBloco) {
-          const cat = g.itens[0].categoria && CATEGORIA_EPI_ORDEM.includes(g.itens[0].categoria) ? g.itens[0].categoria : "OUTROS";
+          const cat = g.itens[0].categoria && ordem.includes(g.itens[0].categoria) ? g.itens[0].categoria : SEM_CATEGORIA;
           if (!porCategoria.has(cat)) porCategoria.set(cat, []);
           porCategoria.get(cat)!.push(g);
         }
-        subgrupos = CATEGORIA_EPI_ORDEM.map((cat) => ({ categoria: cat, grupos: porCategoria.get(cat) ?? [] })).filter((s) => s.grupos.length > 0);
+        subgrupos = [...ordem, SEM_CATEGORIA].map((cat) => ({ categoria: cat, grupos: porCategoria.get(cat) ?? [] })).filter((s) => s.grupos.length > 0);
       }
       return { ...b, grupos: gruposDoBloco, subgrupos };
     }).filter((b) => b.grupos.length > 0);
@@ -365,9 +375,17 @@ function ProdutosTab() {
         >
           {autoFotoRodando ? "Buscando fotos..." : "📷 Preencher fotos automaticamente"}
         </button>
+        {admin && (
+          <button
+            onClick={() => setRecriando(true)}
+            className="ml-auto rounded-lg border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50"
+          >
+            Recriar catálogo do zero
+          </button>
+        )}
         <button
           onClick={() => setShowForm(true)}
-          className="ml-auto rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
+          className={`${admin ? "" : "ml-auto "}rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark`}
         >
           + Novo item
         </button>
@@ -478,6 +496,8 @@ function ProdutosTab() {
           </div>
         );
       })()}
+
+      {recriando && <RecriarCatalogoModal onClose={() => setRecriando(false)} onFeito={reload} />}
 
       {showForm && (
         <NovoProdutoForm
