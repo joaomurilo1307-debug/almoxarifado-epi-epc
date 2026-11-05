@@ -1,7 +1,7 @@
 {
  "data": "2026-11-04",
- "versao": "2026-11-04",
- "fonte": "Inventário ECC (1).xlsx de 04/11/2026 (blocos principal + complementos), mapeado para os códigos do catálogo",
+ "versao": "2026-11-04-v3",
+ "fonte": "Inventário ECC (1).xlsx de 04/11/2026 (blocos principal + complementos), mapeado para os códigos do catálogo unificado",
  "itens": [
   {
    "codigo": "EPI-TRO-001-UN",
@@ -25,36 +25,36 @@
    ]
   },
   {
-   "codigo": "EPI-PES-004-40",
-   "quantidade": 2,
+   "codigo": "EPI-PES-002-40",
+   "quantidade": 11,
    "linhasDoInventario": [
     5,
-    6
+    6,
+    16,
+    17,
+    18,
+    19,
+    20,
+    34
    ]
   },
   {
-   "codigo": "EPI-PES-003-35",
-   "quantidade": 1,
+   "codigo": "EPI-PES-002-35",
+   "quantidade": 3,
    "linhasDoInventario": [
-    7
-   ]
-  },
-  {
-   "codigo": "EPI-PES-005-35",
-   "quantidade": 2,
-   "linhasDoInventario": [
+    7,
     8
    ]
   },
   {
-   "codigo": "EPI-PES-005-36",
+   "codigo": "EPI-PES-002-36",
    "quantidade": 3,
    "linhasDoInventario": [
     9
    ]
   },
   {
-   "codigo": "EPI-PES-005-37",
+   "codigo": "EPI-PES-002-37",
    "quantidade": 2,
    "linhasDoInventario": [
     10
@@ -62,79 +62,41 @@
   },
   {
    "codigo": "EPI-PES-002-38",
-   "quantidade": 1,
+   "quantidade": 10,
    "linhasDoInventario": [
-    11
+    11,
+    12,
+    13,
+    32,
+    33
    ]
   },
   {
-   "codigo": "EPI-PES-003-38",
-   "quantidade": 1,
-   "linhasDoInventario": [
-    12
-   ]
-  },
-  {
-   "codigo": "EPI-PES-005-38",
-   "quantidade": 6,
-   "linhasDoInventario": [
-    13
-   ]
-  },
-  {
-   "codigo": "EPI-PES-003-39",
+   "codigo": "EPI-PES-002-39",
    "quantidade": 2,
    "linhasDoInventario": [
-    14
-   ]
-  },
-  {
-   "codigo": "EPI-PES-005-39",
-   "quantidade": 0,
-   "linhasDoInventario": [
+    14,
     15
    ]
   },
   {
-   "codigo": "EPI-PES-002-40",
-   "quantidade": 2,
+   "codigo": "EPI-PES-003-41",
+   "quantidade": 3,
    "linhasDoInventario": [
-    16
+    21,
+    22,
+    25
    ]
   },
   {
    "codigo": "EPI-PES-003-40",
-   "quantidade": 6,
-   "linhasDoInventario": [
-    17,
-    18,
-    19
-   ]
-  },
-  {
-   "codigo": "EPI-PES-005-40",
-   "quantidade": 0,
-   "linhasDoInventario": [
-    20
-   ]
-  },
-  {
-   "codigo": "EPI-PES-008-41",
-   "quantidade": 2,
-   "linhasDoInventario": [
-    21,
-    22
-   ]
-  },
-  {
-   "codigo": "EPI-PES-008-40",
    "quantidade": 1,
    "linhasDoInventario": [
     1021
    ]
   },
   {
-   "codigo": "EPI-PES-008-48",
+   "codigo": "EPI-PES-003-48",
    "quantidade": 1,
    "linhasDoInventario": [
     1022
@@ -144,72 +106,32 @@
    "codigo": "EPI-PES-002-41",
    "quantidade": 2,
    "linhasDoInventario": [
-    23
-   ]
-  },
-  {
-   "codigo": "EPI-PES-005-41",
-   "quantidade": 0,
-   "linhasDoInventario": [
+    23,
     24
    ]
   },
   {
-   "codigo": "EPI-PES-006-41",
-   "quantidade": 1,
+   "codigo": "EPI-PES-002-42",
+   "quantidade": 6,
    "linhasDoInventario": [
-    25
-   ]
-  },
-  {
-   "codigo": "EPI-PES-003-42",
-   "quantidade": 2,
-   "linhasDoInventario": [
-    26
-   ]
-  },
-  {
-   "codigo": "EPI-PES-005-42",
-   "quantidade": 4,
-   "linhasDoInventario": [
+    26,
     27
    ]
   },
   {
-   "codigo": "EPI-PES-003-43",
-   "quantidade": 2,
+   "codigo": "EPI-PES-002-43",
+   "quantidade": 6,
    "linhasDoInventario": [
-    28
-   ]
-  },
-  {
-   "codigo": "EPI-PES-005-43",
-   "quantidade": 4,
-   "linhasDoInventario": [
+    28,
     29
    ]
   },
   {
-   "codigo": "EPI-PES-003-44",
+   "codigo": "EPI-PES-002-44",
    "quantidade": 2,
    "linhasDoInventario": [
     30,
     31
-   ]
-  },
-  {
-   "codigo": "EPI-PES-004-38",
-   "quantidade": 2,
-   "linhasDoInventario": [
-    32,
-    33
-   ]
-  },
-  {
-   "codigo": "EPI-PES-007-40",
-   "quantidade": 1,
-   "linhasDoInventario": [
-    34
    ]
   },
   {
@@ -578,107 +500,58 @@
   },
   {
    "codigo": "EPI-CAB-002-UN",
-   "quantidade": 12,
+   "quantidade": 22,
    "linhasDoInventario": [
-    87
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-009-UN",
-   "quantidade": 2,
-   "linhasDoInventario": [
-    88
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-007-UN",
-   "quantidade": 2,
-   "linhasDoInventario": [
-    1088
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-012-UN",
-   "quantidade": 15,
-   "linhasDoInventario": [
-    89
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-008-UN",
-   "quantidade": 0,
-   "linhasDoInventario": [
-    1089
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-015-UN",
-   "quantidade": 8,
-   "linhasDoInventario": [
-    90
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-010-UN",
-   "quantidade": 3,
-   "linhasDoInventario": [
-    1090
-   ]
-  },
-  {
-   "codigo": "EPI-TRO-005-G",
-   "quantidade": 4,
-   "linhasDoInventario": [
-    91
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-006-UN",
-   "quantidade": 1,
-   "linhasDoInventario": [
-    1091
-   ]
-  },
-  {
-   "codigo": "EPI-TRO-006-G",
-   "quantidade": 8,
-   "linhasDoInventario": [
-    92
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-003-UN",
-   "quantidade": 2,
-   "linhasDoInventario": [
-    1092
-   ]
-  },
-  {
-   "codigo": "EPI-TRO-004-M",
-   "quantidade": 2,
-   "linhasDoInventario": [
-    93
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-004-UN",
-   "quantidade": 7,
-   "linhasDoInventario": [
+    87,
+    1091,
+    1092,
     1093
    ]
   },
   {
-   "codigo": "EPI-TRO-006-M",
-   "quantidade": 8,
+   "codigo": "EPI-CAB-003-UN",
+   "quantidade": 7,
    "linhasDoInventario": [
-    94
+    88,
+    1088,
+    1089,
+    1090
    ]
   },
   {
-   "codigo": "EPI-CAB-011-UN",
-   "quantidade": 2,
+   "codigo": "EPI-CAB-004-UN",
+   "quantidade": 27,
    "linhasDoInventario": [
-    1094
+    89,
+    1094,
+    1095
+   ]
+  },
+  {
+   "codigo": "EPI-CAB-005-UN",
+   "quantidade": 42,
+   "linhasDoInventario": [
+    90,
+    1096,
+    1097
+   ]
+  },
+  {
+   "codigo": "EPI-TRO-004-G",
+   "quantidade": 15,
+   "linhasDoInventario": [
+    91,
+    92,
+    1101
+   ]
+  },
+  {
+   "codigo": "EPI-TRO-004-M",
+   "quantidade": 12,
+   "linhasDoInventario": [
+    93,
+    94,
+    1099
    ]
   },
   {
@@ -689,13 +562,6 @@
    ]
   },
   {
-   "codigo": "EPI-CAB-013-UN",
-   "quantidade": 10,
-   "linhasDoInventario": [
-    1095
-   ]
-  },
-  {
    "codigo": "EPI-MAO-003-G",
    "quantidade": 1,
    "linhasDoInventario": [
@@ -703,24 +569,10 @@
    ]
   },
   {
-   "codigo": "EPI-CAB-016-UN",
-   "quantidade": 30,
-   "linhasDoInventario": [
-    1096
-   ]
-  },
-  {
    "codigo": "EPI-MAO-003-M",
    "quantidade": 1,
    "linhasDoInventario": [
     97
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-014-UN",
-   "quantidade": 4,
-   "linhasDoInventario": [
-    1097
    ]
   },
   {
@@ -739,14 +591,7 @@
    ]
   },
   {
-   "codigo": "EPI-TRO-005-M",
-   "quantidade": 2,
-   "linhasDoInventario": [
-    1099
-   ]
-  },
-  {
-   "codigo": "EPI-TRO-005-XXG",
+   "codigo": "EPI-TRO-004-XXG",
    "quantidade": 1,
    "linhasDoInventario": [
     1100
@@ -757,13 +602,6 @@
    "quantidade": 15,
    "linhasDoInventario": [
     101
-   ]
-  },
-  {
-   "codigo": "EPI-TRO-004-G",
-   "quantidade": 3,
-   "linhasDoInventario": [
-    1101
    ]
   },
   {
@@ -796,28 +634,22 @@
    ]
   },
   {
-   "codigo": "EPI-MAO-011-UN",
-   "quantidade": 14,
+   "codigo": "EPI-MAO-010-UN",
+   "quantidade": 15,
    "linhasDoInventario": [
-    106
-   ]
-  },
-  {
-   "codigo": "EPI-MAO-012-UN",
-   "quantidade": 1,
-   "linhasDoInventario": [
+    106,
     1106
    ]
   },
   {
-   "codigo": "EPI-MAO-013-UN",
+   "codigo": "EPI-MAO-011-UN",
    "quantidade": 17,
    "linhasDoInventario": [
     107
    ]
   },
   {
-   "codigo": "EPI-MAO-014-UN",
+   "codigo": "EPI-MAO-012-UN",
    "quantidade": 21,
    "linhasDoInventario": [
     108,
@@ -825,70 +657,40 @@
    ]
   },
   {
-   "codigo": "EPI-MAO-015-UN",
+   "codigo": "EPI-MAO-013-UN",
    "quantidade": 9,
    "linhasDoInventario": [
     110
    ]
   },
   {
-   "codigo": "EPI-MAO-017-G",
-   "quantidade": 110,
+   "codigo": "EPI-MAO-014-G",
+   "quantidade": 195,
    "linhasDoInventario": [
-    111
-   ]
-  },
-  {
-   "codigo": "EPI-MAO-018-G",
-   "quantidade": 36,
-   "linhasDoInventario": [
-    112
-   ]
-  },
-  {
-   "codigo": "EPI-MAO-019-G",
-   "quantidade": 1,
-   "linhasDoInventario": [
-    113
-   ]
-  },
-  {
-   "codigo": "EPI-MAO-020-G",
-   "quantidade": 12,
-   "linhasDoInventario": [
-    114
-   ]
-  },
-  {
-   "codigo": "EPI-MAO-021-G",
-   "quantidade": 36,
-   "linhasDoInventario": [
+    111,
+    112,
+    113,
+    114,
     115
    ]
   },
   {
-   "codigo": "EPI-MAO-018-GG",
+   "codigo": "EPI-MAO-014-GG",
    "quantidade": 1,
    "linhasDoInventario": [
     116
    ]
   },
   {
-   "codigo": "EPI-MAO-017-M",
-   "quantidade": 10,
+   "codigo": "EPI-MAO-014-M",
+   "quantidade": 17,
    "linhasDoInventario": [
-    117
-   ]
-  },
-  {
-   "codigo": "EPI-MAO-018-M",
-   "quantidade": 7,
-   "linhasDoInventario": [
+    117,
     118
    ]
   },
   {
-   "codigo": "EPI-MAO-018-P",
+   "codigo": "EPI-MAO-014-P",
    "quantidade": 2,
    "linhasDoInventario": [
     119
@@ -903,7 +705,7 @@
    ]
   },
   {
-   "codigo": "EPI-OLH-005-UN",
+   "codigo": "EPI-OLH-004-UN",
    "quantidade": 15,
    "linhasDoInventario": [
     122,
@@ -911,14 +713,14 @@
    ]
   },
   {
-   "codigo": "EPI-OLH-006-UN",
+   "codigo": "EPI-OLH-005-UN",
    "quantidade": 31,
    "linhasDoInventario": [
     124
    ]
   },
   {
-   "codigo": "EPI-OLH-009-UN",
+   "codigo": "EPI-OLH-008-UN",
    "quantidade": 12,
    "linhasDoInventario": [
     1124,
@@ -927,49 +729,49 @@
    ]
   },
   {
-   "codigo": "EPI-OLH-007-UN",
+   "codigo": "EPI-OLH-006-UN",
    "quantidade": 0,
    "linhasDoInventario": [
     125
    ]
   },
   {
-   "codigo": "EPI-OLH-008-UN",
+   "codigo": "EPI-OLH-007-UN",
    "quantidade": 5,
    "linhasDoInventario": [
     126
    ]
   },
   {
-   "codigo": "EPI-OLH-010-UN",
+   "codigo": "EPI-OLH-009-UN",
    "quantidade": 45,
    "linhasDoInventario": [
     129
    ]
   },
   {
-   "codigo": "EPI-OLH-011-UN",
+   "codigo": "EPI-OLH-010-UN",
    "quantidade": 0,
    "linhasDoInventario": [
     130
    ]
   },
   {
-   "codigo": "EPI-OLH-012-UN",
+   "codigo": "EPI-OLH-011-UN",
    "quantidade": 5,
    "linhasDoInventario": [
     131
    ]
   },
   {
-   "codigo": "EPI-OLH-013-UN",
+   "codigo": "EPI-OLH-012-UN",
    "quantidade": 21,
    "linhasDoInventario": [
     132
    ]
   },
   {
-   "codigo": "EPI-PRN-002-UN",
+   "codigo": "EPI-PRN-003-UN",
    "quantidade": 33,
    "linhasDoInventario": [
     133,
@@ -979,7 +781,7 @@
    ]
   },
   {
-   "codigo": "EPI-MAO-023-UN",
+   "codigo": "EPI-MAO-016-UN",
    "quantidade": 30,
    "linhasDoInventario": [
     136
@@ -987,23 +789,11 @@
   },
   {
    "codigo": "EPI-AUD-002-UN",
-   "quantidade": 0,
-   "linhasDoInventario": [
-    137
-   ]
-  },
-  {
-   "codigo": "EPI-AUD-003-UN",
-   "quantidade": 0,
-   "linhasDoInventario": [
-    138,
-    139
-   ]
-  },
-  {
-   "codigo": "EPI-AUD-004-UN",
    "quantidade": 5,
    "linhasDoInventario": [
+    137,
+    138,
+    139,
     140
    ]
   },
@@ -1026,20 +816,14 @@
    ]
   },
   {
-   "codigo": "EPI-CAB-020-UN",
-   "quantidade": 72,
+   "codigo": "EPI-CAB-009-UN",
+   "quantidade": 76,
    "linhasDoInventario": [
     147,
     148,
     149,
+    150,
     151
-   ]
-  },
-  {
-   "codigo": "EPI-CAB-021-UN",
-   "quantidade": 4,
-   "linhasDoInventario": [
-    150
    ]
   }
  ],

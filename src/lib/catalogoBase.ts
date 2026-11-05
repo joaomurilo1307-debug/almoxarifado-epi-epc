@@ -73,9 +73,10 @@ async function herancaPorNome(prisma: PrismaClient) {
     for (const [v, c] of cont) if (c > n) { melhor = v; n = c; }
     return melhor;
   };
-  const mapa = new Map<string, Herdavel>();
+  const mapa = new Map<string, Herdavel & { linhas?: number }>();
   for (const [nome, l] of porNome) {
     mapa.set(nome, {
+      linhas: l.length,
       valorUnitario: maisComum(l.map((p) => p.valorUnitario)),
       fotoUrl: maisComum(l.map((p) => p.fotoUrl)),
       percentualContingencia: maisComum(l.map((p) => p.percentualContingencia)),
@@ -85,13 +86,22 @@ async function herancaPorNome(prisma: PrismaClient) {
   return mapa;
 }
 
+// Herança do mesmo nome; se não houver, do modelo antigo mais numeroso cujo nome começa com o nome novo (o catálogo unificou marcas/modelos).
+function acharHeranca(heranca: Map<string, Herdavel & { linhas?: number }>, nome: string): Herdavel | undefined {
+  const exato = heranca.get(nome);
+  if (exato) return exato;
+  let melhor: (Herdavel & { linhas?: number }) | undefined;
+  for (const [k, v] of heranca) if (k.startsWith(nome + " ") && (!melhor || (v.linhas ?? 0) > (melhor.linhas ?? 0))) melhor = v;
+  return melhor;
+}
+
 export async function planoCatalogo(prisma: PrismaClient) {
   const [produtos, estoques, movimentacoes, colaboradorItens, heranca] = await Promise.all([
     prisma.epiProduto.count(), prisma.epiEstoque.count(), prisma.epiMovimentacao.count(), prisma.epiColaboradorItem.count(), herancaPorNome(prisma),
   ]);
   const novos = ITENS_CATALOGO;
-  const comValor = novos.filter((i) => heranca.get(semCA(i.nome))?.valorUnitario != null).length;
-  const comFoto = novos.filter((i) => heranca.get(semCA(i.nome))?.fotoUrl).length;
+  const comValor = novos.filter((i) => acharHeranca(heranca, semCA(i.nome))?.valorUnitario != null).length;
+  const comFoto = novos.filter((i) => acharHeranca(heranca, semCA(i.nome))?.fotoUrl).length;
   return {
     problemas: validarCatalogo(),
     atual: { produtos, estoques, movimentacoes, colaboradorItens },
@@ -111,7 +121,7 @@ export async function recriarCatalogo(prisma: PrismaClient) {
   const heranca = await herancaPorNome(prisma);
   let comValor = 0, comFoto = 0;
   const dados = ITENS_CATALOGO.map((i) => {
-    const h = heranca.get(semCA(i.nome));
+    const h = acharHeranca(heranca, semCA(i.nome));
     if (h?.valorUnitario != null) comValor++;
     if (h?.fotoUrl) comFoto++;
     return {
