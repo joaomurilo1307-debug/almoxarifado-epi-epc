@@ -14,6 +14,7 @@ import { copiarTabelas } from "@/lib/backupBanco";
 
 export type ItemCatalogo = (typeof catalogo.itens)[number];
 export const ITENS_CATALOGO: ItemCatalogo[] = catalogo.itens;
+export const VERSAO_CATALOGO: string = (catalogo as { versao?: string }).versao ?? catalogo.geradoEm;
 export const CONFIRMACAO_RECRIAR = "RECRIAR CATALOGO";
 
 const PREFIXO_TIPO: Record<string, string> = { EPI: "EPI", EPC: "EPC", FARDAMENTO: "FRD", GERAL: "GER" };
@@ -51,6 +52,9 @@ export function resumoDoCatalogo(itens: ItemCatalogo[] = ITENS_CATALOGO) {
   return { itens: itens.length, familias: new Set(itens.map((i) => i.familia)).size, porTipo };
 }
 
+// nome sem o " - CA12345" do final (o catálogo novo não usa CA no nome)
+const semCA = (nome: string) => nome.replace(/\s*-\s*CA\s*\d+\s*$/i, "").trim();
+
 type Herdavel = { valorUnitario: number | null; fotoUrl: string | null; percentualContingencia: number | null; fabricante: string | null };
 
 /** Preço, foto, % de contingência e fabricante que o mesmo item (mesmo nome) já tinha no cadastro atual — para não se perder ao recriar. */
@@ -58,9 +62,9 @@ async function herancaPorNome(prisma: PrismaClient) {
   const antigos = await prisma.epiProduto.findMany({ select: { nome: true, valorUnitario: true, fotoUrl: true, percentualContingencia: true, fabricante: true }, orderBy: { id: "asc" } });
   const porNome = new Map<string, typeof antigos>();
   for (const p of antigos) {
-    const l = porNome.get(p.nome) ?? [];
+    const l = porNome.get(semCA(p.nome)) ?? [];
     l.push(p);
-    porNome.set(p.nome, l);
+    porNome.set(semCA(p.nome), l);
   }
   const maisComum = <T,>(vals: (T | null)[]): T | null => {
     const cont = new Map<T, number>();
@@ -86,8 +90,8 @@ export async function planoCatalogo(prisma: PrismaClient) {
     prisma.epiProduto.count(), prisma.epiEstoque.count(), prisma.epiMovimentacao.count(), prisma.epiColaboradorItem.count(), herancaPorNome(prisma),
   ]);
   const novos = ITENS_CATALOGO;
-  const comValor = novos.filter((i) => heranca.get(i.nome)?.valorUnitario != null).length;
-  const comFoto = novos.filter((i) => heranca.get(i.nome)?.fotoUrl).length;
+  const comValor = novos.filter((i) => heranca.get(semCA(i.nome))?.valorUnitario != null).length;
+  const comFoto = novos.filter((i) => heranca.get(semCA(i.nome))?.fotoUrl).length;
   return {
     problemas: validarCatalogo(),
     atual: { produtos, estoques, movimentacoes, colaboradorItens },
@@ -107,7 +111,7 @@ export async function recriarCatalogo(prisma: PrismaClient) {
   const heranca = await herancaPorNome(prisma);
   let comValor = 0, comFoto = 0;
   const dados = ITENS_CATALOGO.map((i) => {
-    const h = heranca.get(i.nome);
+    const h = heranca.get(semCA(i.nome));
     if (h?.valorUnitario != null) comValor++;
     if (h?.fotoUrl) comFoto++;
     return {

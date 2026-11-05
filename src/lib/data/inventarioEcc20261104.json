@@ -1,0 +1,1704 @@
+{
+ "data": "2026-11-04",
+ "fonte": "Inventário ECC (1).xlsx (Downloads, 04/11/2026), aba \"Estoque do ECC\": bloco principal (coluna E) + bloco COMPLEMENTOS (coluna H)",
+ "itens": [
+  {
+   "linha": 2,
+   "bloco": "principal",
+   "produto": "AVENTAL - CA11793",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 3,
+   "bloco": "principal",
+   "produto": "BLUSÃO DE OPERADOR - CA46231",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 3,
+   "medida": "UNID"
+  },
+  {
+   "linha": 4,
+   "bloco": "principal",
+   "produto": "BLUSÃO DE OPERADOR HIGENIZAÇÃO - CA46231",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 5,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA LONGA 40 BRACOL - CA37455",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 6,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA LONGA 40 BRACOL - CA37671",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 7,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 35 BRACOL - CA25687",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 8,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 35 MARLUVAS - CA42374",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 9,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 36 MARLUVAS - CA42374",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 3,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 10,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 37 MARLUVAS - CA42374",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 11,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 38 BOMPEL - CA37671",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 12,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 38 BRACOL - CA25687",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 13,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 38 MARLUVAS - CA42374",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 6,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 14,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 39 BRACOL - CA25687",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 15,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 39 MARLUVAS - CA42374",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 16,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 40 BOMPEL - CA37671",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 17,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 40 BRACOL - CA25687",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 3,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 18,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 40 BRACOL - CA42165",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 19,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 40 BRACOL - CA42165",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 20,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 40 MARLUVAS - CA42374",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 21,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 41 (PROTEÇÃO DE METARARSO) - CA43959",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1021,
+   "bloco": "complementos",
+   "produto": "BOTA DE SEGURANÇA 40 (PROTEÇÃO DE METARARSO) - CA43959",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 22,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 41 (PROTEÇÃO DE METATARSO) - CA37450",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1022,
+   "bloco": "complementos",
+   "produto": "BOTA DE SEGURANÇA 48 (PROTEÇÃO DE METARARSO) - CA43959",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 23,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 41 BOMPEL - CA37671",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 24,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 41 MARLUVAS - CA42374",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 25,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 41 MARLUVAS ANTI CHOQUE - CA43959",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 26,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 42 BRACOL - CA25259",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 27,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 42 MARLUVAS - CA42374",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 4,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 28,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 43 BRACOL - CA25259",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 29,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 43 MARLUVAS - CA42374",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 4,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 30,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 44 BRACOL - CA25687",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 31,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA 44 BRACOL - CA42165",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 32,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA LONGA 38 BRACOL - CA34233",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 33,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA LONGA 38 BRACOL - CA34671",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 34,
+   "bloco": "principal",
+   "produto": "BOTA DE SEGURANÇA MÉDIO 40 BRACOL - CA37750",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 35,
+   "bloco": "principal",
+   "produto": "CALÇA 36",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 36,
+   "bloco": "principal",
+   "produto": "CALÇA 36 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 37,
+   "bloco": "principal",
+   "produto": "CALÇA 38",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 38,
+   "bloco": "principal",
+   "produto": "CALÇA 38 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 39,
+   "bloco": "principal",
+   "produto": "CALÇA 40",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 40,
+   "bloco": "principal",
+   "produto": "CALÇA 40 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 41,
+   "bloco": "principal",
+   "produto": "CALÇA 42",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 42,
+   "bloco": "principal",
+   "produto": "CALÇA 42 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 43,
+   "bloco": "principal",
+   "produto": "CALÇA 44",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 44,
+   "bloco": "principal",
+   "produto": "CALÇA 44 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 45,
+   "bloco": "principal",
+   "produto": "CALÇA 46",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 46,
+   "bloco": "principal",
+   "produto": "CALÇA 46 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 47,
+   "bloco": "principal",
+   "produto": "CALÇA 48",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 48,
+   "bloco": "principal",
+   "produto": "CALÇA 48 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 49,
+   "bloco": "principal",
+   "produto": "CALÇA 50",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 50,
+   "bloco": "principal",
+   "produto": "CALÇA 50 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 51,
+   "bloco": "principal",
+   "produto": "CALÇA 52",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 14,
+   "medida": "UNID"
+  },
+  {
+   "linha": 52,
+   "bloco": "principal",
+   "produto": "CALÇA 52 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 53,
+   "bloco": "principal",
+   "produto": "CALÇA 54",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 15,
+   "medida": "UNID"
+  },
+  {
+   "linha": 54,
+   "bloco": "principal",
+   "produto": "CALÇA 54 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 55,
+   "bloco": "principal",
+   "produto": "CALÇA 56",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 20,
+   "medida": "UNID"
+  },
+  {
+   "linha": 56,
+   "bloco": "principal",
+   "produto": "CALÇA 56 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 57,
+   "bloco": "principal",
+   "produto": "CALÇA 58",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 15,
+   "medida": "UNID"
+  },
+  {
+   "linha": 58,
+   "bloco": "principal",
+   "produto": "CALÇA 58 (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 59,
+   "bloco": "principal",
+   "produto": "CALÇA DE OPERADOR - CA36600",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 3,
+   "medida": "UNID"
+  },
+  {
+   "linha": 60,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA G",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 61,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA G (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "UNID"
+  },
+  {
+   "linha": 62,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA GG",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 63,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA GG (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 64,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA M",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 65,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA M (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 66,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA P",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 67,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA P (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 68,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA PP",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 69,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA PP (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 70,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA XG",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 19,
+   "medida": "UNID"
+  },
+  {
+   "linha": 71,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA XG (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 72,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA XXG",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 18,
+   "medida": "UNID"
+  },
+  {
+   "linha": 73,
+   "bloco": "principal",
+   "produto": "CAMISA DE MALHA XXG (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 74,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO G",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 75,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO G (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 10,
+   "medida": "UNID"
+  },
+  {
+   "linha": 76,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO GG",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 54,
+   "medida": "UNID"
+  },
+  {
+   "linha": 77,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO GG (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 6,
+   "medida": "UNID"
+  },
+  {
+   "linha": 78,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO M",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 79,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO M (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 12,
+   "medida": "UNID"
+  },
+  {
+   "linha": 80,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO P",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 81,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO P (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 3,
+   "medida": "UNID"
+  },
+  {
+   "linha": 82,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO XG",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 28,
+   "medida": "UNID"
+  },
+  {
+   "linha": 83,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO XG (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 84,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO XXG",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 6,
+   "medida": "UNID"
+  },
+  {
+   "linha": 85,
+   "bloco": "principal",
+   "produto": "CAMISA JALECO XXG (HIGIENIZADA)",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 86,
+   "bloco": "principal",
+   "produto": "CAPA DE CHUVA AMARELA",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 9,
+   "medida": "UNID"
+  },
+  {
+   "linha": 87,
+   "bloco": "principal",
+   "produto": "CAPACETE AZUL 3M - CA29638",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 12,
+   "medida": "UNID"
+  },
+  {
+   "linha": 88,
+   "bloco": "principal",
+   "produto": "CAPACETE BRANCO MSA - CA498",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "UNID"
+  },
+  {
+   "linha": 1088,
+   "bloco": "complementos",
+   "produto": "CAPACETE BRANCO 3M NOVO COM ARANHA CA - 29638",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "UNID"
+  },
+  {
+   "linha": 89,
+   "bloco": "principal",
+   "produto": "CAPACETE CINZA MSA - CA498",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 15,
+   "medida": "UNID"
+  },
+  {
+   "linha": 1089,
+   "bloco": "complementos",
+   "produto": "CAPACETE BRANCO 3M USADO SEM ARANHA CA - 29638",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 90,
+   "bloco": "principal",
+   "produto": "CAPACETE LARANJA MSA - CA498",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 8,
+   "medida": "UNID"
+  },
+  {
+   "linha": 1090,
+   "bloco": "complementos",
+   "produto": "CAPACETE BRNACO MSA USADO SEM ARANHA CA - 498",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 3,
+   "medida": "UNID"
+  },
+  {
+   "linha": 91,
+   "bloco": "principal",
+   "produto": "COLETE LARANJA - G",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 4,
+   "medida": "UNID"
+  },
+  {
+   "linha": 1091,
+   "bloco": "complementos",
+   "produto": "CAPACE AZUL ROYAL ULTRA MASTER USADO CA - 498",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "UNID"
+  },
+  {
+   "linha": 92,
+   "bloco": "principal",
+   "produto": "COLETE VERDE - G",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 8,
+   "medida": "UNID"
+  },
+  {
+   "linha": 1092,
+   "bloco": "complementos",
+   "produto": "CAPA. AZUL CLARO 3M USADO SEM ARANHA CA - 29638",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "UNID"
+  },
+  {
+   "linha": 93,
+   "bloco": "principal",
+   "produto": "COLETE AMARELO - M",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "UNID"
+  },
+  {
+   "linha": 1093,
+   "bloco": "complementos",
+   "produto": "CAPA. AZUL CLARO MSA USADO SEM ARANHA CA - 498",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 7,
+   "medida": "UNID"
+  },
+  {
+   "linha": 94,
+   "bloco": "principal",
+   "produto": "COLETE VERDE - M",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 8,
+   "medida": "UNID"
+  },
+  {
+   "linha": 1094,
+   "bloco": "complementos",
+   "produto": "CAPA. CINZA 3M USADO CA - 29638",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "UNID"
+  },
+  {
+   "linha": 95,
+   "bloco": "principal",
+   "produto": "LUVA ALPHATEC ANSELL - CA12872",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 6,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1095,
+   "bloco": "complementos",
+   "produto": "CAPA. CINZA MSA USADO CA - 498",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 10,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 96,
+   "bloco": "principal",
+   "produto": "LUVA ANTICORTE G - CA36606",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1096,
+   "bloco": "complementos",
+   "produto": "CAPA. LARANJA MSA USADO CA - 498",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 30,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 97,
+   "bloco": "principal",
+   "produto": "LUVA ANTICORTE M - CA34000",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1097,
+   "bloco": "complementos",
+   "produto": "CAPA. LARANJA 3M USADO CA - 29638",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 4,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 98,
+   "bloco": "principal",
+   "produto": "LUVA ANTI-IMPACTO - CA44549",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 3,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 99,
+   "bloco": "principal",
+   "produto": "LUVA DE BORRACHA - CA25313",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1099,
+   "bloco": "complementos",
+   "produto": "COLETE LARANJA M",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 100,
+   "bloco": "principal",
+   "produto": "LUVA DE BORRACHA - CA5774",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1100,
+   "bloco": "complementos",
+   "produto": "COLETE LARANJA XXG",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 101,
+   "bloco": "principal",
+   "produto": "LUVA DE BORRACHA G - CA41918",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 15,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1101,
+   "bloco": "complementos",
+   "produto": "COLETE AMARELO G",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 3,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 102,
+   "bloco": "principal",
+   "produto": "LUVA DE BORRACHA M - CA41918",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 5,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 103,
+   "bloco": "principal",
+   "produto": "LUVA DE LATEX - CA13030",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 5,
+   "medida": "CAIXA(S)"
+  },
+  {
+   "linha": 104,
+   "bloco": "principal",
+   "produto": "LUVA DE PVC - CA34570",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 9,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 105,
+   "bloco": "principal",
+   "produto": "LUVA DE RASPA CANO LOGO - CA40320",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 8,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 106,
+   "bloco": "principal",
+   "produto": "LUVA DE VAQUETA - CA11711",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 14,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1106,
+   "bloco": "complementos",
+   "produto": "LUVA DE VAQUETA NYLON OP MOTOSSERRA CA - 12876",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 107,
+   "bloco": "principal",
+   "produto": "LUVA MISTA - CA52131",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 17,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1107,
+   "bloco": "complementos",
+   "produto": "LUVA DE RASPA CA 14873",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 15,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 108,
+   "bloco": "principal",
+   "produto": "LUVA MISTA CANO LONGO - CA36845",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 15,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 109,
+   "bloco": "principal",
+   "produto": "LUVA MISTA CANO LONGO - CA40319",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 6,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 110,
+   "bloco": "principal",
+   "produto": "LUVA NITRILICA - CA25280",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 9,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 111,
+   "bloco": "principal",
+   "produto": "LUVA PU G DANNY - CA29014",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 110,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 112,
+   "bloco": "principal",
+   "produto": "LUVA PU G DELTA - CA36365",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 36,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 113,
+   "bloco": "principal",
+   "produto": "LUVA PU G KALIPSO - CA15272",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 114,
+   "bloco": "principal",
+   "produto": "LUVA PU G SAFETY - CA32038",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 12,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 115,
+   "bloco": "principal",
+   "produto": "LUVA PU G VOLK - CA30916",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 36,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 116,
+   "bloco": "principal",
+   "produto": "LUVA PU GG DELTA - CA36365",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 117,
+   "bloco": "principal",
+   "produto": "LUVA PU M DANNY - CA29014",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 10,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 118,
+   "bloco": "principal",
+   "produto": "LUVA PU M DELTA - CA36365",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 7,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 119,
+   "bloco": "principal",
+   "produto": "LUVA PU P DELTA - CA36365",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 120,
+   "bloco": "principal",
+   "produto": "MANGOTE - CA12107",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 121,
+   "bloco": "principal",
+   "produto": "MANGOTE - CA41029",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 122,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO - CA11268",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "UNID"
+  },
+  {
+   "linha": 123,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO - CA20716",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 14,
+   "medida": "UNID"
+  },
+  {
+   "linha": 124,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO AMPLA VISÃO - CA9722",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 31,
+   "medida": "UNID"
+  },
+  {
+   "linha": 1124,
+   "bloco": "complementos",
+   "produto": "OCULOS RIO DE JANEIRO INCOLOR CA 34082",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 6,
+   "medida": "UNID"
+  },
+  {
+   "linha": 125,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO COM BANDA ELASTICA - CA39190",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 126,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO ESCURO DE SOBREPOSIÇÃO - CA16462",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 5,
+   "medida": "UNID"
+  },
+  {
+   "linha": 127,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR - CA11268",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 4,
+   "medida": "UNID"
+  },
+  {
+   "linha": 128,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR - CA14990",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "UNID"
+  },
+  {
+   "linha": 129,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR AMPLA VISÃO - CA12572",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 45,
+   "medida": "UNID"
+  },
+  {
+   "linha": 130,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR COM BANDA ELASTICA - CA39190",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 131,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR DE SOBREPOSIÇÃO - CA16462",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 5,
+   "medida": "UNID"
+  },
+  {
+   "linha": 132,
+   "bloco": "principal",
+   "produto": "ÓCULOS DE PROTEÇÃO INCOLOR DE SOBREPOSIÇÃO E BANDA ELASTICA - CA 19072",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 21,
+   "medida": "UNID"
+  },
+  {
+   "linha": 133,
+   "bloco": "principal",
+   "produto": "PERNEIRA - CA39624",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 134,
+   "bloco": "principal",
+   "produto": "PERNEIRA - CA44234",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 7,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 135,
+   "bloco": "principal",
+   "produto": "PERNEIRA - CA48785",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 24,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 1135,
+   "bloco": "complementos",
+   "produto": "PERNEIRA - CA 52864",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 1,
+   "medida": "PAR(ES)"
+  },
+  {
+   "linha": 136,
+   "bloco": "principal",
+   "produto": "PRESILHAS PARA LUVAS",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 30,
+   "medida": "UNID"
+  },
+  {
+   "linha": 137,
+   "bloco": "principal",
+   "produto": "PROTETOR AUDITIVO 3M - CA33835",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 138,
+   "bloco": "principal",
+   "produto": "PROTETOR AUDITIVO LIBUS - CA37134",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 139,
+   "bloco": "principal",
+   "produto": "PROTETOR AUDITIVO LIBUS - CA43350",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 140,
+   "bloco": "principal",
+   "produto": "PROTETOR AUDITIVO MSA - CA27972",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 5,
+   "medida": "UNID"
+  },
+  {
+   "linha": 141,
+   "bloco": "principal",
+   "produto": "PROTETOR FACIAL DE ACRILICO - CA311814",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 5,
+   "medida": "UNID"
+  },
+  {
+   "linha": 142,
+   "bloco": "principal",
+   "produto": "PROTETOR RESPIRÁTORIO - CA10578",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 77,
+   "medida": "UNID"
+  },
+  {
+   "linha": 143,
+   "bloco": "principal",
+   "produto": "PROTETOR RESPIRÁTORIO - CA38812",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 20,
+   "medida": "UNID"
+  },
+  {
+   "linha": 144,
+   "bloco": "principal",
+   "produto": "PROTETOR RESPIRÁTORIO - CA38954",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 145,
+   "bloco": "principal",
+   "produto": "PROTETOR RESPIRÁTORIO - CA5657",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 10,
+   "medida": "UNID"
+  },
+  {
+   "linha": 146,
+   "bloco": "principal",
+   "produto": "PROTETOR RESPIRÁTORIO - CA7072",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 0,
+   "medida": "UNID"
+  },
+  {
+   "linha": 147,
+   "bloco": "principal",
+   "produto": "TOUCA ÁRABE - CA28998",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 2,
+   "medida": "UNID"
+  },
+  {
+   "linha": 148,
+   "bloco": "principal",
+   "produto": "TOUCA ÁRABE - CA39760",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 19,
+   "medida": "UNID"
+  },
+  {
+   "linha": 149,
+   "bloco": "principal",
+   "produto": "TOUCA ÁRABE - CA44963",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 41,
+   "medida": "UNID"
+  },
+  {
+   "linha": 150,
+   "bloco": "principal",
+   "produto": "TOUCA ÁRABE AZUL/CZ - CA49731",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 4,
+   "medida": "UNID"
+  },
+  {
+   "linha": 151,
+   "bloco": "principal",
+   "produto": "TOUCA ÁRABE - CA4423",
+   "inicial": null,
+   "entrada": null,
+   "saida": null,
+   "atual": 10,
+   "medida": "UNID"
+  }
+ ],
+ "ignoradas": [
+  {
+   "linha": 1108,
+   "produto": "LUVA DE PROTEÇÃO CINZA 32038",
+   "atual": 12,
+   "motivo": "Mesmo CA (32038) e mesma quantidade (12) da linha 'LUVA PU G SAFETY - CA32038' do bloco principal: parece a mesma contagem repetida. Não somada para não contar em dobro; confirmar."
+  }
+ ]
+}

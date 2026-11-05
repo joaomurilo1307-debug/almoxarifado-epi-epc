@@ -208,3 +208,12 @@ model EpiFuncaoRegra {
   @@unique([contratoId, funcao, categoria])
   @@index([funcao])
 }
+
+// Marcas de "esta carga de dados já foi feita" (versão do catálogo, do estoque inicial...). Fica no schema DE PROPÓSITO: a subida do
+// container roda `prisma db push --accept-data-loss`, que apaga qualquer tabela fora do schema — uma marca em tabela avulsa sumia
+// a cada subida e a carga rodava de novo.
+model EpiMarca {
+  chave         String   @id
+  valor         String
+  atualizadoEm  DateTime @default(now()) @updatedAt
+}

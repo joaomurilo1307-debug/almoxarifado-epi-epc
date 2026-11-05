@@ -9,5 +9,8 @@ if [ "$RUN_SEED" = "true" ]; then
   npx tsx prisma/seed.ts || true
 fi
 
+echo "Carregando catalogo e estoque inicial do ECC (so se ainda nao foram carregados)..."
+npx tsx scripts/carregar-base.ts || true
+
 echo "Iniciando aplicacao..."
 exec npx next start -p 3000
