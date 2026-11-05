@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useSession } from "next-auth/react";
-import RecriarCatalogoModal from "@/components/RecriarCatalogoModal";
 
-type Contrato = { id: string; codigo: string; nome: string | null; percentualContingencia: number };
-type Regra = { id: string; funcao: string; categoria: string; descricao: string; contrato: { id: string; codigo: string } };
 type Produto = {
   id: string;
   nome: string;
@@ -78,35 +74,14 @@ const FOTOS_REFERENCIA = [
   "048_Cal_a_operador_de_motosserra.png",
 ];
 
-export default function CatalogoPage() {
-  const [tab, setTab] = useState<"regras" | "produtos">("produtos");
-  const [contratos, setContratos] = useState<Contrato[]>([]);
-
-  useEffect(() => {
-    fetch("/api/epi/contratos").then((r) => r.json()).then(setContratos).catch(() => {});
-  }, []);
-
+export default function CadastroPage() {
   return (
     <div>
-      <div className="mb-4 flex gap-2">
-        {[
-          { id: "produtos", label: "Catálogo de itens" },
-          { id: "regras", label: "Regras por função" },
-        ].map((t) => (
-          <button
-            key={t.id}
-            onClick={() => setTab(t.id as any)}
-            className={`rounded-lg px-4 py-2 text-sm font-medium ${
-              tab === t.id ? "bg-brand text-white" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+      <div className="mb-4">
+        <h1 className="text-lg font-semibold text-ink">Cadastro de itens</h1>
+        <p className="text-xs text-gray-400">Cada item tem o seu código, e cada tamanho e versão (normal ou higienizada) tem o código próprio. Aqui não há contagem: a quantidade fica na aba Estoque.</p>
       </div>
-
-      {tab === "produtos" && <ProdutosTab />}
-      {tab === "regras" && <RegrasTab contratos={contratos} />}
+      <ProdutosTab />
     </div>
   );
 }
@@ -187,9 +162,6 @@ function ProdutosTab() {
   const [autoFotoResultado, setAutoFotoResultado] = useState<string | null>(null);
   const [expandidos, setExpandidos] = useState<Set<string>>(new Set());
   const [blocosFechados, setBlocosFechados] = useState<Set<string>>(new Set());
-  const { data: sessao } = useSession();
-  const admin = (sessao?.user as any)?.role === "ADMIN";
-  const [recriando, setRecriando] = useState(false);
 
   function toggleBloco(chave: string) {
     setBlocosFechados((prev) => {
@@ -396,14 +368,6 @@ function ProdutosTab() {
         >
           {expandidos.size > 0 ? "Fechar todos os tamanhos" : "Abrir todos os tamanhos"}
         </button>
-        {admin && (
-          <button
-            onClick={() => setRecriando(true)}
-            className="rounded-lg border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50"
-          >
-            Recriar catálogo do zero
-          </button>
-        )}
         <button
           onClick={() => setShowForm(true)}
           className="ml-auto rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
@@ -517,8 +481,6 @@ function ProdutosTab() {
           </div>
         );
       })()}
-
-      {recriando && <RecriarCatalogoModal onClose={() => setRecriando(false)} onFeito={reload} />}
 
       {showForm && (
         <NovoProdutoForm
@@ -926,181 +888,6 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
           </button>
           <button onClick={salvar} disabled={saving} className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50">
             {saving ? "Salvando..." : "Adicionar ao catálogo"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function RegrasTab({ contratos }: { contratos: Contrato[] }) {
-  const [regras, setRegras] = useState<Regra[]>([]);
-  const [contratoId, setContratoId] = useState("");
-  const [funcaoAberta, setFuncaoAberta] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-
-  function reload() {
-    const qs = contratoId ? `?contratoId=${contratoId}` : "";
-    fetch(`/api/epi/funcao-regras${qs}`).then((r) => r.json()).then(setRegras).catch(() => {});
-  }
-  useEffect(reload, [contratoId]);
-
-  async function excluir(id: string) {
-    if (!confirm("Remover esta regra?")) return;
-    await fetch(`/api/epi/funcao-regras/${id}`, { method: "DELETE" });
-    reload();
-  }
-
-  const porFuncao = useMemo(() => {
-    const map = new Map<string, Regra[]>();
-    for (const r of regras) {
-      const key = `${r.funcao}__${r.contrato.codigo}`;
-      if (!map.has(key)) map.set(key, []);
-      map.get(key)!.push(r);
-    }
-    return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  }, [regras]);
-
-  return (
-    <div>
-      <p className="mb-4 text-sm text-gray-500">
-        Qual EPI cada função usa, por contrato — vem da matriz oficial, mas pode ser editada ou ampliada aqui.
-      </p>
-
-      <div className="mb-4 flex items-center gap-3">
-        <select value={contratoId} onChange={(e) => setContratoId(e.target.value)} className="rounded-lg border border-gray-300 px-3 py-2 text-sm">
-          <option value="">Todos os contratos</option>
-          {contratos.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.codigo} {c.nome ? `— ${c.nome}` : ""}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={() => setShowForm(true)}
-          className="ml-auto rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-        >
-          + Nova regra
-        </button>
-      </div>
-
-      <div className="grid gap-3 md:grid-cols-2">
-        {porFuncao.map(([key, items]) => {
-          const [funcao, codigo] = key.split("__");
-          const aberto = funcaoAberta === key;
-          return (
-            <div key={key} className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-              <button onClick={() => setFuncaoAberta(aberto ? null : key)} className="flex w-full items-center justify-between px-5 py-3 text-left">
-                <div>
-                  <p className="text-sm font-semibold text-gray-700">{funcao}</p>
-                  <p className="text-xs text-gray-400">Contrato {codigo} · {items.length} categorias de EPI</p>
-                </div>
-                <span className="text-gray-400">{aberto ? "−" : "+"}</span>
-              </button>
-              {aberto && (
-                <div className="space-y-2 border-t border-gray-100 px-5 py-3">
-                  {items.map((r) => (
-                    <div key={r.id} className="flex items-start justify-between gap-2">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-brand-dark">{r.categoria}</p>
-                        <p className="whitespace-pre-line text-xs text-gray-500">{r.descricao}</p>
-                      </div>
-                      <button onClick={() => excluir(r.id)} className="shrink-0 text-xs text-gray-400 hover:text-rose-600">
-                        Remover
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
-        {porFuncao.length === 0 && <p className="text-sm text-gray-400">Nenhuma regra importada ainda.</p>}
-      </div>
-
-      {showForm && (
-        <NovaRegraForm
-          contratos={contratos}
-          onClose={() => setShowForm(false)}
-          onSaved={() => {
-            setShowForm(false);
-            reload();
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-function NovaRegraForm({ contratos, onClose, onSaved }: { contratos: Contrato[]; onClose: () => void; onSaved: () => void }) {
-  const [contratoId, setContratoId] = useState("");
-  const [funcao, setFuncao] = useState("");
-  const [categoria, setCategoria] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
-
-  async function salvar() {
-    if (!contratoId || !funcao.trim() || !categoria.trim() || !descricao.trim()) {
-      setErro("Preencha contrato, função, categoria e descrição.");
-      return;
-    }
-    setSaving(true);
-    setErro(null);
-    const res = await fetch("/api/epi/funcao-regras", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contratoId, funcao: funcao.trim(), categoria: categoria.trim(), descricao: descricao.trim() }),
-    });
-    setSaving(false);
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setErro(data.error ? JSON.stringify(data.error) : "Erro ao salvar.");
-      return;
-    }
-    onSaved();
-  }
-
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-elevated" onClick={(e) => e.stopPropagation()}>
-        <h3 className="mb-4 text-lg font-semibold text-ink">Nova regra de EPI por função</h3>
-
-        <label className="mb-3 block text-sm">
-          <span className="mb-1 block text-xs font-medium text-gray-500">Contrato</span>
-          <select value={contratoId} onChange={(e) => setContratoId(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2">
-            <option value="">Selecione...</option>
-            {contratos.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.codigo} {c.nome ? `— ${c.nome}` : ""}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="mb-3 block text-sm">
-          <span className="mb-1 block text-xs font-medium text-gray-500">Função</span>
-          <input value={funcao} onChange={(e) => setFuncao(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
-        </label>
-
-        <label className="mb-3 block text-sm">
-          <span className="mb-1 block text-xs font-medium text-gray-500">Categoria (parte do corpo)</span>
-          <input value={categoria} onChange={(e) => setCategoria(e.target.value)} placeholder="ex: EPI - MÃOS" className="w-full rounded-lg border border-gray-300 px-3 py-2" />
-        </label>
-
-        <label className="mb-4 block text-sm">
-          <span className="mb-1 block text-xs font-medium text-gray-500">Descrição (itens, com CA se souber)</span>
-          <textarea value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={3} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
-        </label>
-
-        {erro && <p className="mb-3 text-xs text-rose-600">{erro}</p>}
-
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600">
-            Cancelar
-          </button>
-          <button onClick={salvar} disabled={saving} className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50">
-            {saving ? "Salvando..." : "Adicionar regra"}
           </button>
         </div>
       </div>

@@ -1,13 +1,7 @@
 export { default } from "next-auth/middleware";
 
+// Telas que exigem login. As abas do sistema antigo (dashboard, movimentações, colaboradores...) foram removidas
+// e redirecionam para /estoque (ver next.config.mjs).
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/estoque/:path*",
-    "/movimentacoes/:path*",
-    "/colaboradores/:path*",
-    "/catalogo/:path*",
-    "/metricas/:path*",
-    "/importar/:path*",
-  ],
+  matcher: ["/estoque/:path*", "/catalogo/:path*"],
 };

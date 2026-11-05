@@ -8,15 +8,8 @@ import TrocarSenhaModal from "@/components/TrocarSenhaModal";
 import ConsominasLogo from "@/components/ConsominasLogo";
 
 const tabs = [
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/catalogo", label: "Cadastro" },
   { href: "/estoque", label: "Estoque" },
-  { href: "/estoque-minimo", label: "Estoque Mínimo" },
-  { href: "/conferencia-estoque", label: "Conferência ECC" },
-  { href: "/movimentacoes", label: "Movimentações" },
-  { href: "/colaboradores", label: "Colaboradores" },
-  { href: "/catalogo", label: "Catálogo por função" },
-  { href: "/metricas", label: "Métricas" },
-  { href: "/importar", label: "Importar planilha" },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

@@ -22,7 +22,7 @@ export default function LoginPage() {
       setError(res.error === "CredentialsSignin" ? "E-mail ou senha inválidos." : res.error);
       return;
     }
-    router.push("/dashboard");
+    router.push("/estoque");
     router.refresh();
   }
 
