@@ -141,6 +141,16 @@ model EpiProduto {
   // categoria) — não é @unique porque várias linhas (uma por tamanho) usam
   // o mesmo valor de propósito.
   codigo        String?
+  // SKU Consominas — agrupa itens que servem pra mesma função/tipo (ex.: toda
+  // bota tipo B), independente de fabricante/CA. O cálculo de mínimo
+  // (lib/epi.ts) usa isso pra somar estoque e demanda entre marcas — sem
+  // isso, "bota marca X" e "bota marca Y" contavam como itens separados e
+  // cada um pedia compra sozinho mesmo com estoque suficiente somado entre
+  // os dois. Pedido do João, 11/11/2026 — valor é o nome genérico da função
+  // (ex.: "BOTA", mesma palavra usada em EpiColaboradorItem.produtoNome) pros
+  // itens cobertos por função, ou o nome do item sem o CA/fabricante pros
+  // demais. Nulo = continua agrupando pelo nome (comportamento antigo).
+  skuCns        String?
   ativo         Boolean  @default(true)
   createdAt     DateTime @default(now())
 

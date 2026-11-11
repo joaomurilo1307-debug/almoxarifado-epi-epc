@@ -146,7 +146,7 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
     const atual = e.estoqueInicial + entradas - saidas;
     atualPorLinha.set(e.id, atual);
     movsPorLinha.set(e.id, { entradas, saidas });
-    const chave = chaveGrupo(e.produto.nome, e.produto.tamanho, e.contratoId);
+    const chave = chaveGrupo(e.produto.skuCns ?? e.produto.nome, e.produto.tamanho, e.contratoId);
     estoqueAtualPorGrupo.set(chave, (estoqueAtualPorGrupo.get(chave) ?? 0) + atual);
   }
   // Dentro de cada grupo, só a linha NÃO higienizada carrega a necessidade de
@@ -154,7 +154,7 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
   // grupo, ela mesma carrega.
   const linhaResponsavelPorGrupo = new Map<string, string>();
   for (const e of estoques) {
-    const chave = chaveGrupo(e.produto.nome, e.produto.tamanho, e.contratoId);
+    const chave = chaveGrupo(e.produto.skuCns ?? e.produto.nome, e.produto.tamanho, e.contratoId);
     const atual = linhaResponsavelPorGrupo.get(chave);
     if (!atual || !e.produto.higienizado) linhaResponsavelPorGrupo.set(chave, e.id);
   }
@@ -165,7 +165,10 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
     const valorUnitario = e.produto.valorUnitario ?? null;
     const poolDoEstoque = e.contrato?.codigo === "ECC" ? "ECC" : "GERAL";
     const chaveTamanho = e.produto.tamanho ?? "";
-    const efetivo = efetivoPorProduto.get(e.produto.nome)?.get(poolDoEstoque)?.get(chaveTamanho);
+    // SKU Consominas, quando o produto tem um (ver schema.prisma) -- junta marcas
+    // diferentes do mesmo item na hora de olhar demanda e estoque do grupo.
+    const chaveMatch = e.produto.skuCns ?? e.produto.nome;
+    const efetivo = efetivoPorProduto.get(chaveMatch)?.get(poolDoEstoque)?.get(chaveTamanho);
     const temDadoReal = efetivo !== undefined;
 
     // Resolução em 3 níveis, do mais específico pro mais genérico: % do
@@ -194,7 +197,7 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
     // somados), não só a linha — só a linha "responsável" do grupo carrega a
     // necessidade, a outra mostra 0 (já contabilizada ali) pra não duplicar
     // no pedido de compra.
-    const chaveDoGrupo = chaveGrupo(e.produto.nome, e.produto.tamanho, e.contratoId);
+    const chaveDoGrupo = chaveGrupo(chaveMatch, e.produto.tamanho, e.contratoId);
     const atualDoGrupo = estoqueAtualPorGrupo.get(chaveDoGrupo) ?? atual;
     const ehResponsavelDoGrupo = linhaResponsavelPorGrupo.get(chaveDoGrupo) === e.id;
     const necessidade = minimo !== null && ehResponsavelDoGrupo ? Math.max(0, Math.ceil(minimo - atualDoGrupo)) : 0;
@@ -223,7 +226,7 @@ export async function listaEstoqueComCalculo(where: { contratoId?: string | null
       estoqueMinimoAntigo: e.estoqueMinimo, // histórico, importado — não usado no status/necessidade
       estoqueMinimo: minimo,
       efetivoConsiderado: efetivo ?? null,
-      efetivoPorCentro: temDadoReal ? efetivoPorCentroMap.get(`${e.produto.nome}|${poolDoEstoque}|${chaveTamanho}`) ?? null : null,
+      efetivoPorCentro: temDadoReal ? efetivoPorCentroMap.get(`${chaveMatch}|${poolDoEstoque}|${chaveTamanho}`) ?? null : null,
       temDadoDeUso: temDadoReal,
       necessidade,
       status,
