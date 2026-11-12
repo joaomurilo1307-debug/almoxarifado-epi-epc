@@ -19,7 +19,7 @@ export const CONFIRMACAO_RECRIAR = "RECRIAR CATALOGO";
 
 const PREFIXO_TIPO: Record<string, string> = { EPI: "EPI", EPC: "EPC", FARDAMENTO: "FRD", GERAL: "GER" };
 const ABREV_CATEGORIA: Record<string, Record<string, string>> = {
-  EPI: { "CABEÇA": "CAB", "OLHOS/FACE": "OLH", "AUDIÇÃO": "AUD", "RESPIRATÓRIO": "RES", TRONCO: "TRO", "BRAÇOS": "BRA", "MÃOS": "MAO", PERNAS: "PRN", "PÉS": "PES", PELE: "PEL" },
+  EPI: { "CABEÇA": "CAB", "OLHOS/FACE": "OLH", "AUDIÇÃO": "AUD", "RESPIRATÓRIO": "RES", TRONCO: "TRO", "BRAÇOS": "BRA", "MÃOS": "MAO", PERNAS: "PRN", "PÉS": "PES", PELE: "PEL", ALTURA: "ALT" },
   FARDAMENTO: { CAMISA: "CAM", "CALÇA": "CAL", KIT: "KIT" },
   GERAL: { "Material de Escritório": "ESC", "Itens Veicular": "VEI", "Insumos Alojamento": "ALO", "Depósito Geral": "DEP" },
 };
@@ -128,6 +128,7 @@ export async function recriarCatalogo(prisma: PrismaClient) {
       nome: i.nome, tipo: i.tipo as "EPI" | "EPC" | "FARDAMENTO" | "GERAL", categoria: i.categoria, ca: i.ca, fabricante: i.fabricante ?? h?.fabricante ?? null,
       tamanho: i.tamanho, higienizado: i.higienizado, unidade: i.unidade, descricao: i.descricao, codigo: i.codigo, ativo: true,
       valorUnitario: h?.valorUnitario ?? null, fotoUrl: h?.fotoUrl ?? null, percentualContingencia: h?.percentualContingencia ?? null,
+      skuCns: i.skuCns ?? null,
     };
   });
 
