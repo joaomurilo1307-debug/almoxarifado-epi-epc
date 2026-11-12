@@ -28,6 +28,10 @@ const createSchema = z.object({
   tamanho: z.string().nullable().optional(),
   higienizado: z.boolean().optional(),
   unidade: z.string().default("UNID"),
+  // Código que agrupa esse item com os de outras marcas que cobrem a mesma função/tipo (ex.: CNS-PES-TIPOB
+  // pra toda botina tipo B) — combinado com tamanho, é o que o cálculo de mínimo (lib/epi.ts) usa pra somar
+  // estoque entre marcas em vez de pedir cada uma separado.
+  skuCns: z.string().nullable().optional(),
 });
 
 export async function POST(req: Request) {
@@ -38,7 +42,7 @@ export async function POST(req: Request) {
   const parsed = createSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
 
-  const dados = { ...parsed.data, tamanho: parsed.data.tamanho?.trim() || null };
+  const dados = { ...parsed.data, tamanho: parsed.data.tamanho?.trim() || null, skuCns: parsed.data.skuCns?.trim() || null };
   // o banco não barra repetido quando o tamanho é vazio (NULL), então confere aqui
   const jaExiste = await prisma.epiProduto.findFirst({ where: { nome: dados.nome, tamanho: dados.tamanho, higienizado: dados.higienizado ?? false }, select: { id: true } });
   if (jaExiste) return NextResponse.json({ error: "Esse item já existe no catálogo (mesmo nome, tamanho e higienizada)." }, { status: 409 });

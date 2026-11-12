@@ -773,6 +773,7 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
   const [ca, setCa] = useState("");
   const [fabricante, setFabricante] = useState("");
   const [tamanho, setTamanho] = useState("");
+  const [skuCns, setSkuCns] = useState("");
   const [higienizado, setHigienizado] = useState(false);
   const [unidade, setUnidade] = useState("UNID");
   const [valorUnitario, setValorUnitario] = useState("");
@@ -797,6 +798,7 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
         ca: ca.trim() || null,
         fabricante: fabricante.trim() || null,
         tamanho: tamanho.trim() || null,
+        skuCns: skuCns.trim() || null,
         higienizado,
         unidade: unidade.trim() || "UNID",
       }),
@@ -864,6 +866,16 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
           <input value={fabricante} onChange={(e) => setFabricante(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" />
         </label>
 
+        <label className="mb-3 block text-sm">
+          <span className="mb-1 block text-xs font-medium text-gray-500">SKU Consominas (opcional)</span>
+          <input
+            value={skuCns}
+            onChange={(e) => setSkuCns(e.target.value)}
+            placeholder="ex: CNS-PES-TIPOB — agrupa com outras marcas do mesmo tipo/tamanho"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2"
+          />
+        </label>
+
         <label className="mb-3 flex items-center gap-2 text-sm">
           <input type="checkbox" checked={higienizado} onChange={(e) => setHigienizado(e.target.checked)} className="h-4 w-4 rounded border-gray-300" />
           <span className="text-gray-600">Peça higienizada (lote lavado/reaproveitado, controlado à parte)</span>
@@ -894,3 +906,4 @@ function NovoProdutoForm({ onClose, onSaved }: { onClose: () => void; onSaved: (
     </div>
   );
 }
+
