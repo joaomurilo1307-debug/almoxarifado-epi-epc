@@ -8,6 +8,7 @@ type Produto = {
   tipo: "EPI" | "EPC" | "FARDAMENTO" | "GERAL";
   categoria: string | null;
   ca: string | null;
+  skuCns: string | null;
   codigo: string | null;
   fabricante: string | null;
   tamanho: string | null;
@@ -419,6 +420,7 @@ function ProdutosTab() {
               <th className="px-3 py-2">Código</th>
               <th className="px-3 py-2">Tipo</th>
               <th className="px-3 py-2">CA</th>
+              <th className="px-3 py-2">SKU CNS</th>
               <th className="px-3 py-2">Fabricante</th>
               <th className="px-3 py-2">Tamanho</th>
               <th className="px-3 py-2">Unid.</th>
@@ -586,6 +588,11 @@ function LinhaProduto({
         )}
       </td>
       <td className="px-4 py-2.5 text-gray-500">{indentado ? null : p.ca ?? "—"}</td>
+      <td className="px-4 py-2.5">
+        {indentado ? null : (p.skuCns
+          ? <span className="rounded-md bg-emerald-50 px-2 py-1 font-mono text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">{p.skuCns}</span>
+          : <span className="text-xs text-gray-300">—</span>)}
+      </td>
       <td className="px-4 py-2.5">
         {indentado ? null : editandoFabricanteCampo(p, ed)}
       </td>
