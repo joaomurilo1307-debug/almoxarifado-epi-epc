@@ -129,6 +129,7 @@ export async function recriarCatalogo(prisma: PrismaClient) {
       tamanho: i.tamanho, higienizado: i.higienizado, unidade: i.unidade, descricao: i.descricao, codigo: i.codigo, ativo: true,
       valorUnitario: h?.valorUnitario ?? null, fotoUrl: h?.fotoUrl ?? null, percentualContingencia: h?.percentualContingencia ?? null,
       skuCns: i.skuCns ?? null,
+      funcao: i.funcao ?? null, validadeCa: i.validadeCa ?? null, codigoFornecedor: i.codigoFornecedor ?? null, observacao: i.observacao ?? null,
     };
   });
 

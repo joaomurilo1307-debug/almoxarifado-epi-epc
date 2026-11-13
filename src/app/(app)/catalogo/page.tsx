@@ -18,27 +18,29 @@ type Produto = {
   percentualContingencia: number | null;
   fotoUrl: string | null;
   descricao: string | null;
+  funcao: string | null;
+  validadeCa: string | null;
+  codigoFornecedor: string | null;
+  observacao: string | null;
   ativo: boolean;
 };
 
-const COR_CATEGORIA: Record<string, string> = {
-  "CABEÇA": "bg-blue-50 text-blue-700 ring-blue-200",
-  "OLHOS/FACE": "bg-purple-50 text-purple-700 ring-purple-200",
-  "AUDIÇÃO": "bg-pink-50 text-pink-700 ring-pink-200",
-  "RESPIRATÓRIO": "bg-cyan-50 text-cyan-700 ring-cyan-200",
-  TRONCO: "bg-amber-50 text-amber-700 ring-amber-200",
-  "BRAÇOS": "bg-lime-50 text-lime-700 ring-lime-200",
-  "MÃOS": "bg-orange-50 text-orange-700 ring-orange-200",
-  PERNAS: "bg-indigo-50 text-indigo-700 ring-indigo-200",
-  "PÉS": "bg-red-50 text-red-700 ring-red-200",
-  ALTURA: "bg-violet-50 text-violet-700 ring-violet-200",
-  CAMISA: "bg-teal-50 text-teal-700 ring-teal-200",
-  "CALÇA": "bg-sky-50 text-sky-700 ring-sky-200",
-  KIT: "bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200",
-};
-function corCategoria(categoria: string | null): string {
-  return (categoria && COR_CATEGORIA[categoria]) || "bg-gray-100 text-gray-500 ring-gray-200";
-}
+// Tabela plana igual a planilha: uma coluna por campo, cada uma com seu filtro de texto.
+type ColunaDef = { chave: string; rotulo: string; valor: (p: Produto) => string };
+const COLUNAS: ColunaDef[] = [
+  { chave: "codigo", rotulo: "Item", valor: (p) => p.codigo ?? "" },
+  { chave: "categoria", rotulo: "Categoria", valor: (p) => p.categoria ?? "" },
+  { chave: "tipo", rotulo: "Tipo", valor: (p) => TIPO_LABEL[p.tipo] },
+  { chave: "funcao", rotulo: "Função", valor: (p) => p.funcao ?? "" },
+  { chave: "descricao", rotulo: "Descrição", valor: (p) => p.descricao ?? "" },
+  { chave: "fabricante", rotulo: "Fabricante", valor: (p) => p.fabricante ?? "" },
+  { chave: "ca", rotulo: "CA", valor: (p) => p.ca ?? "" },
+  { chave: "skuCns", rotulo: "SKU CNS", valor: (p) => p.skuCns ?? "" },
+  { chave: "tamanho", rotulo: "Tamanho", valor: (p) => p.tamanho ?? "" },
+  { chave: "codigoFornecedor", rotulo: "Código MRN", valor: (p) => p.codigoFornecedor ?? "" },
+  { chave: "validadeCa", rotulo: "Validade", valor: (p) => p.validadeCa ?? "" },
+  { chave: "observacao", rotulo: "Observação", valor: (p) => p.observacao ?? "" },
+];
 
 // Código do modelo (TIPO-CAT-NNN) a partir do código de um tamanho (TIPO-CAT-NNN-TAMANHO[-H]).
 function familiaDoCodigo(codigo: string | null): string | null {
@@ -167,9 +169,7 @@ const SEM_CATEGORIA = "SEM CATEGORIA";
 
 function ProdutosTab() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
-  const [busca, setBusca] = useState("");
-  const [filtroTipo, setFiltroTipo] = useState<"" | Produto["tipo"]>("");
-  const [filtroFabricante, setFiltroFabricante] = useState("");
+  const [filtrosColuna, setFiltrosColuna] = useState<Record<string, string>>({});
   const [showForm, setShowForm] = useState(false);
   const [editando, setEditando] = useState<string | null>(null);
   const [rascunho, setRascunho] = useState("");
@@ -205,77 +205,20 @@ function ProdutosTab() {
     });
   }
 
-  const fabricantes = useMemo(
-    () => [...new Set(produtos.map((p) => p.fabricante).filter((f): f is string => !!f))].sort(),
-    [produtos]
-  );
-
   const filtrados = useMemo(
     () =>
-      produtos.filter(
-        (p) =>
-          p.ativo &&
-          (!busca ||
-            p.nome.toLowerCase().includes(busca.toLowerCase()) ||
-            (p.tamanho ?? "").toLowerCase().includes(busca.toLowerCase()) ||
-            (p.ca ?? "").toLowerCase().includes(busca.toLowerCase()) ||
-            (p.codigo ?? "").toLowerCase().includes(busca.toLowerCase())) &&
-          (!filtroTipo || p.tipo === filtroTipo) &&
-          (!filtroFabricante || p.fabricante === filtroFabricante)
-      ),
-    [produtos, busca, filtroTipo, filtroFabricante]
+      produtos
+        .filter(
+          (p) =>
+            p.ativo &&
+            COLUNAS.every((c) => {
+              const f = filtrosColuna[c.chave];
+              return !f || c.valor(p).toLowerCase().includes(f.toLowerCase());
+            })
+        )
+        .sort((a, b) => (a.codigo ?? "").localeCompare(b.codigo ?? "")),
+    [produtos, filtrosColuna]
   );
-
-  // Agrupa por nome+tipo — depois da migração de tamanhos, o nome já é a
-  // base limpa do equipamento (ex.: "BOTA DE SEGURANÇA MARLUVAS - CA42374")
-  // e o que varia por tamanho fica só no campo `tamanho`. Item sem variação
-  // de tamanho vira um grupo de 1 — renderiza igual a antes, sem drill-down.
-  // Inclui o tipo na chave de propósito: um nome igual com tipo diferente
-  // (ex.: import antigo categorizou errado) não pode virar um grupo só —
-  // já aconteceu uma vez (ver correção de tipo no migrate-tamanhos) e
-  // misturar tipo escondido dentro do mesmo card seria pior que não agrupar.
-  const grupos = useMemo<Grupo[]>(() => {
-    const map = new Map<string, Produto[]>();
-    for (const p of filtrados) {
-      const chave = `${p.nome}__${p.tipo}`;
-      if (!map.has(chave)) map.set(chave, []);
-      map.get(chave)!.push(p);
-    }
-    return [...map.entries()]
-      .map(([chave, itens]) => ({
-        chave,
-        nome: itens[0].nome,
-        itens: [...itens].sort(compararTamanho),
-      }))
-      .sort((a, b) => a.nome.localeCompare(b.nome));
-  }, [filtrados]);
-
-  // Separa em blocos (mesma lógica do Estoque) e, dentro do bloco EPI,
-  // subdivide por categoria (CABEÇA, MÃOS, PÉS...) — só cria bloco/subgrupo
-  // pra quem tem item de verdade depois do filtro atual.
-  const blocos = useMemo(() => {
-    const porBloco = new Map<string, Grupo[]>();
-    for (const g of grupos) {
-      const chave = blocoChaveDe(g.itens[0]);
-      if (!porBloco.has(chave)) porBloco.set(chave, []);
-      porBloco.get(chave)!.push(g);
-    }
-    return BLOCOS_TOPO.map((b) => {
-      const gruposDoBloco = porBloco.get(b.value) ?? [];
-      let subgrupos: { categoria: string; grupos: Grupo[] }[] | null = null;
-      const ordem = SUBGRUPOS_POR_BLOCO[b.value];
-      if (ordem) {
-        const porCategoria = new Map<string, Grupo[]>();
-        for (const g of gruposDoBloco) {
-          const cat = g.itens[0].categoria && ordem.includes(g.itens[0].categoria) ? g.itens[0].categoria : SEM_CATEGORIA;
-          if (!porCategoria.has(cat)) porCategoria.set(cat, []);
-          porCategoria.get(cat)!.push(g);
-        }
-        subgrupos = [...ordem, SEM_CATEGORIA].map((cat) => ({ categoria: cat, grupos: porCategoria.get(cat) ?? [] })).filter((s) => s.grupos.length > 0);
-      }
-      return { ...b, grupos: gruposDoBloco, subgrupos };
-    }).filter((b) => b.grupos.length > 0);
-  }, [grupos]);
 
   async function salvarFabricante(id: string) {
     const fabricante = rascunhoFabricante.trim() || null;
@@ -335,37 +278,7 @@ function ProdutosTab() {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-3">
-        <input
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-          placeholder="Buscar item, tamanho, CA ou código..."
-          className="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm"
-        />
-        <select
-          value={filtroTipo}
-          onChange={(e) => setFiltroTipo(e.target.value as any)}
-          className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
-        >
-          <option value="">Todos os tipos</option>
-          <option value="EPI">EPI</option>
-          <option value="EPC">EPC</option>
-          <option value="FARDAMENTO">Fardamento</option>
-          <option value="GERAL">Geral (escritório, veicular, alojamento...)</option>
-        </select>
-        <select
-          value={filtroFabricante}
-          onChange={(e) => setFiltroFabricante(e.target.value)}
-          className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
-        >
-          <option value="">Todos os fabricantes</option>
-          {fabricantes.map((f) => (
-            <option key={f} value={f}>
-              {f}
-            </option>
-          ))}
-        </select>
-        <span className="text-xs text-gray-400">{grupos.length} modelos · {filtrados.length} códigos</span>
-
+        <span className="text-xs text-gray-400">{filtrados.length} de {produtos.filter((p) => p.ativo).length} códigos</span>
         <button
           onClick={() => setShowForm(true)}
           className="ml-auto rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
@@ -373,7 +286,6 @@ function ProdutosTab() {
           + Novo item
         </button>
       </div>
-
 
       {(() => {
         const edProps: LinhaEditProps = {
@@ -396,71 +308,40 @@ function ProdutosTab() {
           setEscolhendoFoto,
           excluir,
         };
-        // Tabela plana: uma linha por item (código/tamanho), sem agrupar nem expandir.
-        const renderGrupo = (g: Grupo) => g.itens.map((item) => <LinhaProduto key={item.id} p={item} {...edProps} />);
-        const cabecalho = (
-          <thead className="sticky top-0 z-10">
-            <tr className="whitespace-nowrap border-b border-gray-100 bg-gray-50 text-left text-[10px] uppercase tracking-wide text-gray-400">
-              <th className="px-3 py-2">Item</th>
-              <th className="px-3 py-2">Código</th>
-              <th className="px-3 py-2">Tipo</th>
-              <th className="px-3 py-2">CA</th>
-              <th className="px-3 py-2">SKU CNS</th>
-              <th className="px-3 py-2">Fabricante</th>
-              <th className="px-3 py-2">Tamanho</th>
-              <th className="px-3 py-2" />
-            </tr>
-          </thead>
-        );
         return (
-          <div className="space-y-4">
-            {blocos.map((bloco) => {
-              const fechado = blocosFechados.has(bloco.value);
-              return (
-                <div key={bloco.value} className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-                  <button
-                    onClick={() => toggleBloco(bloco.value)}
-                    className="flex w-full items-center gap-3 bg-gray-50 px-5 py-3 text-left hover:bg-gray-100"
-                  >
-                    <span className="text-xs text-gray-400">{fechado ? "▸" : "▾"}</span>
-                    <span className="font-semibold text-gray-700">{bloco.label}</span>
-                    <span className="text-xs text-gray-400">{bloco.grupos.length} modelos · {bloco.grupos.reduce((n, g) => n + g.itens.length, 0)} códigos</span>
-                  </button>
-
-                  {!fechado &&
-                    (bloco.subgrupos ? (
-                      // Bloco EPI: uma sub-tabela por categoria (CABEÇA, MÃOS, PÉS...) —
-                      // separa itens parecidos mas de proteção diferente (ex.: os 2
-                      // respiradores, os 2 mangotes) em vez de deixar tudo junto em
-                      // ordem alfabética parecendo repetido.
-                      bloco.subgrupos.map((sub) => (
-                        <div key={sub.categoria} className="border-t border-gray-100">
-                          <p className="bg-brand-light/30 px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand-dark">
-                            {sub.categoria} <span className="font-normal normal-case text-gray-400">· {sub.grupos.length} modelos · {sub.grupos.reduce((n, g) => n + g.itens.length, 0)} códigos</span>
-                          </p>
-                          <div className="max-h-[65vh] overflow-x-auto overflow-y-auto">
-                            <table className="w-full min-w-max text-xs">
-                              {cabecalho}
-                              <tbody>{sub.grupos.map(renderGrupo)}</tbody>
-                            </table>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="max-h-[65vh] overflow-x-auto overflow-y-auto border-t border-gray-100">
-                        <table className="w-full min-w-max text-xs">
-                          {cabecalho}
-                          <tbody>{bloco.grupos.map(renderGrupo)}</tbody>
-                        </table>
-                      </div>
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div className="max-h-[75vh] overflow-x-auto overflow-y-auto">
+              <table className="w-full min-w-max text-xs">
+                <thead className="sticky top-0 z-10 bg-gray-50">
+                  <tr className="whitespace-nowrap border-b border-gray-100 text-left text-[10px] uppercase tracking-wide text-gray-400">
+                    {COLUNAS.map((c) => (
+                      <th key={c.chave} className="px-3 py-2">{c.rotulo}</th>
                     ))}
-                </div>
-              );
-            })}
-            {blocos.length === 0 && (
-              <div className="rounded-2xl border border-gray-200 bg-white px-4 py-8 text-center text-sm text-gray-400 shadow-sm">
-                Nenhum item encontrado.
-              </div>
+                    <th className="px-3 py-2" />
+                  </tr>
+                  <tr className="border-b border-gray-200 bg-gray-50">
+                    {COLUNAS.map((c) => (
+                      <th key={c.chave} className="px-3 pb-2">
+                        <input
+                          value={filtrosColuna[c.chave] ?? ""}
+                          onChange={(e) => setFiltrosColuna((prev) => ({ ...prev, [c.chave]: e.target.value }))}
+                          placeholder="filtrar..."
+                          className="w-full rounded border border-gray-200 px-1.5 py-1 text-[11px] font-normal normal-case text-gray-600"
+                        />
+                      </th>
+                    ))}
+                    <th className="px-3 pb-2" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtrados.map((p) => (
+                    <LinhaProduto key={p.id} p={p} {...edProps} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {filtrados.length === 0 && (
+              <div className="px-4 py-8 text-center text-sm text-gray-400">Nenhum item encontrado.</div>
             )}
           </div>
         );
@@ -525,56 +406,17 @@ type LinhaEditProps = {
   excluir: (id: string) => void;
 };
 
-// Uma linha de produto de verdade — usada tanto pra item avulso (sem
-// variação de tamanho) quanto pra cada tamanho dentro de um grupo aberto.
-// `indentado` só muda o recuo visual e esconde colunas que já aparecem na
-// linha-pai do grupo (foto/tipo/CA/fabricante), pra não repetir informação.
-function LinhaProduto({
-  p,
-  indentado,
-  ...ed
-}: { p: Produto; indentado?: boolean } & LinhaEditProps) {
+// Uma linha por item/tamanho, plana — uma célula por coluna de COLUNAS, texto
+// simples, igual a planilha. Sem foto, sem cor, sem agrupar.
+function LinhaProduto({ p, ...ed }: { p: Produto } & LinhaEditProps) {
   return (
     <tr className="whitespace-nowrap border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
-      <td className={`px-4 py-2.5 font-medium text-gray-700 ${indentado ? "pl-10 text-gray-400" : ""}`}>
-        {indentado ? "↳" : p.nome}
-        {!indentado && p.descricao && (
-          <p className="mt-0.5 max-w-xs whitespace-normal text-[11px] font-normal text-gray-400" title={p.descricao}>
-            {p.descricao.length > 110 ? `${p.descricao.slice(0, 110)}…` : p.descricao}
-          </p>
-        )}
-      </td>
-      <td className="px-4 py-2.5">
-        {p.codigo
-          ? <span className={`rounded-md px-2 py-1 font-mono text-xs font-semibold ${indentado ? "bg-white text-gray-700 ring-1 ring-brand/30" : "bg-brand-light text-brand-dark"}`}>{p.codigo}</span>
-          : <span className="text-xs text-gray-300">—</span>}
-      </td>
-      <td className="px-4 py-2.5">
-        {indentado ? null : (
-          <>
-            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{TIPO_LABEL[p.tipo]}</span>
-            {p.categoria && <span className={`ml-1 rounded px-1.5 py-0.5 text-[10px] font-semibold ring-1 ${corCategoria(p.categoria)}`}>{p.categoria}</span>}
-          </>
-        )}
-      </td>
-      <td className="px-4 py-2.5 text-gray-500">{indentado ? null : p.ca ?? "—"}</td>
-      <td className="px-4 py-2.5">
-        {indentado ? null : (p.skuCns
-          ? <span className="rounded-md bg-emerald-50 px-2 py-1 font-mono text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">{p.skuCns}</span>
-          : <span className="text-xs text-gray-300">—</span>)}
-      </td>
-      <td className="px-4 py-2.5">
-        {indentado ? null : editandoFabricanteCampo(p, ed)}
-      </td>
-      <td className="px-4 py-2.5 font-semibold text-gray-700">
-        {p.tamanho ?? "—"}
-        {p.higienizado && (
-          <span className="ml-1.5 rounded-full bg-teal-50 px-1.5 py-0.5 text-[10px] font-medium text-teal-600" title="Peça higienizada, controlada à parte do estoque novo">
-            ♻️ Higienizada
-          </span>
-        )}
-      </td>
-      <td className="px-4 py-2.5 text-right">
+      {COLUNAS.map((c) => (
+        <td key={c.chave} className="px-3 py-2 text-gray-700">
+          {c.valor(p) || <span className="text-gray-300">—</span>}
+        </td>
+      ))}
+      <td className="px-3 py-2 text-right">
         <button onClick={() => ed.excluir(p.id)} className="text-xs text-gray-400 hover:text-rose-600">
           Remover
         </button>

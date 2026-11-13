@@ -32,6 +32,10 @@ const createSchema = z.object({
   // pra toda botina tipo B) — combinado com tamanho, é o que o cálculo de mínimo (lib/epi.ts) usa pra somar
   // estoque entre marcas em vez de pedir cada uma separado.
   skuCns: z.string().nullable().optional(),
+  funcao: z.string().nullable().optional(),
+  validadeCa: z.string().nullable().optional(),
+  codigoFornecedor: z.string().nullable().optional(),
+  observacao: z.string().nullable().optional(),
 });
 
 export async function POST(req: Request) {
