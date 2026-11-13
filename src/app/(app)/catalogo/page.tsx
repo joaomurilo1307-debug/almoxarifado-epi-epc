@@ -346,12 +346,7 @@ function ProdutosTab() {
           ))}
         </select>
         <span className="text-xs text-gray-400">{grupos.length} modelos · {filtrados.length} códigos</span>
-        <button
-          onClick={() => setExpandidos(expandidos.size > 0 ? new Set() : new Set(grupos.filter((g) => g.itens.length > 1).map((g) => g.chave)))}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50"
-        >
-          {expandidos.size > 0 ? "Fechar todos os tamanhos" : "Abrir todos os tamanhos"}
-        </button>
+
         <button
           onClick={() => setShowForm(true)}
           className="ml-auto rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
@@ -382,18 +377,8 @@ function ProdutosTab() {
           setEscolhendoFoto,
           excluir,
         };
-        const renderGrupo = (g: Grupo) =>
-          g.itens.length === 1 ? (
-            <LinhaProduto key={g.itens[0].id} p={g.itens[0]} {...edProps} />
-          ) : (
-            <GrupoTamanhos
-              key={g.chave}
-              grupo={g}
-              aberto={expandidos.has(g.chave)}
-              toggle={() => toggleExpandido(g.chave)}
-              {...edProps}
-            />
-          );
+        // Tabela plana: uma linha por item (código/tamanho), sem agrupar nem expandir.
+        const renderGrupo = (g: Grupo) => g.itens.map((item) => <LinhaProduto key={item.id} p={item} {...edProps} />);
         const cabecalho = (
           <thead className="sticky top-0 z-10">
             <tr className="whitespace-nowrap border-b border-gray-100 bg-gray-50 text-left text-[10px] uppercase tracking-wide text-gray-400">
