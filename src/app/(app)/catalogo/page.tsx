@@ -159,8 +159,7 @@ function ProdutosTab() {
   const [editandoPct, setEditandoPct] = useState<string | null>(null);
   const [rascunhoPct, setRascunhoPct] = useState("");
   const [escolhendoFoto, setEscolhendoFoto] = useState<string | null>(null);
-  const [autoFotoRodando, setAutoFotoRodando] = useState(false);
-  const [autoFotoResultado, setAutoFotoResultado] = useState<string | null>(null);
+
   const [expandidos, setExpandidos] = useState<Set<string>>(new Set());
   const [blocosFechados, setBlocosFechados] = useState<Set<string>>(new Set());
 
@@ -307,15 +306,6 @@ function ProdutosTab() {
     reload();
   }
 
-  async function rodarAutoFoto() {
-    setAutoFotoRodando(true);
-    setAutoFotoResultado(null);
-    const res = await fetch("/api/epi/produtos/auto-foto", { method: "POST" });
-    const data = await res.json();
-    setAutoFotoRodando(false);
-    setAutoFotoResultado(`${data.atualizados} itens ganharam foto automática (${data.semMatch} sem foto de referência parecida).`);
-    reload();
-  }
 
   async function excluir(id: string) {
     if (!confirm("Remover este item do catálogo? Se já tiver movimentação registrada, ele só é desativado (não some do histórico).")) return;
@@ -357,13 +347,6 @@ function ProdutosTab() {
         </select>
         <span className="text-xs text-gray-400">{grupos.length} modelos · {filtrados.length} códigos</span>
         <button
-          onClick={rodarAutoFoto}
-          disabled={autoFotoRodando}
-          className="rounded-lg border border-brand px-4 py-2 text-sm font-semibold text-brand-dark hover:bg-brand-light disabled:opacity-50"
-        >
-          {autoFotoRodando ? "Buscando fotos..." : "📷 Preencher fotos automaticamente"}
-        </button>
-        <button
           onClick={() => setExpandidos(expandidos.size > 0 ? new Set() : new Set(grupos.filter((g) => g.itens.length > 1).map((g) => g.chave)))}
           className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50"
         >
@@ -377,7 +360,6 @@ function ProdutosTab() {
         </button>
       </div>
 
-      {autoFotoResultado && <p className="mb-3 text-xs text-brand-dark">{autoFotoResultado}</p>}
 
       {(() => {
         const edProps: LinhaEditProps = {
@@ -415,7 +397,6 @@ function ProdutosTab() {
         const cabecalho = (
           <thead className="sticky top-0 z-10">
             <tr className="whitespace-nowrap border-b border-gray-100 bg-gray-50 text-left text-[10px] uppercase tracking-wide text-gray-400">
-              <th className="px-3 py-2">Foto</th>
               <th className="px-3 py-2">Item</th>
               <th className="px-3 py-2">Código</th>
               <th className="px-3 py-2">Tipo</th>
@@ -554,18 +535,6 @@ function LinhaProduto({
 }: { p: Produto; indentado?: boolean } & LinhaEditProps) {
   return (
     <tr className="whitespace-nowrap border-b border-gray-50 last:border-0 hover:bg-gray-50/60">
-      <td className="px-4 py-2.5">
-        {indentado ? null : (
-          <button onClick={() => ed.setEscolhendoFoto(p.id)} className="block h-11 w-11 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
-            {p.fotoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={p.fotoUrl} alt={p.nome} className="h-full w-full object-contain" />
-            ) : (
-              <span className="flex h-full w-full items-center justify-center text-[10px] text-gray-300">sem foto</span>
-            )}
-          </button>
-        )}
-      </td>
       <td className={`px-4 py-2.5 font-medium text-gray-700 ${indentado ? "pl-10 text-gray-400" : ""}`}>
         {indentado ? "↳" : p.nome}
         {!indentado && p.descricao && (
@@ -708,21 +677,12 @@ function GrupoTamanhos({
 }: { grupo: Grupo; aberto: boolean; toggle: () => void } & LinhaEditProps) {
   const primeiro = grupo.itens[0];
   const cas = new Set(grupo.itens.map((i) => i.ca ?? ""));
+  const skuCnsSet = new Set(grupo.itens.map((i) => i.skuCns ?? ""));
   const fabricantes = new Set(grupo.itens.map((i) => i.fabricante ?? ""));
 
   return (
     <>
       <tr className="whitespace-nowrap border-b border-gray-50 bg-brand-light/20 hover:bg-brand-light/30">
-        <td className="px-4 py-2.5">
-          <button onClick={() => setEscolhendoFotoDoGrupo(grupo, ed)} className="block h-11 w-11 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
-            {primeiro.fotoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={primeiro.fotoUrl} alt={grupo.nome} className="h-full w-full object-contain" />
-            ) : (
-              <span className="flex h-full w-full items-center justify-center text-[10px] text-gray-300">sem foto</span>
-            )}
-          </button>
-        </td>
         <td className="px-4 py-2.5">
           <button onClick={toggle} className="flex items-center gap-2 text-left font-semibold text-gray-700 hover:text-brand-dark">
             <span className="text-xs text-brand-dark">{aberto ? "▾" : "▸"}</span>
@@ -746,6 +706,11 @@ function GrupoTamanhos({
           {primeiro.categoria && <span className="ml-1 text-xs text-gray-400">{primeiro.categoria}</span>}
         </td>
         <td className="px-4 py-2.5 text-gray-500">{cas.size === 1 ? [...cas][0] || "—" : "vário"}</td>
+        <td className="px-4 py-2.5">
+          {skuCnsSet.size === 1 && [...skuCnsSet][0]
+            ? <span className="rounded-md bg-emerald-50 px-2 py-1 font-mono text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">{[...skuCnsSet][0]}</span>
+            : <span className="text-xs text-gray-300">—</span>}
+        </td>
         <td className="px-4 py-2.5 text-gray-500">{fabricantes.size === 1 ? [...fabricantes][0] || "—" : "vário"}</td>
         <td className="px-4 py-2.5">
           <button onClick={toggle} className="rounded-full bg-brand-light px-2 py-0.5 text-xs font-semibold text-brand-dark hover:bg-brand/20">
