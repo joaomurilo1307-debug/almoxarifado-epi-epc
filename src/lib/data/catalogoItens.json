@@ -1,5 +1,5 @@
 {
-    "versao":  "2026-11-13-v12-maiusculas",
+    "versao":  "2026-11-13-v15-fix-tipo-fardamento",
     "geradoEm":  "13/11/2026",
     "itens":  [
                   {
@@ -7736,7 +7736,7 @@
                       "skuCns":  "COLETE VERDE"
                   },
                   {
-                      "codigo":  "EPI-TRO-013-",
+                      "codigo":  "EPI-TRO-013-UN",
                       "familia":  "EPI-TRO-013",
                       "nome":  "CAPA DE CHUVA AMARELA",
                       "tamanho":  null,
@@ -7755,7 +7755,7 @@
                       "skuCns":  "CAPA DE CHUVA AMARELA"
                   },
                   {
-                      "codigo":  "EPI-MAO-050-",
+                      "codigo":  "EPI-MAO-050-UN",
                       "familia":  "EPI-MAO-050",
                       "nome":  "PRESILHAS PARA LUVAS",
                       "tamanho":  null,
@@ -7774,8 +7774,8 @@
                       "skuCns":  "PRESILHAS PARA LUVAS"
                   },
                   {
-                      "codigo":  "EPI-AUD-010-",
-                      "familia":  "EPI-AUD-010",
+                      "codigo":  "EPI-AUD-014-UN",
+                      "familia":  "EPI-AUD-014",
                       "nome":  "PROTETOR AUDITIVO 3M (CA 33835)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -7793,8 +7793,8 @@
                       "skuCns":  "CNS-NOVO-33835"
                   },
                   {
-                      "codigo":  "EPI-AUD-011-",
-                      "familia":  "EPI-AUD-011",
+                      "codigo":  "EPI-AUD-015-UN",
+                      "familia":  "EPI-AUD-015",
                       "nome":  "ABAFADOR AUDITIVO (CA 33836)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -7812,7 +7812,7 @@
                       "skuCns":  "CNS-NOVO-33836"
                   },
                   {
-                      "codigo":  "EPI-AUD-012-",
+                      "codigo":  "EPI-AUD-012-UN",
                       "familia":  "EPI-AUD-012",
                       "nome":  "PROTETOR AUDITIVO LIBUS (CA 37134)",
                       "tamanho":  null,
@@ -7831,7 +7831,7 @@
                       "skuCns":  "CNS-NOVO-37134"
                   },
                   {
-                      "codigo":  "EPI-AUD-013-",
+                      "codigo":  "EPI-AUD-013-UN",
                       "familia":  "EPI-AUD-013",
                       "nome":  "PROTETOR AUDITIVO LIBUS (CA 43350)",
                       "tamanho":  null,
@@ -7850,7 +7850,7 @@
                       "skuCns":  "CNS-NOVO-43350"
                   },
                   {
-                      "codigo":  "EPI-BRA-010-",
+                      "codigo":  "EPI-BRA-010-UN",
                       "familia":  "EPI-BRA-010",
                       "nome":  "MANGOTE (CA 41029)",
                       "tamanho":  null,
@@ -7869,7 +7869,7 @@
                       "skuCns":  "CNS-NOVO-41029"
                   },
                   {
-                      "codigo":  "EPI-CAB-020-",
+                      "codigo":  "EPI-CAB-020-UN",
                       "familia":  "EPI-CAB-020",
                       "nome":  "TOUCA ÁRABE (CA 39760)",
                       "tamanho":  null,
@@ -7888,7 +7888,7 @@
                       "skuCns":  "CNS-NOVO-39760"
                   },
                   {
-                      "codigo":  "EPI-CAB-021-",
+                      "codigo":  "EPI-CAB-021-UN",
                       "familia":  "EPI-CAB-021",
                       "nome":  "TOUCA ÁRABE (CA 4423)",
                       "tamanho":  null,
@@ -7907,7 +7907,7 @@
                       "skuCns":  "CNS-NOVO-4423"
                   },
                   {
-                      "codigo":  "EPI-CAB-022-",
+                      "codigo":  "EPI-CAB-022-UN",
                       "familia":  "EPI-CAB-022",
                       "nome":  "TOUCA ÁRABE (CA 44963)",
                       "tamanho":  null,
@@ -7926,7 +7926,7 @@
                       "skuCns":  "CNS-NOVO-44963"
                   },
                   {
-                      "codigo":  "EPI-CAB-023-",
+                      "codigo":  "EPI-CAB-023-UN",
                       "familia":  "EPI-CAB-023",
                       "nome":  "TOUCA ÁRABE AZUL/CINZA (CA 49731)",
                       "tamanho":  null,
@@ -7945,12 +7945,12 @@
                       "skuCns":  "CNS-NOVO-49731"
                   },
                   {
-                      "codigo":  "EPI-CAL-010-",
+                      "codigo":  "EPI-CAL-010-UN",
                       "familia":  "EPI-CAL-010",
                       "nome":  "CALÇA DE OPERADOR (CA 36600)",
                       "tamanho":  null,
                       "higienizado":  false,
-                      "tipo":  "FARDAMENTO",
+                      "tipo":  "EPI",
                       "categoria":  "CALÇA",
                       "ca":  "36600",
                       "fabricante":  null,
@@ -7964,8 +7964,8 @@
                       "skuCns":  "CNS-NOVO-36600"
                   },
                   {
-                      "codigo":  "EPI-MAO-010-",
-                      "familia":  "EPI-MAO-010",
+                      "codigo":  "EPI-MAO-051-UN",
+                      "familia":  "EPI-MAO-051",
                       "nome":  "LUVA DE RASPA (CA 14873)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -7983,8 +7983,8 @@
                       "skuCns":  "CNS-NOVO-14873"
                   },
                   {
-                      "codigo":  "EPI-MAO-011-",
-                      "familia":  "EPI-MAO-011",
+                      "codigo":  "EPI-MAO-052-UN",
+                      "familia":  "EPI-MAO-052",
                       "nome":  "LUVA PU KALIPSO (CA 15272)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8002,8 +8002,8 @@
                       "skuCns":  "CNS-NOVO-15272"
                   },
                   {
-                      "codigo":  "EPI-MAO-012-",
-                      "familia":  "EPI-MAO-012",
+                      "codigo":  "EPI-MAO-053-UN",
+                      "familia":  "EPI-MAO-053",
                       "nome":  "LUVA DE BORRACHA (CA 25313)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8021,8 +8021,8 @@
                       "skuCns":  "CNS-NOVO-25313"
                   },
                   {
-                      "codigo":  "EPI-MAO-013-",
-                      "familia":  "EPI-MAO-013",
+                      "codigo":  "EPI-MAO-054-UN",
+                      "familia":  "EPI-MAO-054",
                       "nome":  "LUVA PVC AZUL (CA 26043)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8040,8 +8040,8 @@
                       "skuCns":  "CNS-NOVO-26043"
                   },
                   {
-                      "codigo":  "EPI-MAO-014-",
-                      "familia":  "EPI-MAO-014",
+                      "codigo":  "EPI-MAO-055-UN",
+                      "familia":  "EPI-MAO-055",
                       "nome":  "LUVA PU DANNY (CA 29014)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8059,8 +8059,8 @@
                       "skuCns":  "CNS-NOVO-29014"
                   },
                   {
-                      "codigo":  "EPI-MAO-015-",
-                      "familia":  "EPI-MAO-015",
+                      "codigo":  "EPI-MAO-056-UN",
+                      "familia":  "EPI-MAO-056",
                       "nome":  "LUVA PU VOLK (CA 30916)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8078,8 +8078,8 @@
                       "skuCns":  "CNS-NOVO-30916"
                   },
                   {
-                      "codigo":  "EPI-MAO-016-",
-                      "familia":  "EPI-MAO-016",
+                      "codigo":  "EPI-MAO-057-UN",
+                      "familia":  "EPI-MAO-057",
                       "nome":  "LUVA PU SAFETY (CA 32038)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8097,8 +8097,8 @@
                       "skuCns":  "CNS-NOVO-32038"
                   },
                   {
-                      "codigo":  "EPI-MAO-017-",
-                      "familia":  "EPI-MAO-017",
+                      "codigo":  "EPI-MAO-058-UN",
+                      "familia":  "EPI-MAO-058",
                       "nome":  "LUVA ANTICORTE (CA 34000)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8116,8 +8116,8 @@
                       "skuCns":  "CNS-NOVO-34000"
                   },
                   {
-                      "codigo":  "EPI-MAO-018-",
-                      "familia":  "EPI-MAO-018",
+                      "codigo":  "EPI-MAO-059-UN",
+                      "familia":  "EPI-MAO-059",
                       "nome":  "LUVA DE PVC (CA 34570)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8135,8 +8135,8 @@
                       "skuCns":  "CNS-NOVO-34570"
                   },
                   {
-                      "codigo":  "EPI-MAO-019-",
-                      "familia":  "EPI-MAO-019",
+                      "codigo":  "EPI-MAO-060-UN",
+                      "familia":  "EPI-MAO-060",
                       "nome":  "LUVA PU DELTA (CA 36365)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8154,8 +8154,8 @@
                       "skuCns":  "CNS-NOVO-36365"
                   },
                   {
-                      "codigo":  "EPI-MAO-020-",
-                      "familia":  "EPI-MAO-020",
+                      "codigo":  "EPI-MAO-061-UN",
+                      "familia":  "EPI-MAO-061",
                       "nome":  "LUVA MISTA CANO LONGO (CA 36845)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8173,8 +8173,8 @@
                       "skuCns":  "CNS-NOVO-36845"
                   },
                   {
-                      "codigo":  "EPI-MAO-021-",
-                      "familia":  "EPI-MAO-021",
+                      "codigo":  "EPI-MAO-062-UN",
+                      "familia":  "EPI-MAO-062",
                       "nome":  "LUVA MISTA CANO LONGO (CA 40319)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8192,8 +8192,8 @@
                       "skuCns":  "CNS-NOVO-40319"
                   },
                   {
-                      "codigo":  "EPI-MAO-022-",
-                      "familia":  "EPI-MAO-022",
+                      "codigo":  "EPI-MAO-063-UN",
+                      "familia":  "EPI-MAO-063",
                       "nome":  "LUVA DE RASPA CANO LONGO (CA 40320)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8211,8 +8211,8 @@
                       "skuCns":  "CNS-NOVO-40320"
                   },
                   {
-                      "codigo":  "EPI-MAO-023-",
-                      "familia":  "EPI-MAO-023",
+                      "codigo":  "EPI-MAO-064-UN",
+                      "familia":  "EPI-MAO-064",
                       "nome":  "LUVA DE BORRACHA (CA 41918)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8230,8 +8230,8 @@
                       "skuCns":  "CNS-NOVO-41918"
                   },
                   {
-                      "codigo":  "EPI-MAO-024-",
-                      "familia":  "EPI-MAO-024",
+                      "codigo":  "EPI-MAO-065-UN",
+                      "familia":  "EPI-MAO-065",
                       "nome":  "LUVA MISTA (CA 52131)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8249,8 +8249,8 @@
                       "skuCns":  "CNS-NOVO-52131"
                   },
                   {
-                      "codigo":  "EPI-MAO-025-",
-                      "familia":  "EPI-MAO-025",
+                      "codigo":  "EPI-MAO-066-UN",
+                      "familia":  "EPI-MAO-066",
                       "nome":  "LUVA DE BORRACHA (CA 5774)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8268,7 +8268,7 @@
                       "skuCns":  "CNS-NOVO-5774"
                   },
                   {
-                      "codigo":  "EPI-OLH-020-",
+                      "codigo":  "EPI-OLH-020-UN",
                       "familia":  "EPI-OLH-020",
                       "nome":  "ÓCULOS DE PROTEÇÃO ESCURO (CA 11268)",
                       "tamanho":  null,
@@ -8287,7 +8287,7 @@
                       "skuCns":  "CNS-NOVO-11268"
                   },
                   {
-                      "codigo":  "EPI-OLH-021-",
+                      "codigo":  "EPI-OLH-021-UN",
                       "familia":  "EPI-OLH-021",
                       "nome":  "ÓCULOS DE PROTEÇÃO INCOLOR AMPLA VISÃO (CA 12572)",
                       "tamanho":  null,
@@ -8306,7 +8306,7 @@
                       "skuCns":  "CNS-NOVO-12572"
                   },
                   {
-                      "codigo":  "EPI-OLH-022-",
+                      "codigo":  "EPI-OLH-022-UN",
                       "familia":  "EPI-OLH-022",
                       "nome":  "ÓCULOS DE PROTEÇÃO INCOLOR (CA 14990)",
                       "tamanho":  null,
@@ -8325,7 +8325,7 @@
                       "skuCns":  "CNS-NOVO-14990"
                   },
                   {
-                      "codigo":  "EPI-OLH-023-",
+                      "codigo":  "EPI-OLH-023-UN",
                       "familia":  "EPI-OLH-023",
                       "nome":  "ÓCULOS DE PROTEÇÃO ESCURO (CA 20716)",
                       "tamanho":  null,
@@ -8344,7 +8344,7 @@
                       "skuCns":  "CNS-NOVO-20716"
                   },
                   {
-                      "codigo":  "EPI-OLH-024-",
+                      "codigo":  "EPI-OLH-024-UN",
                       "familia":  "EPI-OLH-024",
                       "nome":  "ÓCULOS (CA 28436)",
                       "tamanho":  null,
@@ -8363,7 +8363,7 @@
                       "skuCns":  "CNS-NOVO-28436"
                   },
                   {
-                      "codigo":  "EPI-OLH-025-",
+                      "codigo":  "EPI-OLH-025-UN",
                       "familia":  "EPI-OLH-025",
                       "nome":  "PROTETOR FACIAL DE ACRÍLICO (CA 311814)",
                       "tamanho":  null,
@@ -8382,7 +8382,7 @@
                       "skuCns":  "CNS-NOVO-311814"
                   },
                   {
-                      "codigo":  "EPI-OLH-026-",
+                      "codigo":  "EPI-OLH-026-UN",
                       "familia":  "EPI-OLH-026",
                       "nome":  "ÓCULOS INCOLOR (CA 34082)",
                       "tamanho":  null,
@@ -8401,7 +8401,7 @@
                       "skuCns":  "CNS-NOVO-34082"
                   },
                   {
-                      "codigo":  "EPI-OLH-027-",
+                      "codigo":  "EPI-OLH-027-UN",
                       "familia":  "EPI-OLH-027",
                       "nome":  "ÓCULOS DE PROTEÇÃO ESCURO AMPLA VISÃO (CA 9722)",
                       "tamanho":  null,
@@ -8420,7 +8420,7 @@
                       "skuCns":  "CNS-NOVO-9722"
                   },
                   {
-                      "codigo":  "EPI-PRN-010-",
+                      "codigo":  "EPI-PRN-010-UN",
                       "familia":  "EPI-PRN-010",
                       "nome":  "PERNEIRA (CA 39624)",
                       "tamanho":  null,
@@ -8439,7 +8439,7 @@
                       "skuCns":  "CNS-NOVO-39624"
                   },
                   {
-                      "codigo":  "EPI-PRN-011-",
+                      "codigo":  "EPI-PRN-011-UN",
                       "familia":  "EPI-PRN-011",
                       "nome":  "PERNEIRA (CA 44234)",
                       "tamanho":  null,
@@ -8458,7 +8458,7 @@
                       "skuCns":  "CNS-NOVO-44234"
                   },
                   {
-                      "codigo":  "EPI-PRN-012-",
+                      "codigo":  "EPI-PRN-012-UN",
                       "familia":  "EPI-PRN-012",
                       "nome":  "PERNEIRA (CA 44964)",
                       "tamanho":  null,
@@ -8477,7 +8477,7 @@
                       "skuCns":  "CNS-NOVO-44964"
                   },
                   {
-                      "codigo":  "EPI-PRN-013-",
+                      "codigo":  "EPI-PRN-013-UN",
                       "familia":  "EPI-PRN-013",
                       "nome":  "PERNEIRA (CA 48785)",
                       "tamanho":  null,
@@ -8496,7 +8496,7 @@
                       "skuCns":  "CNS-NOVO-48785"
                   },
                   {
-                      "codigo":  "EPI-PRN-014-",
+                      "codigo":  "EPI-PRN-014-UN",
                       "familia":  "EPI-PRN-014",
                       "nome":  "PERNEIRA (CA 52864)",
                       "tamanho":  null,
@@ -8515,8 +8515,8 @@
                       "skuCns":  "CNS-NOVO-52864"
                   },
                   {
-                      "codigo":  "EPI-RES-010-",
-                      "familia":  "EPI-RES-010",
+                      "codigo":  "EPI-RES-013-UN",
+                      "familia":  "EPI-RES-013",
                       "nome":  "PROTETOR RESPIRATÓRIO (CA 38812)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8534,8 +8534,8 @@
                       "skuCns":  "CNS-NOVO-38812"
                   },
                   {
-                      "codigo":  "EPI-RES-011-",
-                      "familia":  "EPI-RES-011",
+                      "codigo":  "EPI-RES-014-UN",
+                      "familia":  "EPI-RES-014",
                       "nome":  "PROTETOR RESPIRATÓRIO (CA 38954)",
                       "tamanho":  null,
                       "higienizado":  false,
@@ -8553,7 +8553,7 @@
                       "skuCns":  "CNS-NOVO-38954"
                   },
                   {
-                      "codigo":  "EPI-RES-012-",
+                      "codigo":  "EPI-RES-012-UN",
                       "familia":  "EPI-RES-012",
                       "nome":  "PROTETOR RESPIRATÓRIO (CA 7072)",
                       "tamanho":  null,
@@ -8572,7 +8572,7 @@
                       "skuCns":  "CNS-NOVO-7072"
                   },
                   {
-                      "codigo":  "EPI-TRO-020-",
+                      "codigo":  "EPI-TRO-020-UN",
                       "familia":  "EPI-TRO-020",
                       "nome":  "BLUSÃO DE OPERADOR (CA 46231)",
                       "tamanho":  null,
