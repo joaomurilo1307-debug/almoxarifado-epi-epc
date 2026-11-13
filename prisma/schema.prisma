@@ -134,6 +134,17 @@ model EpiProduto {
   // empresa com foto/modelo/fabricante) — usada no cadastro de itens como
   // fonte de verdade do que o item é, sem depender de marca/CA.
   descricao     String?  @db.Text
+  // Nome genérico da função do item (ex.: "Botina - Tipo B"), mais amplo que
+  // nome/descricao — usado só como coluna de apoio no cadastro, não entra em
+  // nenhum calculo.
+  funcao        String?
+  // Validade do CA (texto livre, formato dd/mm/aaaa — igual ao CA em si, não
+  // vale a pena tipar como data só pra isso).
+  validadeCa    String?
+  // Código do fornecedor/fabricante pro item (ex. código interno da MRN) —
+  // só referência, não é o `codigo` interno da Consominas.
+  codigoFornecedor String?
+  observacao    String?  @db.Text
   // Código interno sequencial (ex.: "EPI-PES-001") — identifica o TIPO do
   // item (nome+tipo), não a linha/tamanho: todos os tamanhos de uma mesma
   // "BOTA DE SEGURANÇA MARLUVAS" compartilham o mesmo código. Gerado uma vez
