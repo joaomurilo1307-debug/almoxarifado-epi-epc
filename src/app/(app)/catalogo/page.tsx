@@ -21,6 +21,25 @@ type Produto = {
   ativo: boolean;
 };
 
+const COR_CATEGORIA: Record<string, string> = {
+  "CABEÇA": "bg-blue-50 text-blue-700 ring-blue-200",
+  "OLHOS/FACE": "bg-purple-50 text-purple-700 ring-purple-200",
+  "AUDIÇÃO": "bg-pink-50 text-pink-700 ring-pink-200",
+  "RESPIRATÓRIO": "bg-cyan-50 text-cyan-700 ring-cyan-200",
+  TRONCO: "bg-amber-50 text-amber-700 ring-amber-200",
+  "BRAÇOS": "bg-lime-50 text-lime-700 ring-lime-200",
+  "MÃOS": "bg-orange-50 text-orange-700 ring-orange-200",
+  PERNAS: "bg-indigo-50 text-indigo-700 ring-indigo-200",
+  "PÉS": "bg-red-50 text-red-700 ring-red-200",
+  ALTURA: "bg-violet-50 text-violet-700 ring-violet-200",
+  CAMISA: "bg-teal-50 text-teal-700 ring-teal-200",
+  "CALÇA": "bg-sky-50 text-sky-700 ring-sky-200",
+  KIT: "bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200",
+};
+function corCategoria(categoria: string | null): string {
+  return (categoria && COR_CATEGORIA[categoria]) || "bg-gray-100 text-gray-500 ring-gray-200";
+}
+
 // Código do modelo (TIPO-CAT-NNN) a partir do código de um tamanho (TIPO-CAT-NNN-TAMANHO[-H]).
 function familiaDoCodigo(codigo: string | null): string | null {
   if (!codigo) return null;
@@ -537,7 +556,7 @@ function LinhaProduto({
         {indentado ? null : (
           <>
             <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{TIPO_LABEL[p.tipo]}</span>
-            {p.categoria && <span className="ml-1 text-xs text-gray-400">{p.categoria}</span>}
+            {p.categoria && <span className={`ml-1 rounded px-1.5 py-0.5 text-[10px] font-semibold ring-1 ${corCategoria(p.categoria)}`}>{p.categoria}</span>}
           </>
         )}
       </td>
