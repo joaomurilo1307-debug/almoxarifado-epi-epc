@@ -408,9 +408,6 @@ function ProdutosTab() {
               <th className="px-3 py-2">SKU CNS</th>
               <th className="px-3 py-2">Fabricante</th>
               <th className="px-3 py-2">Tamanho</th>
-              <th className="px-3 py-2">Unid.</th>
-              <th className="px-3 py-2 text-right">Valor unitário</th>
-              <th className="px-3 py-2 text-center">% Conting.</th>
               <th className="px-3 py-2" />
             </tr>
           </thead>
@@ -576,66 +573,6 @@ function LinhaProduto({
             ♻️ Higienizada
           </span>
         )}
-      </td>
-      <td className="px-4 py-2.5 text-gray-500">{p.unidade}</td>
-      <td className="px-4 py-2.5 text-right">
-        {ed.editando === p.id ? (
-          <input
-            autoFocus
-            value={ed.rascunho}
-            onChange={(e) => ed.setRascunho(e.target.value)}
-            onBlur={() => ed.salvarValor(p.id)}
-            onKeyDown={(e) => e.key === "Enter" && ed.salvarValor(p.id)}
-            placeholder="0,00"
-            className="w-24 rounded border border-brand px-1 py-0.5 text-right text-sm"
-          />
-        ) : (
-          <button
-            onClick={() => {
-              ed.setEditando(p.id);
-              ed.setRascunho(p.valorUnitario !== null ? String(p.valorUnitario) : "");
-            }}
-            className="rounded px-1 text-gray-500 underline decoration-dotted hover:text-brand-dark"
-          >
-            {p.valorUnitario !== null ? fmtMoney(p.valorUnitario) : "definir"}
-          </button>
-        )}
-      </td>
-      <td className="px-4 py-2.5">
-        <div className="flex items-center justify-center gap-1">
-          <button onClick={() => ed.ajustarPct(p, -1)} className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 hover:bg-gray-200" aria-label="Diminuir">
-            −
-          </button>
-          {ed.editandoPct === p.id ? (
-            <input
-              autoFocus
-              value={ed.rascunhoPct}
-              onChange={(e) => ed.setRascunhoPct(e.target.value)}
-              onBlur={() => {
-                const v = parseFloat(ed.rascunhoPct.replace(",", "."));
-                ed.salvarPct(p.id, Number.isNaN(v) ? null : v);
-              }}
-              onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()}
-              className="w-12 rounded border border-brand px-1 py-0.5 text-center text-xs font-semibold"
-            />
-          ) : (
-            <button
-              onClick={() => {
-                ed.setEditandoPct(p.id);
-                ed.setRascunhoPct(p.percentualContingencia !== null ? String(Math.round(p.percentualContingencia * 100)) : "");
-              }}
-              title={p.percentualContingencia === null ? "Usando o % padrão do contrato — clique pra definir um específico" : "Clique pra digitar"}
-              className={`w-14 rounded px-1 py-0.5 text-center text-xs font-semibold ${
-                p.percentualContingencia !== null ? "bg-brand-light text-brand-dark" : "text-gray-400 underline decoration-dotted"
-              }`}
-            >
-              {p.percentualContingencia !== null ? `${Math.round(p.percentualContingencia * 100)}%` : "padrão"}
-            </button>
-          )}
-          <button onClick={() => ed.ajustarPct(p, 1)} className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 hover:bg-gray-200" aria-label="Aumentar">
-            +
-          </button>
-        </div>
       </td>
       <td className="px-4 py-2.5 text-right">
         <button onClick={() => ed.excluir(p.id)} className="text-xs text-gray-400 hover:text-rose-600">
