@@ -1,5 +1,5 @@
 {
-    "versao":  "2026-11-13-v15-fix-tipo-fardamento",
+    "versao":  "2026-11-15-v16-capa-de-chuva",
     "geradoEm":  "13/11/2026",
     "itens":  [
                   {
@@ -8931,6 +8931,63 @@
                       "observacao":  "MESMO ITEM JÁ CADASTRADO EM EPI-TRO-011 (G/M/XXG) -- NA SEDE CONTADO COMO \u0027COLETE REFLETIVO LARANJA\u0027 SEM TAMANHO DISCRIMINADO (6 UN.).",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
                       "skuCns":  "COLETE LARANJA"
+                  },
+                  {
+                      "codigo":  "EPI-TRO-021-UN",
+                      "familia":  "EPI-TRO-021",
+                      "nome":  "CAPA DE CHUVA AZUL CLARO",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "TRONCO",
+                      "ca":  null,
+                      "fabricante":  null,
+                      "unidade":  "UNID",
+                      "funcao":  "CAPA DE CHUVA",
+                      "descricao":  "CAPA DE CHUVA AZUL CLARO",
+                      "validadeCa":  null,
+                      "codigoFornecedor":  null,
+                      "observacao":  "ITEM NOVO -- INFERIDO A PARTIR DE LINHAS ABREVIADAS \u0027CAPA. [COR] [MSA/3M] USADO...\u0027 ACHADAS COMO COMPLEMENTO DE LINHAS DE COLETE E LUVA NO ESTOQUE ECC (NAO DE CAPACETE). TRATADO COMO VARIANTE DE COR DA \u0027CAPA DE CHUVA\u0027 JA CADASTRADA (EPI-TRO-013, AMARELA), MESMO PADRAO: SEM CA, SEM FABRICANTE. O CA/MARCA (498/29638) NAS LINHAS DE ORIGEM PARECE SER DA LINHA-BASE (CAPACETE) ONDE FOI ANOTADO, NAO DESTE ITEM. ALGUMAS LINHAS DE ORIGEM MARCAVAM UNIDADE \u0027PAR(ES)\u0027 EM VEZ DE \u0027UNID\u0027 (PROVAVEL ARRASTE DO CAMPO DA LINHA DE LUVA AO LADO) -- CONFIRMAR COM O RESPONSAVEL DO ESTOQUE SE ESTA INTERPRETACAO ESTA CORRETA.",
+                      "status":  "A CONFIRMAR (INFERIDO DA CONFERENCIA DE ESTOQUE, 15/11/2026)",
+                      "skuCns":  "CAPA DE CHUVA AZUL CLARO"
+                  },
+                  {
+                      "codigo":  "EPI-TRO-022-UN",
+                      "familia":  "EPI-TRO-022",
+                      "nome":  "CAPA DE CHUVA CINZA",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "TRONCO",
+                      "ca":  null,
+                      "fabricante":  null,
+                      "unidade":  "UNID",
+                      "funcao":  "CAPA DE CHUVA",
+                      "descricao":  "CAPA DE CHUVA CINZA",
+                      "validadeCa":  null,
+                      "codigoFornecedor":  null,
+                      "observacao":  "ITEM NOVO -- INFERIDO A PARTIR DE LINHAS ABREVIADAS \u0027CAPA. [COR] [MSA/3M] USADO...\u0027 ACHADAS COMO COMPLEMENTO DE LINHAS DE COLETE E LUVA NO ESTOQUE ECC (NAO DE CAPACETE). TRATADO COMO VARIANTE DE COR DA \u0027CAPA DE CHUVA\u0027 JA CADASTRADA (EPI-TRO-013, AMARELA), MESMO PADRAO: SEM CA, SEM FABRICANTE. O CA/MARCA (498/29638) NAS LINHAS DE ORIGEM PARECE SER DA LINHA-BASE (CAPACETE) ONDE FOI ANOTADO, NAO DESTE ITEM. ALGUMAS LINHAS DE ORIGEM MARCAVAM UNIDADE \u0027PAR(ES)\u0027 EM VEZ DE \u0027UNID\u0027 (PROVAVEL ARRASTE DO CAMPO DA LINHA DE LUVA AO LADO) -- CONFIRMAR COM O RESPONSAVEL DO ESTOQUE SE ESTA INTERPRETACAO ESTA CORRETA.",
+                      "status":  "A CONFIRMAR (INFERIDO DA CONFERENCIA DE ESTOQUE, 15/11/2026)",
+                      "skuCns":  "CAPA DE CHUVA CINZA"
+                  },
+                  {
+                      "codigo":  "EPI-TRO-023-UN",
+                      "familia":  "EPI-TRO-023",
+                      "nome":  "CAPA DE CHUVA LARANJA",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "TRONCO",
+                      "ca":  null,
+                      "fabricante":  null,
+                      "unidade":  "UNID",
+                      "funcao":  "CAPA DE CHUVA",
+                      "descricao":  "CAPA DE CHUVA LARANJA",
+                      "validadeCa":  null,
+                      "codigoFornecedor":  null,
+                      "observacao":  "ITEM NOVO -- INFERIDO A PARTIR DE LINHAS ABREVIADAS \u0027CAPA. [COR] [MSA/3M] USADO...\u0027 ACHADAS COMO COMPLEMENTO DE LINHAS DE COLETE E LUVA NO ESTOQUE ECC (NAO DE CAPACETE). TRATADO COMO VARIANTE DE COR DA \u0027CAPA DE CHUVA\u0027 JA CADASTRADA (EPI-TRO-013, AMARELA), MESMO PADRAO: SEM CA, SEM FABRICANTE. O CA/MARCA (498/29638) NAS LINHAS DE ORIGEM PARECE SER DA LINHA-BASE (CAPACETE) ONDE FOI ANOTADO, NAO DESTE ITEM. ALGUMAS LINHAS DE ORIGEM MARCAVAM UNIDADE \u0027PAR(ES)\u0027 EM VEZ DE \u0027UNID\u0027 (PROVAVEL ARRASTE DO CAMPO DA LINHA DE LUVA AO LADO) -- CONFIRMAR COM O RESPONSAVEL DO ESTOQUE SE ESTA INTERPRETACAO ESTA CORRETA.",
+                      "status":  "A CONFIRMAR (INFERIDO DA CONFERENCIA DE ESTOQUE, 15/11/2026)",
+                      "skuCns":  "CAPA DE CHUVA LARANJA"
                   }
               ]
 }
