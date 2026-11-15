@@ -1,5 +1,5 @@
 {
-    "versao":  "2026-11-15-v16-capa-de-chuva",
+    "versao":  "2026-11-15-v19-skucns-funcao",
     "geradoEm":  "13/11/2026",
     "itens":  [
                   {
@@ -19,7 +19,7 @@
                       "codigoFornecedor":  "KL09274",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-CAB-001"
+                      "skuCns":  "CAPACETE BRANCO"
                   },
                   {
                       "codigo":  "EPI-CAB-002-UN",
@@ -38,7 +38,7 @@
                       "codigoFornecedor":  "KL12239",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-CAB-001"
+                      "skuCns":  "CAPACETE AZUL"
                   },
                   {
                       "codigo":  "EPI-CAB-003-UN",
@@ -304,7 +304,7 @@
                       "codigoFornecedor":  "98045/98046",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-OLH-004"
+                      "skuCns":  "ÓCULOS ESCURO COM BANDA ELÁSTICA"
                   },
                   {
                       "codigo":  "EPI-OLH-012-UN",
@@ -589,7 +589,7 @@
                       "codigoFornecedor":  "-",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-AUD-002"
+                      "skuCns":  "PROTETOR AUDITIVO"
                   },
                   {
                       "codigo":  "EPI-RES-001-UN",
@@ -665,7 +665,7 @@
                       "codigoFornecedor":  "85244/KL227373",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-RES-002"
+                      "skuCns":  "PROTETOR RESPIRATÓRIO"
                   },
                   {
                       "codigo":  "EPI-RES-005-UN",
@@ -684,7 +684,7 @@
                       "codigoFornecedor":  "KL00476/331962",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-RES-002"
+                      "skuCns":  "PROTETOR RESPIRATÓRIO"
                   },
                   {
                       "codigo":  "EPI-RES-006-UN",
@@ -874,7 +874,7 @@
                       "codigoFornecedor":  "14401709",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-TRO-003"
+                      "skuCns":  "AVENTAL DE PVC"
                   },
                   {
                       "codigo":  "EPI-MAO-001-UN",
@@ -912,7 +912,7 @@
                       "codigoFornecedor":  "78380/78382/78383",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-MAO-007"
+                      "skuCns":  "LUVA ANTICORTE"
                   },
                   {
                       "codigo":  "EPI-MAO-003-UN",
@@ -969,7 +969,7 @@
                       "codigoFornecedor":  "KL232126/48491",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-MAO-008"
+                      "skuCns":  "LUVA ANTICORTE"
                   },
                   {
                       "codigo":  "EPI-MAO-006-UN",
@@ -1064,7 +1064,7 @@
                       "codigoFornecedor":  "24374",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-MAO-011"
+                      "skuCns":  "LUVA DE VAQUETA"
                   },
                   {
                       "codigo":  "EPI-MAO-011-UN",
@@ -1292,7 +1292,7 @@
                       "codigoFornecedor":  "KL243069/24424",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-MAO-011"
+                      "skuCns":  "LUVA DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "EPI-MAO-023-UN",
@@ -1349,7 +1349,7 @@
                       "codigoFornecedor":  "83961",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-MAO-002"
+                      "skuCns":  "LUVA DE LÁTEX"
                   },
                   {
                       "codigo":  "EPI-MAO-026-UN",
@@ -1444,7 +1444,7 @@
                       "codigoFornecedor":  "69310",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-BRC-001"
+                      "skuCns":  "MANGOTE"
                   },
                   {
                       "codigo":  "EPI-BRA-003-UN",
@@ -1501,7 +1501,7 @@
                       "codigoFornecedor":  "12360/KL08508/KL08514/KL08515",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-MAO-003"
+                      "skuCns":  "LUVA DE LÁTEX"
                   },
                   {
                       "codigo":  "EPI-MAO-030-UN",
@@ -1596,7 +1596,7 @@
                       "codigoFornecedor":  "85272/85273",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-MAO-006"
+                      "skuCns":  "LUVA NITRILICA"
                   },
                   {
                       "codigo":  "EPI-PES-001-34",
@@ -2242,7 +2242,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-35",
@@ -2261,7 +2261,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-36",
@@ -2280,7 +2280,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-37",
@@ -2299,7 +2299,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-38",
@@ -2318,7 +2318,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-39",
@@ -2337,7 +2337,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-40",
@@ -2356,7 +2356,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-41",
@@ -2375,7 +2375,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-42",
@@ -2394,7 +2394,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-43",
@@ -2413,7 +2413,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-004-44",
@@ -2432,7 +2432,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-PES-005-34",
@@ -4123,7 +4123,7 @@
                       "codigoFornecedor":  "KL11607",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PER-001"
+                      "skuCns":  "PERNEIRA COM PROTEÇÃO DE JOELHO"
                   },
                   {
                       "codigo":  "EPI-PRN-002-UN",
@@ -4142,7 +4142,7 @@
                       "codigoFornecedor":  "67658-67661",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PER-002"
+                      "skuCns":  "PERNEIRA DE BIDIM"
                   },
                   {
                       "codigo":  "EPI-PRN-003-UN",
@@ -4408,7 +4408,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-35",
@@ -4427,7 +4427,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-36",
@@ -4446,7 +4446,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-37",
@@ -4465,7 +4465,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-38",
@@ -4484,7 +4484,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-39",
@@ -4503,7 +4503,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-40",
@@ -4522,7 +4522,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-41",
@@ -4541,7 +4541,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-42",
@@ -4560,7 +4560,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-43",
@@ -4579,7 +4579,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-014-44",
@@ -4598,7 +4598,7 @@
                       "codigoFornecedor":  "34051-34058",
                       "observacao":  "PREFERENCIAL",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
                   },
                   {
                       "codigo":  "EPI-PES-015-34",
@@ -5548,7 +5548,7 @@
                       "codigoFornecedor":  "33250/33256/33265/33261/33266",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAM-MOTO"
+                      "skuCns":  "BLUSÃO DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAM-001-G",
@@ -5567,7 +5567,7 @@
                       "codigoFornecedor":  "33250/33256/33265/33261/33266",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAM-MOTO"
+                      "skuCns":  "BLUSÃO DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAM-001-GG",
@@ -5586,7 +5586,7 @@
                       "codigoFornecedor":  "33250/33256/33265/33261/33266",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAM-MOTO"
+                      "skuCns":  "BLUSÃO DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAM-001-M",
@@ -5605,7 +5605,7 @@
                       "codigoFornecedor":  "33250/33256/33265/33261/33266",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAM-MOTO"
+                      "skuCns":  "BLUSÃO DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAM-001-P",
@@ -5624,7 +5624,7 @@
                       "codigoFornecedor":  "33250/33256/33265/33261/33266",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAM-MOTO"
+                      "skuCns":  "BLUSÃO DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAL-001-EXG",
@@ -5643,7 +5643,7 @@
                       "codigoFornecedor":  "33255/33251/33252/33248/33249",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAL-MOTO"
+                      "skuCns":  "CALÇA DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAL-001-G",
@@ -5662,7 +5662,7 @@
                       "codigoFornecedor":  "33255/33251/33252/33248/33249",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAL-MOTO"
+                      "skuCns":  "CALÇA DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAL-001-GG",
@@ -5681,7 +5681,7 @@
                       "codigoFornecedor":  "33255/33251/33252/33248/33249",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAL-MOTO"
+                      "skuCns":  "CALÇA DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAL-001-M",
@@ -5700,7 +5700,7 @@
                       "codigoFornecedor":  "33255/33251/33252/33248/33249",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAL-MOTO"
+                      "skuCns":  "CALÇA DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAL-001-P",
@@ -5719,7 +5719,7 @@
                       "codigoFornecedor":  "33255/33251/33252/33248/33249",
                       "observacao":  "PEÇA SEPARADA DO CONJUNTO ORIGINAL (ANTES VINHA JUNTO COM A OUTRA PEÇA NA MESMA LINHA)",
                       "status":  "CONFIRMADO (LIVRO DE HOMOLOGAÇÃO EPI, CA/FABRICANTE VERIFICADOS)",
-                      "skuCns":  "CNS-FRD-CAL-MOTO"
+                      "skuCns":  "CALÇA DE OPERADOR DE MOTOSSERRA"
                   },
                   {
                       "codigo":  "FRD-CAM-002-EXG",
@@ -7657,7 +7657,7 @@
                       "codigoFornecedor":  null,
                       "observacao":  "ITEM NOVO — ACHADO NO ESTOQUE ECC E SEDE (LÁ \u0027REFLETIVO LARANJA\u0027, MESMO ITEM)",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
-                      "skuCns":  "COLETE LARANJA"
+                      "skuCns":  "COLETE REFLETIVO"
                   },
                   {
                       "codigo":  "EPI-TRO-011-M",
@@ -7676,7 +7676,7 @@
                       "codigoFornecedor":  null,
                       "observacao":  "ITEM NOVO — ACHADO NO ESTOQUE ECC E SEDE (LÁ \u0027REFLETIVO LARANJA\u0027, MESMO ITEM)",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
-                      "skuCns":  "COLETE LARANJA"
+                      "skuCns":  "COLETE REFLETIVO"
                   },
                   {
                       "codigo":  "EPI-TRO-011-XXG",
@@ -7695,7 +7695,7 @@
                       "codigoFornecedor":  null,
                       "observacao":  "ITEM NOVO — ACHADO NO ESTOQUE ECC E SEDE (LÁ \u0027REFLETIVO LARANJA\u0027, MESMO ITEM)",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
-                      "skuCns":  "COLETE LARANJA"
+                      "skuCns":  "COLETE REFLETIVO"
                   },
                   {
                       "codigo":  "EPI-TRO-012-G",
@@ -7885,7 +7885,7 @@
                       "codigoFornecedor":  null,
                       "observacao":  "CA REAL DO ESTOQUE, SEM MARCA/FABRICANTE CONFIRMADO ONDE NÃO ANOTADO — SKU CNS PRÓPRIO (NÃO ACHEI GRUPO CLARO COM OS JÁ EXISTENTES)",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
-                      "skuCns":  "CNS-NOVO-39760"
+                      "skuCns":  "TOUCA ÁRABE"
                   },
                   {
                       "codigo":  "EPI-CAB-021-UN",
@@ -8075,7 +8075,7 @@
                       "codigoFornecedor":  null,
                       "observacao":  "CA REAL DO ESTOQUE, SEM MARCA/FABRICANTE CONFIRMADO ONDE NÃO ANOTADO — SKU CNS PRÓPRIO (NÃO ACHEI GRUPO CLARO COM OS JÁ EXISTENTES)",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
-                      "skuCns":  "CNS-NOVO-30916"
+                      "skuCns":  "LUVA PU"
                   },
                   {
                       "codigo":  "EPI-MAO-057-UN",
@@ -8151,7 +8151,7 @@
                       "codigoFornecedor":  null,
                       "observacao":  "CA REAL DO ESTOQUE, SEM MARCA/FABRICANTE CONFIRMADO ONDE NÃO ANOTADO — SKU CNS PRÓPRIO (NÃO ACHEI GRUPO CLARO COM OS JÁ EXISTENTES)",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
-                      "skuCns":  "CNS-NOVO-36365"
+                      "skuCns":  "LUVA PU"
                   },
                   {
                       "codigo":  "EPI-MAO-061-UN",
@@ -8265,12 +8265,12 @@
                       "codigoFornecedor":  null,
                       "observacao":  "CA REAL DO ESTOQUE, SEM MARCA/FABRICANTE CONFIRMADO ONDE NÃO ANOTADO — SKU CNS PRÓPRIO (NÃO ACHEI GRUPO CLARO COM OS JÁ EXISTENTES)",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
-                      "skuCns":  "CNS-NOVO-5774"
+                      "skuCns":  "LUVA ANTI-IMPACTO"
                   },
                   {
                       "codigo":  "EPI-OLH-020-UN",
                       "familia":  "EPI-OLH-020",
-                      "nome":  "ÓCULOS DE PROTEÇÃO ESCURO (CA 11268)",
+                      "nome":  "ÓCULOS DE PROTEÇÃO (CA 11268)",
                       "tamanho":  null,
                       "higienizado":  false,
                       "tipo":  "EPI",
@@ -8279,7 +8279,7 @@
                       "fabricante":  null,
                       "unidade":  "UNID",
                       "funcao":  "ÓCULOS",
-                      "descricao":  "ÓCULOS DE PROTEÇÃO ESCURO — CA REAL, NÃO ESTÁ NO LIVRO DE HOMOLOGAÇÃO MRN, ACHADO NO ESTOQUE ECC",
+                      "descricao":  "ÓCULOS DE PROTEÇÃO, DISPONÍVEL EM LENTE ESCURA OU INCOLOR",
                       "validadeCa":  null,
                       "codigoFornecedor":  null,
                       "observacao":  "CA REAL DO ESTOQUE, SEM MARCA/FABRICANTE CONFIRMADO ONDE NÃO ANOTADO — SKU CNS PRÓPRIO (NÃO ACHEI GRUPO CLARO COM OS JÁ EXISTENTES)",
@@ -8303,7 +8303,7 @@
                       "codigoFornecedor":  null,
                       "observacao":  "CA REAL DO ESTOQUE, SEM MARCA/FABRICANTE CONFIRMADO ONDE NÃO ANOTADO — SKU CNS PRÓPRIO (NÃO ACHEI GRUPO CLARO COM OS JÁ EXISTENTES)",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
-                      "skuCns":  "CNS-NOVO-12572"
+                      "skuCns":  "ÓCULOS DE PROTEÇÃO ESCURO"
                   },
                   {
                       "codigo":  "EPI-OLH-022-UN",
@@ -8854,7 +8854,7 @@
                       "codigoFornecedor":  "109951-KL12675",
                       "observacao":  "2ª OPÇÃO -- TAMANHO 45 INCLUÍDO POR CONSTAR NO ESTOQUE DA SEDE (MESMO CA/FABRICANTE; BOOK DE HOMOLOGAÇÃO LISTAVA ATÉ O TAMANHO 44)",
                       "status":  "INCLUÍDO POR ESTOQUE (MESMA CA/FABRICANTE DO BOOK; TAMANHO 45 NÃO CONSTAVA NAS PÁGINAS ORIGINAIS)",
-                      "skuCns":  "CNS-PES-TIPOB"
+                      "skuCns":  "BOTA"
                   },
                   {
                       "codigo":  "EPI-CAB-024-UN",
@@ -8930,7 +8930,7 @@
                       "codigoFornecedor":  null,
                       "observacao":  "MESMO ITEM JÁ CADASTRADO EM EPI-TRO-011 (G/M/XXG) -- NA SEDE CONTADO COMO \u0027COLETE REFLETIVO LARANJA\u0027 SEM TAMANHO DISCRIMINADO (6 UN.).",
                       "status":  "CONFIRMADO (CONFERÊNCIA ESTOQUE ECC/SEDE, 13/11/2026)",
-                      "skuCns":  "COLETE LARANJA"
+                      "skuCns":  "COLETE REFLETIVO"
                   },
                   {
                       "codigo":  "EPI-TRO-021-UN",
@@ -8988,6 +8988,177 @@
                       "observacao":  "ITEM NOVO -- INFERIDO A PARTIR DE LINHAS ABREVIADAS \u0027CAPA. [COR] [MSA/3M] USADO...\u0027 ACHADAS COMO COMPLEMENTO DE LINHAS DE COLETE E LUVA NO ESTOQUE ECC (NAO DE CAPACETE). TRATADO COMO VARIANTE DE COR DA \u0027CAPA DE CHUVA\u0027 JA CADASTRADA (EPI-TRO-013, AMARELA), MESMO PADRAO: SEM CA, SEM FABRICANTE. O CA/MARCA (498/29638) NAS LINHAS DE ORIGEM PARECE SER DA LINHA-BASE (CAPACETE) ONDE FOI ANOTADO, NAO DESTE ITEM. ALGUMAS LINHAS DE ORIGEM MARCAVAM UNIDADE \u0027PAR(ES)\u0027 EM VEZ DE \u0027UNID\u0027 (PROVAVEL ARRASTE DO CAMPO DA LINHA DE LUVA AO LADO) -- CONFIRMAR COM O RESPONSAVEL DO ESTOQUE SE ESTA INTERPRETACAO ESTA CORRETA.",
                       "status":  "A CONFIRMAR (INFERIDO DA CONFERENCIA DE ESTOQUE, 15/11/2026)",
                       "skuCns":  "CAPA DE CHUVA LARANJA"
+                  },
+                  {
+                      "codigo":  "EPI-CAB-027-UN",
+                      "familia":  "EPI-CAB-027",
+                      "nome":  "CAPACETE DE SEGURANÇA TIPO I, ABA FRONTAL, CLASSE E — LIBUS (CA 36099)",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "CABEÇA",
+                      "ca":  "36099",
+                      "fabricante":  "LIBUS",
+                      "unidade":  "UNID",
+                      "funcao":  "CAPACETE DE SEGURANÇA",
+                      "descricao":  "CAPACETE DE SEGURANÇA TIPO I, ABA FRONTAL, CLASSE E (ELÉTRICO), LINHA GENESIS",
+                      "validadeCa":  "15/08/2028",
+                      "codigoFornecedor":  null,
+                      "observacao":  "DISPONÍVEL EM VÁRIAS CORES (BRANCO, LARANJA, ETC) -- CONFIRMADO VIA CONSULTA CAEPI OFICIAL",
+                      "status":  "CONFIRMADO (CONSULTA CAEPI OFICIAL, 15/11/2026)",
+                      "skuCns":  "CAPACETE LARANJA"
+                  },
+                  {
+                      "codigo":  "EPI-CAB-028-UN",
+                      "familia":  "EPI-CAB-028",
+                      "nome":  "CAPACETE DE SEGURANÇA CLASSE C — MSA V-GARD (CA 8304)",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "CABEÇA",
+                      "ca":  "8304",
+                      "fabricante":  "MSA",
+                      "unidade":  "UNID",
+                      "funcao":  "CAPACETE DE SEGURANÇA",
+                      "descricao":  "CAPACETE DE SEGURANÇA TIPO I, CLASSE C, ABA FRONTAL, LINHA V-GARD",
+                      "validadeCa":  "09/01/2028",
+                      "codigoFornecedor":  null,
+                      "observacao":  "DISPONÍVEL EM VÁRIAS CORES (BRANCO, ETC) -- CONFIRMADO VIA CONSULTA CAEPI OFICIAL",
+                      "status":  "CONFIRMADO (CONSULTA CAEPI OFICIAL, 15/11/2026)",
+                      "skuCns":  "CAPACETE BRANCO"
+                  },
+                  {
+                      "codigo":  "EPI-AUD-016-UN",
+                      "familia":  "EPI-AUD-016",
+                      "nome":  "PROTETOR AUDITIVO TIPO CONCHA P/ ACOPLAR AO CAPACETE — LIBUS (CA 37132)",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "AUDIÇÃO",
+                      "ca":  "37132",
+                      "fabricante":  "LIBUS",
+                      "unidade":  "UNID",
+                      "funcao":  "PROTETOR AUDITIVO",
+                      "descricao":  "PROTETOR AUDITIVO CIRCUM-AURICULAR TIPO CONCHA, HASTE MÓVEL, PARA USO ACOPLADO AO CAPACETE",
+                      "validadeCa":  "10/10/2030",
+                      "codigoFornecedor":  null,
+                      "observacao":  "CONFIRMADO VIA CONSULTA CAEPI OFICIAL",
+                      "status":  "CONFIRMADO (CONSULTA CAEPI OFICIAL, 15/11/2026)",
+                      "skuCns":  "PROTETOR AUDITIVO"
+                  },
+                  {
+                      "codigo":  "EPI-PES-028-UN",
+                      "familia":  "EPI-PES-028",
+                      "nome":  "BOTINA DE SEGURANÇA TIPO B, PROTEÇÃO DE METATARSO — MARLUVAS (CA 46301)",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "PÉS",
+                      "ca":  "46301",
+                      "fabricante":  "MARLUVAS",
+                      "unidade":  "UNID",
+                      "funcao":  "BOTINA - TIPO B",
+                      "descricao":  "CALÇADO DE SEGURANÇA PROFISSIONAL TIPO BOTINA, FECHAMENTO EM ELÁSTICO, COM PROTETOR DE METATARSO",
+                      "validadeCa":  "12/07/2030",
+                      "codigoFornecedor":  null,
+                      "observacao":  "CONFIRMADO VIA CONSULTA CAEPI OFICIAL",
+                      "status":  "CONFIRMADO (CONSULTA CAEPI OFICIAL, 15/11/2026)",
+                      "skuCns":  "BOTA COM PROTEÇÃO DE METATARSO"
+                  },
+                  {
+                      "codigo":  "EPI-OLH-028-UN",
+                      "familia":  "EPI-OLH-028",
+                      "nome":  "ÓCULOS DE PROTEÇÃO — KALIPSO (CA 35156)",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "OLHOS/FACE",
+                      "ca":  "35156",
+                      "fabricante":  "KALIPSO",
+                      "unidade":  "UNID",
+                      "funcao":  "ÓCULOS DE PROTEÇÃO",
+                      "descricao":  "ÓCULOS DE SEGURANÇA, ARMAÇÃO E VISOR EM POLICARBONATO, DISPONÍVEL EM INCOLOR E OUTRAS CORES",
+                      "validadeCa":  "04/03/2029",
+                      "codigoFornecedor":  null,
+                      "observacao":  "CONFIRMADO VIA CONSULTA CAEPI OFICIAL",
+                      "status":  "CONFIRMADO (CONSULTA CAEPI OFICIAL, 15/11/2026)",
+                      "skuCns":  "ÓCULOS DE PROTEÇÃO INCOLOR"
+                  },
+                  {
+                      "codigo":  "EPI-OLH-029-UN",
+                      "familia":  "EPI-OLH-029",
+                      "nome":  "ÓCULOS DE PROTEÇÃO — SUPER SAFETY (CA 26126)",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "OLHOS/FACE",
+                      "ca":  "26126",
+                      "fabricante":  "SUPER SAFETY",
+                      "unidade":  "UNID",
+                      "funcao":  "ÓCULOS DE PROTEÇÃO",
+                      "descricao":  "ÓCULOS DE SEGURANÇA, ARMAÇÃO E VISOR EM POLICARBONATO, DISPONÍVEL EM INCOLOR, ESCURO E OUTRAS CORES",
+                      "validadeCa":  "01/06/2030",
+                      "codigoFornecedor":  null,
+                      "observacao":  "CONFIRMADO VIA CONSULTA CAEPI OFICIAL",
+                      "status":  "CONFIRMADO (CONSULTA CAEPI OFICIAL, 15/11/2026)",
+                      "skuCns":  "ÓCULOS DE PROTEÇÃO INCOLOR"
+                  },
+                  {
+                      "codigo":  "EPI-MAO-067-UN",
+                      "familia":  "EPI-MAO-067",
+                      "nome":  "LUVA DE VAQUETA — THECOM (CA 8820)",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "MÃOS",
+                      "ca":  "8820",
+                      "fabricante":  "THECOM",
+                      "unidade":  "UNID",
+                      "funcao":  "LUVA DE VAQUETA",
+                      "descricao":  "LUVA DE SEGURANÇA EM VAQUETA, REFORÇO NO DEDO POLEGAR, ANELAR E MÉDIO, ELÁSTICO NO DORSO",
+                      "validadeCa":  "02/08/2028",
+                      "codigoFornecedor":  null,
+                      "observacao":  "CONFIRMADO VIA CONSULTA CAEPI OFICIAL",
+                      "status":  "CONFIRMADO (CONSULTA CAEPI OFICIAL, 15/11/2026)",
+                      "skuCns":  "LUVA DE VAQUETA"
+                  },
+                  {
+                      "codigo":  "EPI-MAO-068-UN",
+                      "familia":  "EPI-MAO-068",
+                      "nome":  "LUVA CONTRA AGENTES TÉRMICOS E QUÍMICOS — VCH (CA 40174)",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "MÃOS",
+                      "ca":  "40174",
+                      "fabricante":  "VCH",
+                      "unidade":  "UNID",
+                      "funcao":  "LUVA TÉRMICA/QUÍMICA",
+                      "descricao":  "LUVA DE SEGURANÇA EM FIBRAS NATURAIS INTERLOCK, REVESTIDA EM LÁTEX CORRUGADO, PROTEÇÃO MECÂNICA/QUÍMICA/TÉRMICA",
+                      "validadeCa":  "29/03/2031",
+                      "codigoFornecedor":  null,
+                      "observacao":  "CONFIRMADO VIA CONSULTA CAEPI OFICIAL",
+                      "status":  "CONFIRMADO (CONSULTA CAEPI OFICIAL, 15/11/2026)",
+                      "skuCns":  "LUVA ANTI-TÉRMICA"
+                  },
+                  {
+                      "codigo":  "EPI-MAO-069-UN",
+                      "familia":  "EPI-MAO-069",
+                      "nome":  "LUVA DE RASPA CANO LONGO — MARTINS \u0026 SA (CA 6314)",
+                      "tamanho":  null,
+                      "higienizado":  false,
+                      "tipo":  "EPI",
+                      "categoria":  "MÃOS",
+                      "ca":  "6314",
+                      "fabricante":  "MARTINS \u0026 SA",
+                      "unidade":  "UNID",
+                      "funcao":  "LUVA DE RASPA CANO LONGO",
+                      "descricao":  "LUVA DE SEGURANÇA EM RASPA, PUNHO EM RASPA, DISPONÍVEL EM COMPRIMENTOS DE PUNHO 07 A 40CM",
+                      "validadeCa":  "02/01/2031",
+                      "codigoFornecedor":  null,
+                      "observacao":  "AINDA NÃO ESTÁ NO BOOK DE HOMOLOGAÇÃO MRN (OBSERVAÇÃO DA PRÓPRIA FONTE) -- CA CONFIRMADO VÁLIDO VIA CONSULTA CAEPI OFICIAL",
+                      "status":  "CONFIRMADO (CONSULTA CAEPI OFICIAL, 15/11/2026)",
+                      "skuCns":  "LUVA DE RASPA CANO LONGO"
                   }
               ]
 }
