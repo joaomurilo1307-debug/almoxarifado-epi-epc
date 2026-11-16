@@ -66,6 +66,13 @@ export async function reconstruirItensNecessarios() {
     if (c.tamanhoCamisa) {
       add(c.id, "CAMISA DE MALHA", c.tamanhoCamisa, "FICHA");
       add(c.id, "CAMISA JALECO", c.tamanhoCamisa, "FICHA");
+      // CAMISA POLO e JAQUETA VERDE: mesma ficha universal, só que o
+      // estoque delas é da Sede/GERAL (CAMISA DE MALHA/JALECO é do ECC) —
+      // não precisa filtrar por contrato aqui, o cálculo em lib/epi.ts já
+      // casa a demanda com o estoque pelo pool do próprio estoque, então a
+      // linha "sobra" sem efeito pra quem está no contrato errado.
+      add(c.id, "CAMISA POLO", c.tamanhoCamisa, "FICHA");
+      add(c.id, "JAQUETA VERDE", c.tamanhoCamisa, "FICHA");
     }
 
     // FUNÇÃO — cruza a função do colaborador (normalizada, tolerando
@@ -109,3 +116,4 @@ export async function reconstruirItensNecessarios() {
     origemFuncao: linhas.filter((l) => l.origem === "FUNCAO").length,
   };
 }
+
