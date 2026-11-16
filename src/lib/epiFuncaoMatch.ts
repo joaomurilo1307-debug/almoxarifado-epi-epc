@@ -7,17 +7,26 @@
 // lugares — foi exatamente duplicar/perder sincronismo que causou bug antes.
 
 // Produtos cujo tamanho bate com um campo de verdade da ficha de cadastro
-// do colaborador. BOTA/CALÇA/CAMISA (DE MALHA e JALECO) são universais —
-// todo colaborador ativo com aquele campo preenchido usa o item, no
-// tamanho da ficha, independente da função. "BOTA COM PROTEÇÃO DE
-// METATARSO" é diferente: só quem BATE a função de motosserrista usa,
-// mas no tamanho de bota da própria ficha (por isso fica de fora daqui e
-// é tratada como caso especial no rebuild).
+// do colaborador. BOTA/CALÇA/CAMISA (DE MALHA, JALECO, POLO) e JAQUETA
+// VERDE são universais — todo colaborador ativo com aquele campo
+// preenchido usa o item, no tamanho da ficha, independente da função.
+// "BOTA COM PROTEÇÃO DE METATARSO" é diferente: só quem BATE a função de
+// motosserrista usa, mas no tamanho de bota da própria ficha (por isso
+// fica de fora daqui e é tratada como caso especial no rebuild).
+// CAMISA DE MALHA/JALECO só têm estoque no ECC; CAMISA POLO e JAQUETA
+// VERDE só têm estoque na Sede/GERAL — mas isso não precisa de filtro de
+// contrato aqui: o cálculo em lib/epi.ts já casa a demanda com o estoque
+// pelo pool do PRÓPRIO estoque, então a linha "sobra" sem efeito pra quem
+// está no contrato errado (confirmado: não duplica nem infla nenhum
+// número, só fica uma linha de demanda sem estoque correspondente pra
+// combinar, igual já acontecia com CAMISA DE MALHA pra quem é da Sede).
 export const CAMPO_TAMANHO_POR_NOME: Record<string, "tamanhoBota" | "tamanhoCalca" | "tamanhoCamisa"> = {
   BOTA: "tamanhoBota",
   CALÇA: "tamanhoCalca",
   "CAMISA DE MALHA": "tamanhoCamisa",
   "CAMISA JALECO": "tamanhoCamisa",
+  "CAMISA POLO": "tamanhoCamisa",
+  "JAQUETA VERDE": "tamanhoCamisa",
 };
 
 // Nomes já 100% cobertos pela ficha (universal) — o rebuild não processa
@@ -130,3 +139,4 @@ export function funcaoColaboradorBateComRegra(funcaoColabNorm: string, funcaoReg
   if (funcaoColabNorm === funcaoRegraNorm || funcaoColabNorm === funcaoRegraNorm + "S") return true;
   return funcaoColabNorm.startsWith(funcaoRegraNorm + " ") || funcaoColabNorm.startsWith(funcaoRegraNorm + ",");
 }
+
